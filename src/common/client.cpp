@@ -77,12 +77,12 @@ void Client::OnBeforeClose( CefRefPtr<CefBrowser> browser )
     */
   } else if (browser->IsPopup()) {
     // Remove the record for DevTools popup windows.
-    /*
+    
     std::set<std::string>::iterator it =
-      m_OpenDevToolsURLs.find(browser->GetMainFrame()->GetURL());
-    if (it != m_OpenDevToolsURLs.end())
-      m_OpenDevToolsURLs.erase(it);
-    */
+      _openDevToolsURLs.find(browser->GetMainFrame()->GetURL());
+    if (it != _openDevToolsURLs.end())
+      _openDevToolsURLs.erase(it);
+    
 
     // Remove from the browser popup list.
     BrowserList::iterator bit = _popupBrowsers.begin();
@@ -97,5 +97,20 @@ void Client::OnBeforeClose( CefRefPtr<CefBrowser> browser )
   if (--_browserCount == 0) {
     // All browser windows have closed. Quit the application message loop.
     CefQuitMessageLoop();
+  }
+}
+
+void Client::showDevTools( CefRefPtr<CefBrowser> browser )
+{
+  std::string devtools_url = browser->GetHost()->GetDevToolsURL(true);
+  if(!devtools_url.empty())
+  {
+    if(_openDevToolsURLs.find(devtools_url) == _openDevToolsURLs.end())
+    {
+      // Open DevTools in a popup window.
+      _openDevToolsURLs.insert(devtools_url);
+      browser->GetMainFrame()->ExecuteJavaScript(
+        "window.open('" +  devtools_url + "');", "about:blank", 0);
+    }
   }
 }

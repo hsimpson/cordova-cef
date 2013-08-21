@@ -9,6 +9,8 @@ public:
   Client_Win() {}
   virtual ~Client_Win() {}
 
+  virtual bool OnKeyEvent( CefRefPtr<CefBrowser> browser, const CefKeyEvent& event, CefEventHandle os_event ) OVERRIDE;
+
   IMPLEMENT_REFCOUNTING(Client_Win);
 };
 

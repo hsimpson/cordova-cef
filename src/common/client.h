@@ -3,9 +3,11 @@
 
 #include "include/cef_client.h"
 #include <list>
+#include <set>
 
 class Client : public CefClient,
-                      CefLifeSpanHandler
+                      CefLifeSpanHandler,
+                      CefKeyboardHandler
 {
 public:
   Client();
@@ -13,6 +15,7 @@ public:
 
   // CefClient method(s)
   virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {return this;}
+  virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() OVERRIDE { return this; }
 
   // CefLifeSpanHandler method(s)
   virtual bool OnBeforePopup( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access ) OVERRIDE;
@@ -21,6 +24,8 @@ public:
   virtual void OnBeforeClose( CefRefPtr<CefBrowser> browser ) OVERRIDE;
 
 protected:
+
+  virtual void showDevTools(CefRefPtr<CefBrowser> browser);
 
   // Number of currently existing browser windows. The application will exit
   // when the number of windows reaches 0.
@@ -31,6 +36,9 @@ protected:
 
   // The child browser id
   int _browserId;
+
+  // List of open DevTools URLs if not using an external browser window.
+  std::set<std::string> _openDevToolsURLs;
 
   // List of any popup browser windows. Only accessed on the CEF UI thread.
   typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
