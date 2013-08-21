@@ -9,7 +9,10 @@ Client::Client()
   : _browserId(0),
     _bIsClosing(false)
 {
+  // build startup url  
+  std::string startupDocument = "index.html";
 
+  _startupUrl = "file:///" + wwwDir + "/" + startupDocument;
 }
 
 Client:: ~Client() 
@@ -33,6 +36,7 @@ void Client::OnAfterCreated( CefRefPtr<CefBrowser> browser )
     // We need to keep the main child window, but not popup windows
     _browser = browser;
     _browserId = browser->GetIdentifier();
+    browser->GetMainFrame()->LoadURL(_startupUrl);
   } else if (browser->IsPopup()) {
     // Add to the list of popup browsers.
     _popupBrowsers.push_back(browser);

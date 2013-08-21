@@ -4,6 +4,7 @@
 #include "include/cef_client.h"
 #include <list>
 #include <set>
+#include <string>
 
 class Client : public CefClient,
                       CefLifeSpanHandler,
@@ -44,7 +45,13 @@ protected:
   typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
   BrowserList _popupBrowsers;
 
+  // browser is closing
   bool _bIsClosing;
+
+
+  std::string _startupUrl;
+
+
 
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(Client);

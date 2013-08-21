@@ -36,13 +36,16 @@ int CALLBACK WinMain(
   CefWindowInfo info;
   info.SetAsPopup(NULL, L"Cordova-windows-desktop");
 
-  CefBrowserSettings browsersettings;
+  CefBrowserSettings browserSettings;
+  browserSettings.file_access_from_file_urls = STATE_ENABLED;
+  browserSettings.universal_access_from_file_urls = STATE_ENABLED;
+  browserSettings.web_security = STATE_DISABLED;
 
   // CefClient implementation.
   CefRefPtr<CefClient> client = new Client_Win;
 
   // Create the browser asynchronously. Initially loads the Google URL.
-  CefBrowserHost::CreateBrowser(info, client, "http://www.google.de", browsersettings);
+  CefBrowserHost::CreateBrowser(info, client, "", browserSettings);
 
   // Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
   CefRunMessageLoop();
