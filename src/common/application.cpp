@@ -23,8 +23,10 @@
 
 
 
+
 Application::Application(CefRefPtr<CefClient> client)
-  : _client(client)
+  : _client(client),
+    _appDirFetched(false)
 {
 }
 
@@ -34,16 +36,18 @@ Application::~Application()
 }
 
 void Application::OnContextInitialized()
-{
+{  
+  _config = new Config(getAppDirectory() + L"/config.xml");
+  _startupUrl = L"file:///" + getAppDirectory() + L"/www/" + _config->startDocument(); 
+
   CefWindowInfo info;
-  info.SetAsPopup(NULL, L"Cordova CEF");
+  info.SetAsPopup(NULL, _config->appName());
 
   CefBrowserSettings browserSettings;
   browserSettings.file_access_from_file_urls = STATE_ENABLED;
   browserSettings.universal_access_from_file_urls = STATE_ENABLED;
   browserSettings.web_security = STATE_DISABLED;
 
-  // Create the browser asynchronously. Initially loads the Google URL.
-  //CefBrowserHost::CreateBrowser(info, _client, "http://www.google.de", browserSettings);
+  // Create the browser asynchronously and load the startup url
   CefBrowserHost::CreateBrowser(info, _client, _startupUrl, browserSettings);
 }

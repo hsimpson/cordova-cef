@@ -28,25 +28,24 @@
 Application_Win::Application_Win()
   : Application(new Client_Win)
 {
-  std::string startupDocument = "index.html";
-  _startupUrl = "file:///" + getAppDirectory() + "/www/" + startupDocument; 
 }
 
 Application_Win::~Application_Win()
 {
 }
 
-std::string Application_Win::getAppDirectory()
+std::wstring Application_Win::getAppDirectory()
 {
-  if(_applicationDir.empty())
+  if(!_appDirFetched)
   {
     TCHAR path[MAX_PATH];
     DWORD length = GetModuleFileName( NULL, path, MAX_PATH );
     PathRemoveFileSpec(path);
     TCHAR path_canonicalized[MAX_PATH];
     PathCanonicalize(path_canonicalized, path);
-    _applicationDir = CefString(path_canonicalized).ToString();
+    _applicationDir = path_canonicalized;
     std::replace(_applicationDir.begin(), _applicationDir.end(), '\\', '/');
+    _appDirFetched = true;
   }
   return _applicationDir;
 }

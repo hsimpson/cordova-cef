@@ -31,7 +31,10 @@ public:
   virtual ~Application_Win();
 
 protected:
-  virtual std::string getAppDirectory();
+  virtual std::wstring getAppDirectory();
+
+private:
+  std::wstring _applicationDir;
 
   IMPLEMENT_REFCOUNTING(Application_Win);
 };

@@ -1,0 +1,7 @@
+TODO's for Cordova-CEF:
+
+* common
+- White list/access parsing and handling, for now web security is disabled
+
+* windows-desktop
+- Off-screen rendering for transparent window and background

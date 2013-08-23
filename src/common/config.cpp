@@ -19,36 +19,29 @@
  *
 */
 
-#ifndef application_h__
-#define application_h__
-
-#include "include/cef_app.h"
-#include "include/cef_client.h"
 #include "config.h"
 
-class Application : public CefApp,
-                    public CefBrowserProcessHandler
+Config::Config(const std::wstring configXMLFile)
 {
-public:
-  Application(CefRefPtr<CefClient> client);
-  virtual ~Application();
+  pugi::xml_document doc;
+  pugi::xml_parse_result result = doc.load_file(configXMLFile.c_str());
+  if(result.status == pugi::status_ok)
+  {
+    // get name node
+    pugi::xpath_node name_node =  doc.select_single_node(L"/widget/name");
+    _appName = name_node.node().text().get();
+    pugi::xpath_node content_node =  doc.select_single_node(L"/widget/content");
+    _startDocument = content_node.node().attribute(L"src").value();
+  }
+  else
+  {
+    //TODO: error handling
+  }
+}
 
-  // CefApp method(s)
-  virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE { return this; }
+Config::~Config()
+{
 
-  //CefBrowserProcessHandler method(s)
-  virtual void OnContextInitialized() OVERRIDE;
+}
 
-protected:
 
-  virtual std::wstring getAppDirectory() = 0;
-
-  CefRefPtr<CefClient> _client;
-  CefRefPtr<Config> _config;
-
-  bool _appDirFetched;
-  std::wstring _startupUrl;
-  
-  IMPLEMENT_REFCOUNTING(Application);
-};
-#endif // application_h__

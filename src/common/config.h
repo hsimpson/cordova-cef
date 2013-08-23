@@ -19,36 +19,22 @@
  *
 */
 
-#ifndef application_h__
-#define application_h__
+#include "include/cef_base.h"
+#include "pugixml.hpp"
 
-#include "include/cef_app.h"
-#include "include/cef_client.h"
-#include "config.h"
-
-class Application : public CefApp,
-                    public CefBrowserProcessHandler
+class Config : CefBase
 {
 public:
-  Application(CefRefPtr<CefClient> client);
-  virtual ~Application();
+  Config(const std::wstring configXMLFile);
+  virtual ~Config();
 
-  // CefApp method(s)
-  virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE { return this; }
+  std::wstring appName() const { return _appName;}
+  std::wstring startDocument() const { return _startDocument; }
 
-  //CefBrowserProcessHandler method(s)
-  virtual void OnContextInitialized() OVERRIDE;
-
-protected:
-
-  virtual std::wstring getAppDirectory() = 0;
-
-  CefRefPtr<CefClient> _client;
-  CefRefPtr<Config> _config;
-
-  bool _appDirFetched;
-  std::wstring _startupUrl;
+private:
   
-  IMPLEMENT_REFCOUNTING(Application);
+  std::wstring _appName;
+  std::wstring _startDocument;  
+
+  IMPLEMENT_REFCOUNTING(Config);
 };
-#endif // application_h__
