@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "windows-desktop", "windows-desktop.vcxproj", "{8713D8FB-A631-4926-9796-4CCC8436FDA2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "windows-desktop", "projects\windows-desktop\windows-desktop.vcxproj", "{8713D8FB-A631-4926-9796-4CCC8436FDA2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{89A1E353-E2DC-495C-B403-742BE206ACED} = {89A1E353-E2DC-495C-B403-742BE206ACED}
+		{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9} = {A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcef_dll_wrapper", "..\..\3rdparty\cef3\windows\libcef_dll_wrapper.vcxproj", "{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcef_dll_wrapper", "3rdparty\cef3\windows\libcef_dll_wrapper.vcxproj", "{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pugixml_vs2010_static", "3rdparty\pugixml\scripts\pugixml_vs2010_static.vcxproj", "{89A1E353-E2DC-495C-B403-742BE206ACED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +33,14 @@ Global
 		{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}.Release|Win32.Build.0 = Release|Win32
 		{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}.Release|x64.ActiveCfg = Release|x64
 		{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}.Release|x64.Build.0 = Release|x64
+		{89A1E353-E2DC-495C-B403-742BE206ACED}.Debug|Win32.ActiveCfg = Debug|Win32
+		{89A1E353-E2DC-495C-B403-742BE206ACED}.Debug|Win32.Build.0 = Debug|Win32
+		{89A1E353-E2DC-495C-B403-742BE206ACED}.Debug|x64.ActiveCfg = Debug|x64
+		{89A1E353-E2DC-495C-B403-742BE206ACED}.Debug|x64.Build.0 = Debug|x64
+		{89A1E353-E2DC-495C-B403-742BE206ACED}.Release|Win32.ActiveCfg = Release|Win32
+		{89A1E353-E2DC-495C-B403-742BE206ACED}.Release|Win32.Build.0 = Release|Win32
+		{89A1E353-E2DC-495C-B403-742BE206ACED}.Release|x64.ActiveCfg = Release|x64
+		{89A1E353-E2DC-495C-B403-742BE206ACED}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

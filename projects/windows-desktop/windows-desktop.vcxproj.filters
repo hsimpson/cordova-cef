@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="scripts">
+      <UniqueIdentifier>{53db6b1e-f75f-42b3-bb64-696e4b6cd7ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\windows-desktop\application_win.cpp">
@@ -47,5 +50,10 @@
     <ClInclude Include="..\..\src\common\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="postbuild.bat">
+      <Filter>scripts</Filter>
+    </None>
   </ItemGroup>
 </Project>

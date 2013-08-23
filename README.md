@@ -8,9 +8,11 @@ This project is a [Cordova/Phongap](http://cordova.apache.org "Cordova") framewo
 
 ## Windows-Desktop for Windows 7 or later (not Windows 8 Store APP) ##
 - Download [CEF3 binaries for Windows](http://www.magpcss.net/cef_downloads/index.php "CEF3 binaries for Windows")
-- Copy contents of CEF3 binaries package into <ROOT>\3rdparty\cef3\windows
-- Open <ROOT>\projects\windows-desktop\windows-desktop.sln with Visual Studio 2012 and build Debug or Releas
-- After building the output can be foun in <ROOT>\projects\windows-desktop\Debug or Relase
+- Copy contents of CEF3 binaries package into `<ROOT>/3rdparty/cef3/windows` (tested with 3.1453.1255)
+- Download the [Boost Libraries](http://www.boost.org/users/download/ "Boost Libraries")
+- Copy the contents of the `boost_x_y_z` folder into `<ROOT>/3rdparty/boost`
+- Open `<ROOT>/projects/windows-desktop/windows-desktop.sln` with Visual Studio 2012 and build Debug or Releas
+- After building the output can be foun in `<ROOT>/projects/windows-desktop/Debug` or Relase
 
 
 
