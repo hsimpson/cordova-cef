@@ -22,6 +22,7 @@
 #include "config.h"
 
 Config::Config(const std::wstring configXMLFile)
+  : INIT_LOGGER(Config)
 {
   pugi::xml_document doc;
   pugi::xml_parse_result result = doc.load_file(configXMLFile.c_str());
@@ -35,6 +36,7 @@ Config::Config(const std::wstring configXMLFile)
   }
   else
   {
+    BOOST_LOG_SEV(logger(), error) << "failed to parse config xml '" << configXMLFile << "' result=" << result.status;
     //TODO: error handling
   }
 }

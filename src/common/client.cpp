@@ -23,12 +23,11 @@
 #include "util.h"
 
 #include "include/cef_app.h"
+#include "logging.h"
 
-int Client::_browserCount = 0;
 
-Client::Client() 
-  : _browserId(0),
-    _bIsClosing(false)
+Client::Client()
+  :INIT_LOGGER(Client)
 {
 }
 
@@ -49,16 +48,8 @@ void Client::OnAfterCreated( CefRefPtr<CefBrowser> browser )
 {
   REQUIRE_UI_THREAD();
   AutoLock lock_scope(this);
-  if (!_browser.get())   {
-    // We need to keep the main child window, but not popup windows
-    _browser = browser;
-    _browserId = browser->GetIdentifier();
-  } else if (browser->IsPopup()) {
-    // Add to the list of popup browsers.
-    _popupBrowsers.push_back(browser);
-  }
-
-  _browserCount++;
+  // Add to the list of browsers.
+  _browsers.push_back(browser);
 }
 
 bool Client::DoClose( CefRefPtr<CefBrowser> browser )
@@ -68,12 +59,9 @@ bool Client::DoClose( CefRefPtr<CefBrowser> browser )
   // Closing the main window requires special handling. See the DoClose()
   // documentation in the CEF header for a detailed description of this
   // process.
-  if (_browserId == browser->GetIdentifier()) {
+  if (_browsers.size() == 1 && _browsers.front()->IsSame(browser)) {
     // Notify the browser that the parent window is about to close.
     browser->GetHost()->ParentWindowWillClose();
-
-    // Set a flag to indicate that the window close should be allowed.
-    _bIsClosing = true;
   }
 
   // Allow the close. For windowed browsers this will result in the OS close
@@ -84,37 +72,24 @@ bool Client::DoClose( CefRefPtr<CefBrowser> browser )
 void Client::OnBeforeClose( CefRefPtr<CefBrowser> browser )
 {
   REQUIRE_UI_THREAD();
-
-  if (_browserId == browser->GetIdentifier()) {
-    // Free the browser pointer so that the browser can be destroyed
-    _browser = NULL;
-
-    /*
-    if (m_OSRHandler.get()) {
-      m_OSRHandler->OnBeforeClose(browser);
-      m_OSRHandler = NULL;
-    }
-    */
-  } else if (browser->IsPopup()) {
-    // Remove the record for DevTools popup windows.
     
-    std::set<std::string>::iterator it =
-      _openDevToolsURLs.find(browser->GetMainFrame()->GetURL());
-    if (it != _openDevToolsURLs.end())
-      _openDevToolsURLs.erase(it);
+  std::set<std::string>::iterator it =
+    _openDevToolsURLs.find(browser->GetMainFrame()->GetURL());
+  if (it != _openDevToolsURLs.end())
+    _openDevToolsURLs.erase(it);
     
 
-    // Remove from the browser popup list.
-    BrowserList::iterator bit = _popupBrowsers.begin();
-    for (; bit != _popupBrowsers.end(); ++bit) {
-      if ((*bit)->IsSame(browser)) {
-        _popupBrowsers.erase(bit);
-        break;
-      }
+  // Remove from the browser popup list.
+  BrowserList::iterator bit = _browsers.begin();
+  for (; bit != _browsers.end(); ++bit) {
+    if ((*bit)->IsSame(browser)) {
+      _browsers.erase(bit);
+      break;
     }
   }
+  
 
-  if (--_browserCount == 0) {
+  if (_browsers.empty()) {
     // All browser windows have closed. Quit the application message loop.
     CefQuitMessageLoop();
   }
@@ -122,6 +97,8 @@ void Client::OnBeforeClose( CefRefPtr<CefBrowser> browser )
 
 void Client::showDevTools( CefRefPtr<CefBrowser> browser )
 {
+  BOOST_LOG_SEV(logger(), debug) << "showDevTools, id=" << browser->GetIdentifier();
+
   std::string devtools_url = browser->GetHost()->GetDevToolsURL(true);
   if(!devtools_url.empty())
   {
@@ -129,8 +106,22 @@ void Client::showDevTools( CefRefPtr<CefBrowser> browser )
     {
       // Open DevTools in a popup window.
       _openDevToolsURLs.insert(devtools_url);
+
+      /*
       browser->GetMainFrame()->ExecuteJavaScript(
         "window.open('" +  devtools_url + "');", "about:blank", 0);
+      */
+
+      CefWindowInfo info;
+      info.SetAsPopup(NULL, devtools_url);
+
+      CefBrowserSettings browserSettings;
+      browserSettings.developer_tools = STATE_DISABLED;
+      browserSettings.file_access_from_file_urls = STATE_ENABLED;
+      browserSettings.universal_access_from_file_urls = STATE_ENABLED;
+      browserSettings.web_security = STATE_DISABLED;
+
+      CefBrowserHost::CreateBrowser(info, this, devtools_url, browserSettings);
     }
   }
 }

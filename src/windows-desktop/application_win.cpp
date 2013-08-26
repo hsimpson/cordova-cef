@@ -26,7 +26,8 @@
 #include <algorithm>
 
 Application_Win::Application_Win()
-  : Application(new Client_Win)
+  : INIT_LOGGER(Application_Win),
+    Application(new Client_Win)
 {
 }
 
@@ -46,6 +47,7 @@ std::wstring Application_Win::getAppDirectory()
     _applicationDir = path_canonicalized;
     std::replace(_applicationDir.begin(), _applicationDir.end(), '\\', '/');
     _appDirFetched = true;
+    BOOST_LOG_SEV(logger(), debug) << "fetched application dir: '" << _applicationDir << "'";
   }
   return _applicationDir;
 }

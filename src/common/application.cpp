@@ -24,8 +24,11 @@
 
 
 
+
+
 Application::Application(CefRefPtr<CefClient> client)
-  : _client(client),
+  : INIT_LOGGER(Application),
+    _client(client),
     _appDirFetched(false)
 {
 }
@@ -35,8 +38,13 @@ Application::~Application()
 
 }
 
+
+
 void Application::OnContextInitialized()
 {  
+
+
+
   _config = new Config(getAppDirectory() + L"/config.xml");
   _startupUrl = L"file:///" + getAppDirectory() + L"/www/" + _config->startDocument(); 
 
@@ -44,10 +52,12 @@ void Application::OnContextInitialized()
   info.SetAsPopup(NULL, _config->appName());
 
   CefBrowserSettings browserSettings;
+  browserSettings.developer_tools = STATE_ENABLED;
   browserSettings.file_access_from_file_urls = STATE_ENABLED;
   browserSettings.universal_access_from_file_urls = STATE_ENABLED;
   browserSettings.web_security = STATE_DISABLED;
 
   // Create the browser asynchronously and load the startup url
+  BOOST_LOG_SEV(logger(), debug) << "create browser with startup url: '" << _startupUrl << "'";
   CefBrowserHost::CreateBrowser(info, _client, _startupUrl, browserSettings);
 }

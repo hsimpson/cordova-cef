@@ -55,13 +55,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\3rdparty\cef3\windows;..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\cpplog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\3rdparty\cef3\windows\Debug;..\..\3rdparty\cef3\windows\out\Debug\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\3rdparty\cef3\windows\Debug;..\..\3rdparty\cef3\windows\out\Debug\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;..\..\3rdparty\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libcef.lib;libcef_dll_wrapper.lib;pugixmlsd.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -78,7 +79,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\3rdparty\cef3\windows;..\..\3rdparty\pugixml\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\cpplog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -86,7 +87,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\3rdparty\cef3\windows\Release;..\..\3rdparty\cef3\windows\out\Release\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\3rdparty\cef3\windows\Release;..\..\3rdparty\cef3\windows\out\Release\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;..\..\3rdparty\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libcef.lib;libcef_dll_wrapper.lib;pugixmls.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -105,6 +106,7 @@
     <ClInclude Include="..\..\src\common\application.h" />
     <ClInclude Include="..\..\src\common\client.h" />
     <ClInclude Include="..\..\src\common\config.h" />
+    <ClInclude Include="..\..\src\common\logging.h" />
     <ClInclude Include="..\..\src\common\util.h" />
     <ClInclude Include="..\..\src\windows-desktop\application_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\client_win.h" />

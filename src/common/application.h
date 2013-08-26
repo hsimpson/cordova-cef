@@ -25,6 +25,7 @@
 #include "include/cef_app.h"
 #include "include/cef_client.h"
 #include "config.h"
+#include "common/logging.h"
 
 class Application : public CefApp,
                     public CefBrowserProcessHandler
@@ -40,7 +41,6 @@ public:
   virtual void OnContextInitialized() OVERRIDE;
 
 protected:
-
   virtual std::wstring getAppDirectory() = 0;
 
   CefRefPtr<CefClient> _client;
@@ -50,5 +50,7 @@ protected:
   std::wstring _startupUrl;
   
   IMPLEMENT_REFCOUNTING(Application);
+
+  DECLARE_LOGGER(Application);
 };
 #endif // application_h__

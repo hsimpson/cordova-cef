@@ -22,7 +22,8 @@
 #ifndef application_win_h__
 #define application_win_h__
 
-#include "../common/application.h"
+#include "common/application.h"
+#include "common/logging.h"
 
 class Application_Win : public Application 
 {
@@ -37,5 +38,7 @@ private:
   std::wstring _applicationDir;
 
   IMPLEMENT_REFCOUNTING(Application_Win);
+  
+  DECLARE_LOGGER(Application_Win);
 };
 #endif // application_win_h__

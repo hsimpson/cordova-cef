@@ -21,6 +21,7 @@
 
 #include "include/cef_base.h"
 #include "pugixml.hpp"
+#include "common/logging.h"
 
 class Config : CefBase
 {
@@ -37,4 +38,5 @@ private:
   std::wstring _startDocument;  
 
   IMPLEMENT_REFCOUNTING(Config);
+  DECLARE_LOGGER(Config);
 };

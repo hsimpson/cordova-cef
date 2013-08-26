@@ -27,6 +27,7 @@
 #include <list>
 #include <set>
 #include <string>
+#include "common/logging.h"
 
 class Client : public CefClient,
                       CefLifeSpanHandler,
@@ -50,36 +51,19 @@ protected:
 
   virtual void showDevTools(CefRefPtr<CefBrowser> browser);
 
-  // Number of currently existing browser windows. The application will exit
-  // when the number of windows reaches 0.
-  static int _browserCount;
-
-  // The child browser window
-  CefRefPtr<CefBrowser> _browser;
-
-  // The child browser id
-  int _browserId;
-
   // List of open DevTools URLs if not using an external browser window.
   std::set<std::string> _openDevToolsURLs;
 
-  // List of any popup browser windows. Only accessed on the CEF UI thread.
+  // List of any browser windows. Only accessed on the CEF UI thread.
   typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
-  BrowserList _popupBrowsers;
-
-  // browser is closing
-  bool _bIsClosing;
-
-
-  
-
-
+  BrowserList _browsers;
 
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(Client);
   // Include the default locking implementation.
   IMPLEMENT_LOCKING(Client);
-
+  // define logger
+  DECLARE_LOGGER(Client);
 };
 
 #endif // client_h__

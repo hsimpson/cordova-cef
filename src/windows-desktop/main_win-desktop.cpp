@@ -19,6 +19,8 @@
  *
 */
 
+#include "common/logging.h"
+
 #include <Windows.h>
 #include "include/cef_base.h"
 
@@ -32,6 +34,9 @@ int CALLBACK WinMain(
   _In_  int nCmdShow
   )
 {
+  // first init the logging system
+  init_logging();
+
   // passing command-line
   CefMainArgs main_args(hInstance);
 
