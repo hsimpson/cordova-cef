@@ -54,7 +54,7 @@ inline void init_logging()
 
   boost::shared_ptr< sinks::text_file_backend > backend =
     boost::make_shared< sinks::text_file_backend >(
-    keywords::file_name = "x:\\file_%5N.log",                                          
+    keywords::file_name = "file_%5N.log", // ToDo: use better path then relative (maybe $HOME/..)                                         
     keywords::rotation_size = 5 * 1024 * 1024,                                     
     keywords::time_based_rotation = sinks::file::rotation_at_time_point(12, 0, 0),
     keywords::auto_flush = true,
