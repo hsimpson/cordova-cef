@@ -19,25 +19,17 @@
  *
 */
 
-#include "include/cef_base.h"
-#include "pugixml.hpp"
-#include "logging.h"
-#include "pluginmanager.h"
+#include "cordovaplugin.h"
+#include "json/json.h"
 
-class Config : CefBase
+CordovaPlugin::CordovaPlugin()
 {
-public:
-  Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager);
-  virtual ~Config();
+}
 
-  std::wstring appName() const { return _appName;}
-  std::wstring startDocument() const { return _startDocument; }
+CordovaPlugin::~CordovaPlugin()
+{
+}
 
-private:
-  
-  std::wstring _appName;
-  std::wstring _startDocument;  
-
-  IMPLEMENT_REFCOUNTING(Config);
-  DECLARE_LOGGER(Config);
-};
+void CordovaPlugin::initialize()
+{
+}

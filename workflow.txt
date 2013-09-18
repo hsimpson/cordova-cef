@@ -1,0 +1,22 @@
+Workflow:
+ 0. Probably make a Splashscreen
+ 1. Config parsing
+ 2. Setup Main Window (size/fullscreen/etc.)
+ 3. Get Starturl
+ 4. Lazy init Webview
+ 5. Setup Webview properties 
+    - inital scale
+    - disable vertical scale
+    - file access
+    - SOP
+    - DB
+    - geolocation
+    - cache (about 5MB)
+ 6. Create the PluginManager
+ 7. Create jsMessageQueue (really needed?)
+ 8. Create exposedJsApi (which implements the exec method)
+ 9. Create resourceApi (probably file backend)
+10. Bind the exposedJsApi to '_cordovaNative' JS object
+11. Load the startup url into webview
+   
+

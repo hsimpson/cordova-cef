@@ -19,25 +19,26 @@
  *
 */
 
-#include "include/cef_base.h"
-#include "pugixml.hpp"
-#include "logging.h"
-#include "pluginmanager.h"
 
-class Config : CefBase
+#include "pluginregistry.h"
+
+PluginRegistry::PluginClass2CreatorFunc PluginRegistry::_registeredPlugins;
+
+bool PluginRegistry::registerPlugin(const std::string& name, PluginRegistry::plugin_creator_func create_func)
 {
-public:
-  Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager);
-  virtual ~Config();
+  if(_registeredPlugins.find(name) == _registeredPlugins.end())
+  {
+    _registeredPlugins[name] = create_func;
+    return true;
+  }
+  return false;
+}
 
-  std::wstring appName() const { return _appName;}
-  std::wstring startDocument() const { return _startDocument; }
-
-private:
-  
-  std::wstring _appName;
-  std::wstring _startDocument;  
-
-  IMPLEMENT_REFCOUNTING(Config);
-  DECLARE_LOGGER(Config);
-};
+PluginRegistry::plugin_creator_func PluginRegistry::getPluginCreateFunc(const std::string& name)
+{
+  PluginRegistry::PluginClass2CreatorFunc::iterator iter = _registeredPlugins.find(name);
+  if(iter != _registeredPlugins.end())
+    return iter->second;
+  else
+    return NULL;
+}

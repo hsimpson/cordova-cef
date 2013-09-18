@@ -19,25 +19,24 @@
  *
 */
 
-#include "include/cef_base.h"
-#include "pugixml.hpp"
-#include "logging.h"
-#include "pluginmanager.h"
+#ifndef pluginregistry_h__
+#define pluginregistry_h__
 
-class Config : CefBase
+#include <string>
+#include <map>
+
+class CordovaPlugin;
+
+class PluginRegistry
 {
 public:
-  Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager);
-  virtual ~Config();
-
-  std::wstring appName() const { return _appName;}
-  std::wstring startDocument() const { return _startDocument; }
+  typedef CordovaPlugin* (*plugin_creator_func)();
+  typedef std::map<std::string, plugin_creator_func> PluginClass2CreatorFunc;
+  static bool registerPlugin(const std::string& name, PluginRegistry::plugin_creator_func create_func);
+  static PluginRegistry::plugin_creator_func getPluginCreateFunc(const std::string& name);
 
 private:
-  
-  std::wstring _appName;
-  std::wstring _startDocument;  
-
-  IMPLEMENT_REFCOUNTING(Config);
-  DECLARE_LOGGER(Config);
+  static PluginClass2CreatorFunc _registeredPlugins;
 };
+
+#endif // pluginregistry_h__

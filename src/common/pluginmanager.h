@@ -19,25 +19,44 @@
  *
 */
 
-#include "include/cef_base.h"
-#include "pugixml.hpp"
-#include "logging.h"
-#include "pluginmanager.h"
+#ifndef pluginmanager_h__
+#define pluginmanager_h__
 
-class Config : CefBase
+#include "include/cef_base.h"
+#include <string>
+#include <map>
+#include "cordovaplugin.h"
+#include "logging.h"
+#include "pluginregistry.h"
+
+class Application;
+class PluginEntry;
+
+class PluginManager
 {
 public:
-  Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager);
-  virtual ~Config();
-
-  std::wstring appName() const { return _appName;}
-  std::wstring startDocument() const { return _startDocument; }
+  PluginManager(Application* app);
+  virtual ~PluginManager();
+  void init();
+  void addPlugin(const std::string& servicename, const std::string& classname, bool onload=false);
+  void exec(const std::string& service, const std::string& action, const std::string& callbackId, const std::string& rawArgs);
 
 private:
   
-  std::wstring _appName;
-  std::wstring _startDocument;  
 
-  IMPLEMENT_REFCOUNTING(Config);
-  DECLARE_LOGGER(Config);
+  void clearPluginObjects();
+  void startupPlugins();
+  CordovaPlugin* getPlugin(const std::string service);
+  
+
+  
+  bool _firstRun;
+  Application* _app;
+  typedef std::map<std::string, PluginEntry*> PluginMap;
+  PluginMap _pluginEntries;
+
+  IMPLEMENT_REFCOUNTING(PluginManager);
+  DECLARE_LOGGER(PluginManager);
 };
+
+#endif // pluginmanager_h__

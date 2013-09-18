@@ -19,25 +19,42 @@
  *
 */
 
-#include "include/cef_base.h"
-#include "pugixml.hpp"
-#include "logging.h"
-#include "pluginmanager.h"
+#include "device.h"
+#include "json/json.h"
 
-class Config : CefBase
+Device::Device()
 {
-public:
-  Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager);
-  virtual ~Config();
+}
 
-  std::wstring appName() const { return _appName;}
-  std::wstring startDocument() const { return _startDocument; }
+Device::~Device()
+{
+}
 
-private:
-  
-  std::wstring _appName;
-  std::wstring _startDocument;  
+bool Device::execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext)
+{
+  if(action == "getDeviceInfo")
+  {
+    Json::Value result;
+    result["uuid"] = _uuid;
+    result["version"] = _version;
+    result["platform"] = _platform;
+    result["cordova"] = _cordova;
+    result["model"] = _model;
 
-  IMPLEMENT_REFCOUNTING(Config);
-  DECLARE_LOGGER(Config);
-};
+    callbackContext.success(result);
+    return true;
+  }
+  return false;
+}
+
+void Device::initialize()
+{
+  CordovaPlugin::initialize();
+  _cordova = "dev";
+#ifdef WIN32
+  _platform = "CEF-win-desktop";
+#endif
+
+}
+
+REGISTER_PLUGIN(Device);

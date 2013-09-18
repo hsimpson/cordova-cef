@@ -51,7 +51,11 @@
     <preference name="SuppressesIncrementalRendering" value="false" />
     <preference name="TopActivityIndicator" value="gray" />
 
-    <feature name="LocalStorage">
-        <param name="ios-package" value="CDVLocalStorage"/>
+    <feature name="Device">
+        <param name="cef-package" value="Device" onload="true"/>
     </feature>
+    <feature name="MyPlugin">
+        <param name="cef-package" value="Plugin"/>
+    </feature>
+    
 </widget>

@@ -19,25 +19,31 @@
  *
 */
 
-#include "include/cef_base.h"
-#include "pugixml.hpp"
-#include "logging.h"
-#include "pluginmanager.h"
+#ifndef CallbackContext_h__
+#define CallbackContext_h__
 
-class Config : CefBase
+#include <string>
+#include "pluginresult.h"
+
+class Application;
+namespace Json
+{
+  class Value;
+}
+
+
+class CallbackContext
 {
 public:
-  Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager);
-  virtual ~Config();
+  CallbackContext(const std::string& callbackId, Application* app);
+  virtual ~CallbackContext();
 
-  std::wstring appName() const { return _appName;}
-  std::wstring startDocument() const { return _startDocument; }
+  void success(const Json::Value& json);
+  void sendPluginresult(const PluginResult& result);
 
 private:
-  
-  std::wstring _appName;
-  std::wstring _startDocument;  
-
-  IMPLEMENT_REFCOUNTING(Config);
-  DECLARE_LOGGER(Config);
+  std::string _callbackId;
+  Application* _app;
 };
+
+#endif // CallbackContext_h__

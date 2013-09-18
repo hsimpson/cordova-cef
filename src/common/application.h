@@ -25,10 +25,15 @@
 #include "include/cef_app.h"
 #include "include/cef_client.h"
 #include "config.h"
-#include "common/logging.h"
+#include "logging.h"
+#include "pluginmanager.h"
+#include "pluginresult.h"
+
 
 class Application : public CefApp,
-                    public CefBrowserProcessHandler
+                    public CefBrowserProcessHandler,
+                    public CefRenderProcessHandler,
+                    public CefV8Handler
 {
 public:
   Application(CefRefPtr<CefClient> client);
@@ -36,18 +41,33 @@ public:
 
   // CefApp method(s)
   virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE { return this; }
+  virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE { return this; }
 
   //CefBrowserProcessHandler method(s)
   virtual void OnContextInitialized() OVERRIDE;
+
+  //CefRenderProcessHandler method(s)
+  virtual void OnContextCreated( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context ) OVERRIDE;
+  virtual void OnContextReleased( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context ) OVERRIDE;
+
+  //CefV8Handler method(s)
+  virtual bool Execute( const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception ) OVERRIDE;
+
+  void sendJavascript(const std::string& statement);
+  void sendPluginResult(const PluginResult& result, const std::string& callbackId);
 
 protected:
   virtual std::wstring getAppDirectory() = 0;
 
   CefRefPtr<CefClient> _client;
   CefRefPtr<Config> _config;
+  CefRefPtr<PluginManager> _pluginManager;
 
   bool _appDirFetched;
   std::wstring _startupUrl;
+
+  CefRefPtr<CefV8Value> _exposedJSObject;
+
   
   IMPLEMENT_REFCOUNTING(Application);
 

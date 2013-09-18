@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-Config::Config(const std::wstring configXMLFile)
+Config::Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager)
   : INIT_LOGGER(Config)
 {
   pugi::xml_document doc;
@@ -33,6 +33,28 @@ Config::Config(const std::wstring configXMLFile)
     _appName = name_node.node().text().get();
     pugi::xpath_node content_node =  doc.select_single_node(L"/widget/content");
     _startDocument = content_node.node().attribute(L"src").value();
+
+    // parse the plugins
+    // get all feature nodes
+    pugi::xpath_node_set features = doc.select_nodes(L"/widget/feature");
+    
+    for(pugi::xpath_node_set::const_iterator iter = features.begin() ; iter != features.end(); ++iter)
+    {
+      std::wstring servicename = iter->node().attribute(L"name").value();
+      pugi::xpath_node param = iter->node().select_single_node(L"param");
+      
+      // check if name="cef-package"
+      std::wstring param_name = param.node().attribute(L"name").value();
+      if( param_name.compare(L"cef-package") == 0)
+      {
+        std::wstring classname = param.node().attribute(L"value").value();
+        std::wstring onload_str = param.node().attribute(L"onload").value();
+        bool onload = false;
+        if(onload_str.compare(L"true") == 0)
+          onload = true;
+        pluginManager->addPlugin(CefString(servicename).ToString(), CefString(classname).ToString(), onload);
+      }
+    }
   }
   else
   {

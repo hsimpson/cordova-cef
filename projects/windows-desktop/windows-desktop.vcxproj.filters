@@ -16,6 +16,9 @@
     <Filter Include="scripts">
       <UniqueIdentifier>{53db6b1e-f75f-42b3-bb64-696e4b6cd7ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="plugins">
+      <UniqueIdentifier>{2a9292d9-8707-45ca-a6ae-5cc78aa6263f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\windows-desktop\application_win.cpp">
@@ -35,6 +38,27 @@
     </ClCompile>
     <ClCompile Include="..\..\src\common\config.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\cordovaplugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\pluginregistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rdparty\json-cpp-amalgamation\jsoncpp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\pluginmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\callbackcontext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\pluginresult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\plugins\device.cpp">
+      <Filter>plugins</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +82,30 @@
     </ClInclude>
     <ClInclude Include="..\..\src\common\logging.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\cordovaplugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\pluginregistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdparty\json-cpp-amalgamation\json\json-forwards.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rdparty\json-cpp-amalgamation\json\json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\pluginmanager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\callbackcontext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\pluginresult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\plugins\device.h">
+      <Filter>plugins</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

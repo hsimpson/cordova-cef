@@ -55,6 +55,9 @@ int CALLBACK WinMain(
   // Populate this structure to customize CEF behavior.
   CefSettings appsettings;
   appsettings.remote_debugging_port = 9999;
+#ifdef _DEBUG
+  appsettings.single_process = true;
+#endif
 
   // Initialize CEF in the main process.
   CefInitialize(main_args, appsettings, app);

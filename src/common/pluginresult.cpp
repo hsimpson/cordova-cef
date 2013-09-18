@@ -19,25 +19,39 @@
  *
 */
 
-#include "include/cef_base.h"
-#include "pugixml.hpp"
-#include "logging.h"
-#include "pluginmanager.h"
+#include "pluginresult.h"
+#include "json/json.h"
 
-class Config : CefBase
-{
-public:
-  Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager);
-  virtual ~Config();
-
-  std::wstring appName() const { return _appName;}
-  std::wstring startDocument() const { return _startDocument; }
-
-private:
-  
-  std::wstring _appName;
-  std::wstring _startDocument;  
-
-  IMPLEMENT_REFCOUNTING(Config);
-  DECLARE_LOGGER(Config);
+const char* PluginResult::_statusMessages[] = {
+  "No result",
+  "OK",
+  "Class not found",
+  "Illegal access",
+  "Instantiation error",
+  "Malformed url",
+  "IO error",
+  "Invalid action",
+  "JSON error",
+  "Error"
 };
+
+PluginResult::PluginResult( PluginResult::Status status )
+  : _status(status),
+    _messageType(PluginResult::MESSAGE_TYPE_STRING),
+    _strMessage(PluginResult::_statusMessages[(int)status])
+{
+
+}
+
+PluginResult::PluginResult( PluginResult::Status status, const Json::Value& json )
+  : _status(status),
+    _messageType(PluginResult::MESSAGE_TYPE_JSON)
+{
+  Json::FastWriter writer;
+  _encodedMessage = writer.write(json);
+}
+
+PluginResult::~PluginResult()
+{
+
+}

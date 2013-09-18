@@ -19,25 +19,26 @@
  *
 */
 
-#include "include/cef_base.h"
-#include "pugixml.hpp"
-#include "logging.h"
-#include "pluginmanager.h"
+#ifndef cdvplugindevice_h__
+#define cdvplugindevice_h__
 
-class Config : CefBase
+#include "common/cordovaplugin.h"
+
+class Device : public CordovaPlugin
 {
 public:
-  Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager);
-  virtual ~Config();
-
-  std::wstring appName() const { return _appName;}
-  std::wstring startDocument() const { return _startDocument; }
+  
+  virtual ~Device();
+  virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext);
+  virtual void initialize();
 
 private:
-  
-  std::wstring _appName;
-  std::wstring _startDocument;  
+  std::string _uuid;
+  std::string _version;
+  std::string _platform;
+  std::string _cordova;
+  std::string _model;
 
-  IMPLEMENT_REFCOUNTING(Config);
-  DECLARE_LOGGER(Config);
+  DECLARE_PLUGIN(Device);
 };
+#endif // cdvplugindevice_h__

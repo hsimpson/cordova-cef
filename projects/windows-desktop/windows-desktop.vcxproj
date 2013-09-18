@@ -53,9 +53,9 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;JSON_IS_AMALGAMATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\src;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\cpplog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\json-cpp-amalgamation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
@@ -77,9 +77,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;JSON_IS_AMALGAMATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\src;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\cpplog;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\json-cpp-amalgamation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -95,18 +95,33 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\3rdparty\json-cpp-amalgamation\jsoncpp.cpp" />
     <ClCompile Include="..\..\src\common\application.cpp" />
+    <ClCompile Include="..\..\src\common\callbackcontext.cpp" />
     <ClCompile Include="..\..\src\common\client.cpp" />
     <ClCompile Include="..\..\src\common\config.cpp" />
+    <ClCompile Include="..\..\src\common\cordovaplugin.cpp" />
+    <ClCompile Include="..\..\src\common\pluginmanager.cpp" />
+    <ClCompile Include="..\..\src\common\pluginregistry.cpp" />
+    <ClCompile Include="..\..\src\common\pluginresult.cpp" />
+    <ClCompile Include="..\..\src\common\plugins\device.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\application_win.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\client_win.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\main_win-desktop.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\3rdparty\json-cpp-amalgamation\json\json-forwards.h" />
+    <ClInclude Include="..\..\3rdparty\json-cpp-amalgamation\json\json.h" />
     <ClInclude Include="..\..\src\common\application.h" />
+    <ClInclude Include="..\..\src\common\callbackcontext.h" />
     <ClInclude Include="..\..\src\common\client.h" />
     <ClInclude Include="..\..\src\common\config.h" />
+    <ClInclude Include="..\..\src\common\cordovaplugin.h" />
     <ClInclude Include="..\..\src\common\logging.h" />
+    <ClInclude Include="..\..\src\common\pluginmanager.h" />
+    <ClInclude Include="..\..\src\common\pluginregistry.h" />
+    <ClInclude Include="..\..\src\common\pluginresult.h" />
+    <ClInclude Include="..\..\src\common\plugins\device.h" />
     <ClInclude Include="..\..\src\common\util.h" />
     <ClInclude Include="..\..\src\windows-desktop\application_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\client_win.h" />
