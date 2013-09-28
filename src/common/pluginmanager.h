@@ -46,7 +46,7 @@ private:
 
   void clearPluginObjects();
   void startupPlugins();
-  CordovaPlugin* getPlugin(const std::string service);
+  CordovaPlugin* getPlugin(const std::string& service);
   
 
   

@@ -23,7 +23,10 @@
 #define CallbackContext_h__
 
 #include <string>
+#include <vector>
+#include "logging.h"
 #include "pluginresult.h"
+#include <boost/thread.hpp>
 
 class Application;
 namespace Json
@@ -38,12 +41,29 @@ public:
   CallbackContext(const std::string& callbackId, Application* app);
   virtual ~CallbackContext();
 
-  void success(const Json::Value& json);
-  void sendPluginresult(const PluginResult& result);
+  void success(const Json::Value& message);
+  void success(const std::string& message);
+  void success(const std::vector<char>& message);
+  void success(int message);
+  void success();
+
+  void error(const Json::Value& message);
+  void error(const std::string& message);
+  void error(int message);
+
+
+
+
+
+  void sendPluginresult( std::shared_ptr<const PluginResult> result);
 
 private:
   std::string _callbackId;
   Application* _app;
+  bool _finished;
+  boost::recursive_mutex _mutex;
+
+  DECLARE_LOGGER(CallbackContext);
 };
 
 #endif // CallbackContext_h__

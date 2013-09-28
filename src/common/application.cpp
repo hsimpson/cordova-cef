@@ -20,16 +20,13 @@
 */
 
 #include "application.h"
-
-
-
-
-
+#include "client.h"
 
 Application::Application(CefRefPtr<CefClient> client)
   : INIT_LOGGER(Application),
     _client(client),
-    _appDirFetched(false)
+    _appDirFetched(false),
+    _jsMessageQueue(this)
 {
 }
 
@@ -97,10 +94,16 @@ bool Application::Execute( const CefString& name, CefRefPtr<CefV8Value> object, 
 
 void Application::sendJavascript( const std::string& statement )
 {
-  // ToDo:
+  _jsMessageQueue.addJavaScript(statement);
 }
 
-void Application::sendPluginResult( const PluginResult& result, const std::string& callbackId )
+void Application::sendPluginResult( std::shared_ptr<const PluginResult> pluginResult, const std::string& callbackId )
 {
-  // ToDo:
+  _jsMessageQueue.addPluginResult(pluginResult, callbackId);
+}
+
+void Application::runJavaScript( const std::string& js )
+{
+  Client* c = (Client*)_client.get();
+  c->runJavaScript(js);
 }

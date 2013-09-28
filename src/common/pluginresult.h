@@ -22,6 +22,8 @@
 #ifndef pluginresult_h__
 #define pluginresult_h__
 #include <string>
+#include <vector>
+
 namespace Json
 {
   class Value;
@@ -57,15 +59,30 @@ public:
   };
 
   PluginResult(PluginResult::Status status);
+  PluginResult(PluginResult::Status status, const std::string& message);
   PluginResult(PluginResult::Status status, const Json::Value& json);
+  PluginResult(PluginResult::Status status, int i);
+  PluginResult(PluginResult::Status status, float f);
+  PluginResult(PluginResult::Status status, bool b);
+  PluginResult(PluginResult::Status status, const std::vector<char>& data, bool binaryString=false);
+
+
+
   virtual ~PluginResult();
+
+  std::string getMessage() const {return _encodedMessage;}
+  std::string getStrMessage() const {return _strMessage;}
+  void setKeepCallback(bool b) {_keepCallback = b;}
+  bool getKeepCallback() const {return _keepCallback;}
+  PluginResult::Status getStatus() const {return _status;}
+  PluginResult::MessageType getMessageType() const {return _messageType;}
 
 private:
   Status _status;
   MessageType _messageType;
   std::string _strMessage;
   std::string _encodedMessage;
-
+  bool _keepCallback;
   static const char* _statusMessages[];
 };
 #endif // pluginresult_h__

@@ -58,6 +58,7 @@
       <AdditionalIncludeDirectories>..\..\src;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\json-cpp-amalgamation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessToFile>false</PreprocessToFile>
+      <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -101,6 +102,8 @@
     <ClCompile Include="..\..\src\common\client.cpp" />
     <ClCompile Include="..\..\src\common\config.cpp" />
     <ClCompile Include="..\..\src\common\cordovaplugin.cpp" />
+    <ClCompile Include="..\..\src\common\jsmessage.cpp" />
+    <ClCompile Include="..\..\src\common\nativetojsmessagequeue.cpp" />
     <ClCompile Include="..\..\src\common\pluginmanager.cpp" />
     <ClCompile Include="..\..\src\common\pluginregistry.cpp" />
     <ClCompile Include="..\..\src\common\pluginresult.cpp" />
@@ -117,7 +120,9 @@
     <ClInclude Include="..\..\src\common\client.h" />
     <ClInclude Include="..\..\src\common\config.h" />
     <ClInclude Include="..\..\src\common\cordovaplugin.h" />
+    <ClInclude Include="..\..\src\common\jsmessage.h" />
     <ClInclude Include="..\..\src\common\logging.h" />
+    <ClInclude Include="..\..\src\common\nativetojsmessagequeue.h" />
     <ClInclude Include="..\..\src\common\pluginmanager.h" />
     <ClInclude Include="..\..\src\common\pluginregistry.h" />
     <ClInclude Include="..\..\src\common\pluginresult.h" />

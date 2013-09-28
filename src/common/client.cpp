@@ -23,6 +23,7 @@
 #include "util.h"
 
 #include "include/cef_app.h"
+#include "include/cef_runnable.h"
 #include "logging.h"
 
 
@@ -124,4 +125,28 @@ void Client::showDevTools( CefRefPtr<CefBrowser> browser )
       CefBrowserHost::CreateBrowser(info, this, devtools_url, browserSettings);
     }
   }
+}
+
+void Client::runJavaScript( const std::string& js )
+{
+  // ToDo: run on first or last or all browsers ??
+  if(_browsers.size())
+  {
+    CefRefPtr<CefBrowser> browser = _browsers.back();
+    if (CefCurrentlyOn(TID_UI)) 
+    {
+      runJavaScriptOnUI_Thread(browser, js);
+    } 
+    else 
+    {
+      // Execute on the UI thread.
+      CefPostTask(TID_UI, NewCefRunnableMethod(this, &Client::runJavaScriptOnUI_Thread, browser, js));
+    }
+  }
+}
+
+void Client::runJavaScriptOnUI_Thread( CefRefPtr<CefBrowser> browser, const std::string js )
+{
+  CefRefPtr<CefFrame> frame = browser->GetMainFrame();
+  frame->ExecuteJavaScript(js, frame->GetURL(), 0);
 }

@@ -28,6 +28,7 @@
 #include "logging.h"
 #include "pluginmanager.h"
 #include "pluginresult.h"
+#include "nativetojsmessagequeue.h"
 
 
 class Application : public CefApp,
@@ -54,7 +55,8 @@ public:
   virtual bool Execute( const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception ) OVERRIDE;
 
   void sendJavascript(const std::string& statement);
-  void sendPluginResult(const PluginResult& result, const std::string& callbackId);
+  void sendPluginResult(std::shared_ptr<const PluginResult> pluginResult, const std::string& callbackId);
+  void runJavaScript(const std::string& js);
 
 protected:
   virtual std::wstring getAppDirectory() = 0;
@@ -68,6 +70,7 @@ protected:
 
   CefRefPtr<CefV8Value> _exposedJSObject;
 
+  NativeToJsMessageQueue _jsMessageQueue;
   
   IMPLEMENT_REFCOUNTING(Application);
 

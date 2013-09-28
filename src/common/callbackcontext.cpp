@@ -23,8 +23,10 @@
 #include "application.h"
 
 CallbackContext::CallbackContext( const std::string& callbackId, Application* app )
-  : _callbackId(callbackId),
-    _app(app)
+  : INIT_LOGGER(CallbackContext),
+    _callbackId(callbackId),
+    _app(app),
+    _finished(false)
 {
 
 }
@@ -34,13 +36,62 @@ CallbackContext::~CallbackContext()
 
 }
 
-void CallbackContext::success( const Json::Value& json )
+void CallbackContext::sendPluginresult( std::shared_ptr<const PluginResult> result )
 {
-  PluginResult r(PluginResult::OK, json);
-  sendPluginresult(r);
-}
-
-void CallbackContext::sendPluginresult( const PluginResult& result )
-{
+  {
+    boost::lock_guard<boost::recursive_mutex> lock(_mutex);
+    if(_finished)
+    {
+      BOOST_LOG_SEV(logger(), warning) << "Attempted to send a second callback for ID: " << _callbackId << "\nResult was: " << result->getMessage();
+      return;
+    }
+    else
+    {
+      _finished = !result->getKeepCallback();
+    }
+  }
   _app->sendPluginResult(result, _callbackId);
 }
+
+void CallbackContext::success( const Json::Value& message )
+{
+  sendPluginresult(std::make_shared<PluginResult>(PluginResult::OK, message));
+}
+
+void CallbackContext::success( const std::string& message )
+{
+  sendPluginresult(std::make_shared<PluginResult>(PluginResult::OK, message));
+}
+
+void CallbackContext::success( const std::vector<char>& message )
+{
+  std::shared_ptr<PluginResult> p(new PluginResult(PluginResult::OK, message));
+  sendPluginresult(p);
+}
+
+void CallbackContext::success( int message )
+{
+  sendPluginresult(std::make_shared<PluginResult>(PluginResult::OK, message));
+}
+
+void CallbackContext::success()
+{
+  sendPluginresult(std::make_shared<PluginResult>(PluginResult::OK));
+}
+
+void CallbackContext::error( const Json::Value& message )
+{
+  sendPluginresult(std::make_shared<PluginResult>(PluginResult::ERROR_, message));
+}
+
+void CallbackContext::error( const std::string& message )
+{
+  sendPluginresult(std::make_shared<PluginResult>(PluginResult::ERROR_, message));
+}
+
+void CallbackContext::error(int message)
+{
+  sendPluginresult(std::make_shared<PluginResult>(PluginResult::ERROR_, message));
+}
+
+

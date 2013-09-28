@@ -47,9 +47,12 @@ public:
   virtual bool DoClose( CefRefPtr<CefBrowser> browser ) OVERRIDE;
   virtual void OnBeforeClose( CefRefPtr<CefBrowser> browser ) OVERRIDE;
 
+  void runJavaScript( const std::string& js );
+
 protected:
 
   virtual void showDevTools(CefRefPtr<CefBrowser> browser);
+  void runJavaScriptOnUI_Thread(CefRefPtr<CefBrowser> browser, const std::string js);
 
   // List of open DevTools URLs if not using an external browser window.
   std::set<std::string> _openDevToolsURLs;

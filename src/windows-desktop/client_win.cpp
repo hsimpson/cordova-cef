@@ -76,7 +76,7 @@ bool Client_Win::OnKeyEvent( CefRefPtr<CefBrowser> browser, const CefKeyEvent& e
           break;
       }
     }
-    if(event.modifiers & EVENTFLAG_SHIFT_DOWN) // modifiers: CTRL
+    if(event.modifiers & EVENTFLAG_SHIFT_DOWN) // modifiers: SHIFT
     {
       switch (event.windows_key_code)
       {

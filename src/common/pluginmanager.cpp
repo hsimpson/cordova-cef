@@ -131,7 +131,7 @@ void PluginManager::startupPlugins()
   }
 }
 
-CordovaPlugin* PluginManager::getPlugin( const std::string service )
+CordovaPlugin* PluginManager::getPlugin( const std::string& service )
 {
   PluginMap::iterator iter = _pluginEntries.find(service);
   if(iter == _pluginEntries.end())
@@ -149,9 +149,8 @@ void PluginManager::exec( const std::string& service, const std::string& action,
   CordovaPlugin* plugin = getPlugin(service);
   if(plugin == NULL)
   {
-    BOOST_LOG_SEV(logger(), error) << "exec() call to unknown plugin: " << service;
-    PluginResult cr(PluginResult::CLASS_NOT_FOUND_EXCEPTION);
-    _app->sendPluginResult(cr, callbackId);
+    BOOST_LOG_SEV(logger(), error) << "exec() call to unknown plugin: " << service;    
+    _app->sendPluginResult(std::make_shared<PluginResult>(PluginResult::CLASS_NOT_FOUND_EXCEPTION), callbackId);
     return;
   }
 
@@ -160,12 +159,11 @@ void PluginManager::exec( const std::string& service, const std::string& action,
   Json::Value jsonArgs;
   Json::Reader reader;
   reader.parse(rawArgs, jsonArgs);
-  // ToDo: time measurement
+  // TODO: time measurement
   bool wasValidAction = plugin->execute(action, jsonArgs, cbCtx);
-  // ToDo: time measurement
+  // TODO: time measurement
 
   if(!wasValidAction){
-    PluginResult cr(PluginResult::INVALID_ACTION);
-    _app->sendPluginResult(cr, callbackId);
+    _app->sendPluginResult(std::make_shared<PluginResult>(PluginResult::INVALID_ACTION), callbackId);
   }
 }

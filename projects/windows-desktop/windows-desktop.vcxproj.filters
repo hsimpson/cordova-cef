@@ -60,6 +60,12 @@
     <ClCompile Include="..\..\src\common\plugins\device.cpp">
       <Filter>plugins</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\common\nativetojsmessagequeue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\jsmessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\windows-desktop\application_win.h">
@@ -106,6 +112,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\common\plugins\device.h">
       <Filter>plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\nativetojsmessagequeue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\jsmessage.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

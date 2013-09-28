@@ -22,6 +22,12 @@
 #include "pluginresult.h"
 #include "json/json.h"
 
+#include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/insert_linebreaks.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
+#include <boost/archive/iterators/ostream_iterator.hpp>
+#include <sstream>
+
 const char* PluginResult::_statusMessages[] = {
   "No result",
   "OK",
@@ -40,8 +46,17 @@ PluginResult::PluginResult( PluginResult::Status status )
     _messageType(PluginResult::MESSAGE_TYPE_STRING),
     _strMessage(PluginResult::_statusMessages[(int)status])
 {
-
+  _encodedMessage = Json::valueToQuotedString(_strMessage.c_str());
 }
+
+PluginResult::PluginResult(PluginResult::Status status, const std::string& message)
+  : _status(status),
+    _messageType(PluginResult::MESSAGE_TYPE_STRING),
+    _strMessage(message)
+{
+  _encodedMessage = Json::valueToQuotedString(_strMessage.c_str());
+}
+
 
 PluginResult::PluginResult( PluginResult::Status status, const Json::Value& json )
   : _status(status),
@@ -49,6 +64,58 @@ PluginResult::PluginResult( PluginResult::Status status, const Json::Value& json
 {
   Json::FastWriter writer;
   _encodedMessage = writer.write(json);
+}
+
+PluginResult::PluginResult(PluginResult::Status status, int i)
+  : _status(status),
+    _messageType(PluginResult::MESSAGE_TYPE_NUMBER),
+    _encodedMessage(std::to_string(i))
+{
+
+}
+
+PluginResult::PluginResult(PluginResult::Status status, float f)
+  : _status(status),
+    _messageType(PluginResult::MESSAGE_TYPE_NUMBER),
+    _encodedMessage(std::to_string(f))
+{
+
+}
+
+PluginResult::PluginResult(PluginResult::Status status, bool b)
+  : _status(status),
+    _messageType(PluginResult::MESSAGE_TYPE_NUMBER),
+    _encodedMessage(b ? "true" : "false")
+{
+
+}
+
+PluginResult::PluginResult(PluginResult::Status status, const std::vector<char>& data, bool binaryString)
+  : _status(status),
+    _messageType(binaryString ? MESSAGE_TYPE_BINARYSTRING : MESSAGE_TYPE_ARRAYBUFFER)
+{
+  using namespace boost::archive::iterators;
+
+  std::stringstream os;
+  typedef 
+    insert_linebreaks<         // insert line breaks every 72 characters
+      base64_from_binary<    // convert binary values ot base64 characters
+        transform_width<   // retrieve 6 bit integers from a sequence of 8 bit bytes
+          const char *,
+          6,
+          8
+        >
+      > 
+      ,72
+    > 
+    base64_text; // compose all the above operations in to a new iterator
+
+  std::copy(
+    base64_text(&data[0]),
+    base64_text(&data[0] + data.size()),
+    ostream_iterator<char>(os)
+  );
+  _encodedMessage = os.str();
 }
 
 PluginResult::~PluginResult()
