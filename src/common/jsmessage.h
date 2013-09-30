@@ -18,25 +18,27 @@
  * under the License.
  *
 */
-
-#ifndef pluginregistry_h__
-#define pluginregistry_h__
+#ifndef jsmessage_h__
+#define jsmessage_h__
 
 #include <string>
-#include <map>
+#include <memory>
+#include <sstream>
+#include "pluginresult.h"
 
-class CordovaPlugin;
 
-class PluginRegistry
+class JsMessage
 {
 public:
-  typedef CordovaPlugin* (*plugin_creator_func)();
-  typedef std::map<std::string, plugin_creator_func> PluginClass2CreatorFunc;
-  static bool registerPlugin(const std::string& name, PluginRegistry::plugin_creator_func create_func);
-  static PluginRegistry::plugin_creator_func getPluginCreateFunc(const std::string& name);
+  JsMessage(const std::string& js);
+  JsMessage(std::shared_ptr<const PluginResult> pluginResult, const std::string& callbackId);
+  virtual ~JsMessage();
+  int calculateEncodedLength() const;
+  void encodeAsJsMessage(std::stringstream& s) const;
 
 private:
-  static PluginClass2CreatorFunc _registeredPlugins;
+  const std::string _jsPayloadOrCallbackId;
+  std::shared_ptr<const PluginResult> _pluginResult;
 };
 
-#endif // pluginregistry_h__
+#endif // jsmessage_h__

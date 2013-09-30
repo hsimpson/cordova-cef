@@ -27,7 +27,6 @@
 #include <map>
 #include "cordovaplugin.h"
 #include "logging.h"
-#include "pluginregistry.h"
 
 class Application;
 class PluginEntry;
@@ -46,13 +45,13 @@ private:
 
   void clearPluginObjects();
   void startupPlugins();
-  CordovaPlugin* getPlugin(const std::string& service);
+  std::shared_ptr<CordovaPlugin> getPlugin(const std::string& service);
   
 
   
   bool _firstRun;
   Application* _app;
-  typedef std::map<std::string, PluginEntry*> PluginMap;
+  typedef std::map<std::string, std::shared_ptr<PluginEntry> > PluginMap;
   PluginMap _pluginEntries;
 
   IMPLEMENT_REFCOUNTING(PluginManager);

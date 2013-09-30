@@ -91,7 +91,7 @@ void NativeToJsMessageQueue::enqueueMessage( std::shared_ptr<JsMessage> message 
 
 void NativeToJsMessageQueue::setBridgeMode( size_t value )
 {
-  if (value < 0 || value >= _registeredListeners.size()) {
+  if (value >= _registeredListeners.size()) {
     BOOST_LOG_SEV(logger(), error) << "Invalid NativeToJsBridgeMode: " << value;
   } 
   else 

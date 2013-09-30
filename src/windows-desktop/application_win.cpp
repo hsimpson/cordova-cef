@@ -40,7 +40,7 @@ std::wstring Application_Win::getAppDirectory()
   if(!_appDirFetched)
   {
     TCHAR path[MAX_PATH];
-    DWORD length = GetModuleFileName( NULL, path, MAX_PATH );
+    GetModuleFileName( NULL, path, MAX_PATH );
     PathRemoveFileSpec(path);
     TCHAR path_canonicalized[MAX_PATH];
     PathCanonicalize(path_canonicalized, path);

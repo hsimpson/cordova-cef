@@ -22,10 +22,6 @@
 #include "cordovaplugin.h"
 #include "json/json.h"
 
-CordovaPlugin::CordovaPlugin()
-{
-}
-
 CordovaPlugin::~CordovaPlugin()
 {
 }
@@ -33,3 +29,46 @@ CordovaPlugin::~CordovaPlugin()
 void CordovaPlugin::initialize()
 {
 }
+
+PluginCreator::PluginCreator(const std::string& pluginname)
+{
+  PluginFactory::registerit(pluginname, this);
+}
+
+void PluginFactory::registerit(const std::string& classname, PluginCreator* creator)
+{
+  PluginCreatorMapT::iterator i;
+  i = get_table().find(classname);
+  if(i == get_table().end()) // not found
+    get_table()[classname] = creator;
+}
+
+std::shared_ptr<CordovaPlugin> PluginFactory::create(const std::string& classname)
+{
+  PluginCreatorMapT::iterator i;
+  i = get_table().find(classname);
+
+  if(i != get_table().end())
+    return i->second->create();
+  else
+    return nullptr;
+}
+
+PluginFactory::PluginCreatorMapT& PluginFactory::get_table()
+{
+  static PluginCreatorMapT table;
+  return table;
+}
+
+PluginCreator* PluginFactory::getPluginCreator( const std::string& pluginname )
+{
+  PluginCreatorMapT::iterator i;
+  i = get_table().find(pluginname);
+
+  if(i != get_table().end())
+    return i->second;
+  return nullptr;
+}
+
+
+

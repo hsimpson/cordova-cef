@@ -28,42 +28,35 @@ class PluginEntry
 {
 public:
   PluginEntry()
-    : creator_func(NULL),
-    plugin(NULL),
-    onload(false)
+    : creator(nullptr),
+      onload(false)
   {
   }
-  PluginEntry(PluginRegistry::plugin_creator_func creatorFunc, bool onLoad)
-    : creator_func(creatorFunc),
-    plugin(NULL),
-    onload(onLoad)
+  PluginEntry(PluginCreator* creator, bool onLoad)
+    : creator(creator),    
+      onload(onLoad)
   {
   }
 
   ~PluginEntry()
-  {
-    if(plugin)
-    {
-      delete plugin;
-      plugin = NULL;
-    }
+  {    
   }
 
-  CordovaPlugin* createPlugin()
+  std::shared_ptr<CordovaPlugin> createPlugin()
   {
     // if not already created then create
-    if(!plugin && creator_func)
+    if(!plugin.get() && creator)
     {
       // create
-      plugin = creator_func();
+      plugin = creator->create();
       // and call initialize
       plugin->initialize();
     }
     return plugin;
   }
 
-  PluginRegistry::plugin_creator_func creator_func;
-  CordovaPlugin* plugin;
+  PluginCreator* creator;
+  std::shared_ptr<CordovaPlugin> plugin;
   bool onload;
 };
 
@@ -75,11 +68,7 @@ PluginManager::PluginManager(Application* app)
 }
 
 PluginManager::~PluginManager()
-{
-  for(PluginMap::iterator iter = _pluginEntries.begin(); iter != _pluginEntries.end(); ++iter)
-  {
-    delete iter->second;
-  }
+{  
 }
 
 void PluginManager::init()
@@ -99,11 +88,11 @@ void PluginManager::init()
 
 void PluginManager::addPlugin(const std::string& servicename, const std::string& classname, bool onload)
 {
-  PluginRegistry::plugin_creator_func creatorFunc = PluginRegistry::getPluginCreateFunc(classname);
-  if(creatorFunc)
+  PluginCreator* creator = PluginFactory::getPluginCreator(servicename);
+  if(creator)
   {
     if(_pluginEntries.find(servicename) == _pluginEntries.end()) // not found
-      _pluginEntries[servicename] = new PluginEntry(creatorFunc, onload);
+      _pluginEntries[servicename] = std::make_shared<PluginEntry>(creator, onload);
     else
       BOOST_LOG_SEV(logger(), error) << "Plugin '" << servicename << "' already added";
   }
@@ -117,8 +106,8 @@ void PluginManager::clearPluginObjects()
 {  
   for(PluginMap::iterator iter = _pluginEntries.begin(); iter != _pluginEntries.end(); ++iter)
   {
-    if(iter->second->plugin)
-      delete iter->second->plugin;
+    if(iter->second->plugin.get())
+      iter->second->plugin = nullptr;
   }
 }
 
@@ -131,13 +120,13 @@ void PluginManager::startupPlugins()
   }
 }
 
-CordovaPlugin* PluginManager::getPlugin( const std::string& service )
+std::shared_ptr<CordovaPlugin> PluginManager::getPlugin( const std::string& service )
 {
   PluginMap::iterator iter = _pluginEntries.find(service);
   if(iter == _pluginEntries.end())
     return NULL;
-  CordovaPlugin* plugin = iter->second->plugin;
-  if(plugin == NULL) // create it
+  std::shared_ptr<CordovaPlugin> plugin = iter->second->plugin;
+  if(!plugin.get()) // create it
   {
     plugin = iter->second->createPlugin();
   }
@@ -146,8 +135,8 @@ CordovaPlugin* PluginManager::getPlugin( const std::string& service )
 
 void PluginManager::exec( const std::string& service, const std::string& action, const std::string& callbackId, const std::string& rawArgs )
 {
-  CordovaPlugin* plugin = getPlugin(service);
-  if(plugin == NULL)
+  std::shared_ptr<CordovaPlugin> plugin = getPlugin(service);
+  if(!plugin.get())
   {
     BOOST_LOG_SEV(logger(), error) << "exec() call to unknown plugin: " << service;    
     _app->sendPluginResult(std::make_shared<PluginResult>(PluginResult::CLASS_NOT_FOUND_EXCEPTION), callbackId);

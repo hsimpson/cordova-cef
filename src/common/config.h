@@ -27,7 +27,7 @@
 class Config : CefBase
 {
 public:
-  Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager);
+  Config(const std::wstring& configXMLFile, CefRefPtr<PluginManager> pluginManager);
   virtual ~Config();
 
   std::wstring appName() const { return _appName;}

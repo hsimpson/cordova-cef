@@ -5,3 +5,4 @@ TODO's for Cordova-CEF:
 
 * windows-desktop
 - Off-screen rendering for transparent window and background
+- multi process implementation has problems

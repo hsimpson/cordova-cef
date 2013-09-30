@@ -117,7 +117,7 @@ void Client::showDevTools( CefRefPtr<CefBrowser> browser )
       info.SetAsPopup(NULL, devtools_url);
 
       CefBrowserSettings browserSettings;
-      browserSettings.developer_tools = STATE_DISABLED;
+      //browserSettings.developer_tools = STATE_DISABLED;
       browserSettings.file_access_from_file_urls = STATE_ENABLED;
       browserSettings.universal_access_from_file_urls = STATE_ENABLED;
       browserSettings.web_security = STATE_DISABLED;
@@ -130,7 +130,7 @@ void Client::showDevTools( CefRefPtr<CefBrowser> browser )
 void Client::runJavaScript( const std::string& js )
 {
   // ToDo: run on first or last or all browsers ??
-  if(_browsers.size())
+  if(!_browsers.empty())
   {
     CefRefPtr<CefBrowser> browser = _browsers.back();
     if (CefCurrentlyOn(TID_UI)) 

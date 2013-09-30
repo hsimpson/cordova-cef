@@ -24,7 +24,7 @@
 
 
 #include "callbackcontext.h"
-#include "pluginregistry.h"
+#include <memory>
 
 namespace Json
 {
@@ -37,30 +37,50 @@ public:
   virtual ~CordovaPlugin();
 
   virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext) = 0;
-  virtual void initialize();
-
-protected: 
-  // protected constructor and assignment
-  CordovaPlugin();
-  CordovaPlugin(const CordovaPlugin& other) {}
-  CordovaPlugin& operator=(const CordovaPlugin& other) {}
-  
+  virtual void initialize();  
 };
 
-#define DECLARE_PLUGIN(clazzname)\
-  private:\
-    clazzname();\
-    clazzname(const clazzname& other);\
-    clazzname& operator=(const clazzname& other);\
-  public:\
-    static CordovaPlugin* createPlugin()\
-    {\
-      return new clazzname();\
-    }\
+class PluginCreator : public std::enable_shared_from_this<PluginCreator>
+{
+public:
+  PluginCreator(const std::string& pluginname);
+  virtual ~PluginCreator() {};
 
-#define REGISTER_PLUGIN(clazzname)\
-  PluginRegistry::plugin_creator_func creator = &##clazzname::createPlugin;\
-  bool ret = PluginRegistry::registerPlugin(#clazzname, creator);\
+  virtual std::shared_ptr<CordovaPlugin> create() = 0;
+};
+
+class PluginFactory
+{
+public:
+  static PluginCreator* getPluginCreator(const std::string& pluginname);
+  static std::shared_ptr<CordovaPlugin> create(const std::string& pluginname);
+  static void registerit(const std::string& pluginname, PluginCreator* creator);
+  typedef std::map<std::string, PluginCreator*> PluginCreatorMapT;
+private:
+  
+  static PluginCreatorMapT& get_table();
+};
+
+template <class T>
+class PluginCreatorImpl : public PluginCreator
+{
+public:
+  PluginCreatorImpl<T>(const std::string& pluginname) : PluginCreator(pluginname) {}
+  virtual ~PluginCreatorImpl<T>() {}
+
+  virtual std::shared_ptr<CordovaPlugin> create() { return std::make_shared<T>(); }
+};
+
+
+
+#define DECLARE_PLUGIN(classname)\
+  private:\
+    static const PluginCreatorImpl<classname> plugincreator;
+
+#define REGISTER_PLUGIN(classname, pluginname)\
+  const PluginCreatorImpl<classname> classname::plugincreator(#pluginname);
+
+
 
 
 #endif // cordovaplugin_h__

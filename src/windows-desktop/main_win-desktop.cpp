@@ -34,40 +34,42 @@ int CALLBACK WinMain(
   _In_  int nCmdShow
   )
 {
-  // first init the logging system
-  init_logging();
+  {
 
-  // passing command-line
-  CefMainArgs main_args(hInstance);
+    // first init the logging system
+    init_logging();
 
-  // create app
-  CefRefPtr<CefApp> app = new Application_Win;
+    // passing command-line
+    CefMainArgs main_args(hInstance);
+
+    // create app
+    CefRefPtr<CefApp> app = new Application_Win;
 
 
-  // Execute the sub-process logic, if any. This will either return immediately for the browser
-  // process or block until the sub-process should exit.
-  int exit_code = CefExecuteProcess(main_args, app);
-  if (exit_code >= 0) {
-    // The sub-process terminated, exit now.
-    return exit_code;
-  }
+    // Execute the sub-process logic, if any. This will either return immediately for the browser
+    // process or block until the sub-process should exit.
+    int exit_code = CefExecuteProcess(main_args, app);
+    if (exit_code >= 0) {
+      // The sub-process terminated, exit now.
+      return exit_code;
+    }
 
-  // Populate this structure to customize CEF behavior.
-  CefSettings appsettings;
-  appsettings.remote_debugging_port = 9999;
-#ifdef _DEBUG
-  appsettings.single_process = true;
-#endif
+    // Populate this structure to customize CEF behavior.
+    CefSettings appsettings;
+    appsettings.remote_debugging_port = 9999;
+  //#ifdef _DEBUG
+    appsettings.single_process = true;
+  //#endif
 
-  // Initialize CEF in the main process.
-  CefInitialize(main_args, appsettings, app);
+    // Initialize CEF in the main process.
+    CefInitialize(main_args, appsettings, app);
   
-  // Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
-  CefRunMessageLoop();
+    // Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
+    CefRunMessageLoop();
 
+  }
   // Shut down CEF.
   CefShutdown();
-
   return 0;
 }
 

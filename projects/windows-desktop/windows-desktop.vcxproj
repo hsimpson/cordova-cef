@@ -105,12 +105,12 @@
     <ClCompile Include="..\..\src\common\jsmessage.cpp" />
     <ClCompile Include="..\..\src\common\nativetojsmessagequeue.cpp" />
     <ClCompile Include="..\..\src\common\pluginmanager.cpp" />
-    <ClCompile Include="..\..\src\common\pluginregistry.cpp" />
     <ClCompile Include="..\..\src\common\pluginresult.cpp" />
     <ClCompile Include="..\..\src\common\plugins\device.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\application_win.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\client_win.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\main_win-desktop.cpp" />
+    <ClCompile Include="..\..\src\windows-desktop\plugins\device_win.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\3rdparty\json-cpp-amalgamation\json\json-forwards.h" />
@@ -124,12 +124,12 @@
     <ClInclude Include="..\..\src\common\logging.h" />
     <ClInclude Include="..\..\src\common\nativetojsmessagequeue.h" />
     <ClInclude Include="..\..\src\common\pluginmanager.h" />
-    <ClInclude Include="..\..\src\common\pluginregistry.h" />
     <ClInclude Include="..\..\src\common\pluginresult.h" />
     <ClInclude Include="..\..\src\common\plugins\device.h" />
     <ClInclude Include="..\..\src\common\util.h" />
     <ClInclude Include="..\..\src\windows-desktop\application_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\client_win.h" />
+    <ClInclude Include="..\..\src\windows-desktop\plugins\device_win.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="postbuild.bat">

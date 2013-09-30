@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-Config::Config(const std::wstring configXMLFile, CefRefPtr<PluginManager> pluginManager)
+Config::Config( const std::wstring& configXMLFile, CefRefPtr<PluginManager> pluginManager )
   : INIT_LOGGER(Config)
 {
   pugi::xml_document doc;

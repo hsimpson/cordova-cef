@@ -24,13 +24,19 @@
 
 #include "common/cordovaplugin.h"
 
-class Device : public CordovaPlugin
+class DeviceBase : public CordovaPlugin
 {
 public:
   
-  virtual ~Device();
+  virtual ~DeviceBase();
   virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext);
   virtual void initialize();
+
+protected:
+  virtual std::string getUuid() = 0;
+  virtual std::string getVersion() = 0;
+  virtual std::string getPlatform() = 0;
+  virtual std::string getModel() = 0;
 
 private:
   std::string _uuid;
@@ -38,7 +44,5 @@ private:
   std::string _platform;
   std::string _cordova;
   std::string _model;
-
-  DECLARE_PLUGIN(Device);
 };
 #endif // cdvplugindevice_h__

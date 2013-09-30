@@ -19,38 +19,31 @@
  *
 */
 
-#include "device.h"
-#include "json/json.h"
+#include "device_win.h"
 
-DeviceBase::~DeviceBase()
+REGISTER_PLUGIN(Device_Win, Device);
+
+Device_Win::~Device_Win()
 {
+
 }
 
-bool DeviceBase::execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext)
+std::string Device_Win::getUuid()
 {
-  if(action == "getDeviceInfo")
-  {
-    Json::Value result;
-    result["uuid"] = _uuid;
-    result["version"] = _version;
-    result["platform"] = _platform;
-    result["cordova"] = _cordova;
-    result["model"] = _model;
-
-    callbackContext.success(result);
-    return true;
-  }
-  return false;
+  return "";
 }
 
-void DeviceBase::initialize()
+std::string Device_Win::getVersion()
 {
-  CordovaPlugin::initialize();
-  _uuid = getUuid();
-  _version = getVersion();
-  _platform = getPlatform();
-  _cordova = "dev";
-  _model = getModel();
+  return "";
 }
 
-//REGISTER_PLUGIN(Device);
+std::string Device_Win::getPlatform()
+{
+  return "CEF-win-desktop";
+}
+
+std::string Device_Win::getModel()
+{
+  return "";
+}

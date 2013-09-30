@@ -42,7 +42,8 @@ const char* PluginResult::_statusMessages[] = {
 };
 
 PluginResult::PluginResult( PluginResult::Status status )
-  : _status(status),
+  : _keepCallback(false),
+    _status(status),
     _messageType(PluginResult::MESSAGE_TYPE_STRING),
     _strMessage(PluginResult::_statusMessages[(int)status])
 {
@@ -50,7 +51,8 @@ PluginResult::PluginResult( PluginResult::Status status )
 }
 
 PluginResult::PluginResult(PluginResult::Status status, const std::string& message)
-  : _status(status),
+  : _keepCallback(false),
+    _status(status),
     _messageType(PluginResult::MESSAGE_TYPE_STRING),
     _strMessage(message)
 {
@@ -59,7 +61,8 @@ PluginResult::PluginResult(PluginResult::Status status, const std::string& messa
 
 
 PluginResult::PluginResult( PluginResult::Status status, const Json::Value& json )
-  : _status(status),
+  : _keepCallback(false),
+    _status(status),
     _messageType(PluginResult::MESSAGE_TYPE_JSON)
 {
   Json::FastWriter writer;
@@ -67,7 +70,8 @@ PluginResult::PluginResult( PluginResult::Status status, const Json::Value& json
 }
 
 PluginResult::PluginResult(PluginResult::Status status, int i)
-  : _status(status),
+  : _keepCallback(false),
+    _status(status),
     _messageType(PluginResult::MESSAGE_TYPE_NUMBER),
     _encodedMessage(std::to_string(i))
 {
@@ -75,7 +79,8 @@ PluginResult::PluginResult(PluginResult::Status status, int i)
 }
 
 PluginResult::PluginResult(PluginResult::Status status, float f)
-  : _status(status),
+  : _keepCallback(false),
+    _status(status),
     _messageType(PluginResult::MESSAGE_TYPE_NUMBER),
     _encodedMessage(std::to_string(f))
 {
@@ -83,7 +88,8 @@ PluginResult::PluginResult(PluginResult::Status status, float f)
 }
 
 PluginResult::PluginResult(PluginResult::Status status, bool b)
-  : _status(status),
+  : _keepCallback(false),
+    _status(status),
     _messageType(PluginResult::MESSAGE_TYPE_NUMBER),
     _encodedMessage(b ? "true" : "false")
 {
@@ -91,7 +97,8 @@ PluginResult::PluginResult(PluginResult::Status status, bool b)
 }
 
 PluginResult::PluginResult(PluginResult::Status status, const std::vector<char>& data, bool binaryString)
-  : _status(status),
+  : _keepCallback(false),
+    _status(status),
     _messageType(binaryString ? MESSAGE_TYPE_BINARYSTRING : MESSAGE_TYPE_ARRAYBUFFER)
 {
   using namespace boost::archive::iterators;

@@ -54,7 +54,7 @@ void Application::OnContextInitialized()
   info.SetAsPopup(NULL, _config->appName());
 
   CefBrowserSettings browserSettings;
-  browserSettings.developer_tools = STATE_ENABLED;
+  //browserSettings.developer_tools = STATE_ENABLED;
   browserSettings.file_access_from_file_urls = STATE_ENABLED;
   browserSettings.universal_access_from_file_urls = STATE_ENABLED;
   browserSettings.web_security = STATE_DISABLED;
@@ -104,6 +104,7 @@ void Application::sendPluginResult( std::shared_ptr<const PluginResult> pluginRe
 
 void Application::runJavaScript( const std::string& js )
 {
-  Client* c = (Client*)_client.get();
-  c->runJavaScript(js);
+  Client* c = dynamic_cast<Client*>(_client.get());
+  if(c)
+    c->runJavaScript(js);
 }

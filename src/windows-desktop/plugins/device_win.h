@@ -19,26 +19,22 @@
  *
 */
 
+#ifndef device_win_h__
+#define device_win_h__
 
-#include "pluginregistry.h"
+#include "common/plugins/device.h"
 
-PluginRegistry::PluginClass2CreatorFunc PluginRegistry::_registeredPlugins;
-
-bool PluginRegistry::registerPlugin(const std::string& name, PluginRegistry::plugin_creator_func create_func)
+class Device_Win : public DeviceBase
 {
-  if(_registeredPlugins.find(name) == _registeredPlugins.end())
-  {
-    _registeredPlugins[name] = create_func;
-    return true;
-  }
-  return false;
-}
+  DECLARE_PLUGIN(Device_Win);
 
-PluginRegistry::plugin_creator_func PluginRegistry::getPluginCreateFunc(const std::string& name)
-{
-  PluginRegistry::PluginClass2CreatorFunc::iterator iter = _registeredPlugins.find(name);
-  if(iter != _registeredPlugins.end())
-    return iter->second;
-  else
-    return NULL;
-}
+public:
+  virtual ~Device_Win();
+
+  virtual std::string getUuid();
+  virtual std::string getVersion();
+  virtual std::string getPlatform();
+  virtual std::string getModel();
+
+};
+#endif // device_win_h__

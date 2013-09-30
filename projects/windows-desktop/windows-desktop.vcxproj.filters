@@ -42,9 +42,6 @@
     <ClCompile Include="..\..\src\common\cordovaplugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\common\pluginregistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\3rdparty\json-cpp-amalgamation\jsoncpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\common\jsmessage.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\windows-desktop\plugins\device_win.cpp">
+      <Filter>plugins</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,9 +92,6 @@
     <ClInclude Include="..\..\src\common\cordovaplugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\pluginregistry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\3rdparty\json-cpp-amalgamation\json\json-forwards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -118,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\common\jsmessage.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\windows-desktop\plugins\device_win.h">
+      <Filter>plugins</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
