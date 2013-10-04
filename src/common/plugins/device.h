@@ -33,7 +33,7 @@ public:
   virtual void initialize();
 
 protected:
-  virtual std::string getUuid() = 0;
+  std::string getUuid();
   virtual std::string getVersion() = 0;
   virtual std::string getPlatform() = 0;
   virtual std::string getModel() = 0;

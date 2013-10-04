@@ -119,6 +119,9 @@
     <ClInclude Include="..\..\src\windows-desktop\plugins\device_win.h">
       <Filter>plugins</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\common\helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="postbuild.bat">

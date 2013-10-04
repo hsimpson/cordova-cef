@@ -120,6 +120,7 @@
     <ClInclude Include="..\..\src\common\client.h" />
     <ClInclude Include="..\..\src\common\config.h" />
     <ClInclude Include="..\..\src\common\cordovaplugin.h" />
+    <ClInclude Include="..\..\src\common\helper.h" />
     <ClInclude Include="..\..\src\common\jsmessage.h" />
     <ClInclude Include="..\..\src\common\logging.h" />
     <ClInclude Include="..\..\src\common\nativetojsmessagequeue.h" />

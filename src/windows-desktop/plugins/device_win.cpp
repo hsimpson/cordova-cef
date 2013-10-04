@@ -20,6 +20,8 @@
 */
 
 #include "device_win.h"
+#include "common/helper.h"
+#include <Windows.h>
 
 REGISTER_PLUGIN(Device_Win, Device);
 
@@ -28,14 +30,19 @@ Device_Win::~Device_Win()
 
 }
 
-std::string Device_Win::getUuid()
-{
-  return "";
-}
-
 std::string Device_Win::getVersion()
 {
-  return "";
+  OSVERSIONINFOW osvi;
+  ZeroMemory(&osvi, sizeof(OSVERSIONINFOW));
+  osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOW);
+  std::string ret = "";
+  if(GetVersionExW(&osvi))
+  {
+    std::stringstream ss;
+    ss << osvi.dwMajorVersion << '.' << osvi.dwMinorVersion << '.' << osvi.dwBuildNumber;
+    ret = ss.str();
+  }
+  return ret;
 }
 
 std::string Device_Win::getPlatform()
@@ -45,5 +52,13 @@ std::string Device_Win::getPlatform()
 
 std::string Device_Win::getModel()
 {
-  return "";
+  std::string ret = "";
+  DWORD length = MAX_COMPUTERNAME_LENGTH+1;
+  wchar_t* buffer = new wchar_t[length];
+  if(GetComputerNameW(buffer, &length))
+  {
+    ret = Helper::wideToUtf8(buffer);   
+  }
+  delete[] buffer;
+  return ret;
 }

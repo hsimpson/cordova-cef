@@ -19,21 +19,19 @@
  *
 */
 
-#ifndef device_win_h__
-#define device_win_h__
+#ifndef helper_h__
+#define helper_h__
 
-#include "common/plugins/device.h"
+#include <string>
+#include <locale>
+#include <codecvt>
 
-class Device_Win : public DeviceBase
+namespace Helper
 {
-  DECLARE_PLUGIN(Device_Win);
-
-public:
-  virtual ~Device_Win();
-
-  virtual std::string getVersion();
-  virtual std::string getPlatform();
-  virtual std::string getModel();
-
-};
-#endif // device_win_h__
+  inline std::string wideToUtf8(const std::wstring& wstr)
+  {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+    return conv.to_bytes(wstr);
+  }
+}
+#endif // helper_h__

@@ -21,6 +21,9 @@
 
 #include "device.h"
 #include "json/json.h"
+#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
+#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
 
 DeviceBase::~DeviceBase()
 {
@@ -51,6 +54,13 @@ void DeviceBase::initialize()
   _platform = getPlatform();
   _cordova = "dev";
   _model = getModel();
+}
+
+std::string DeviceBase::getUuid()
+{
+  // ToDo: serialize into app settings
+  boost::uuids::uuid uuid = boost::uuids::random_generator()();
+  return boost::uuids::to_string(uuid);
 }
 
 //REGISTER_PLUGIN(Device);
