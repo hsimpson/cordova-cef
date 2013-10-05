@@ -41,7 +41,7 @@ bool Client_Win::OnKeyEvent( CefRefPtr<CefBrowser> browser, const CefKeyEvent& e
   // see chrome shortcuts: https://support.google.com/chrome/topic/25799?hl=en
   // see windows key codes: http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
   REQUIRE_UI_THREAD();
-  BOOST_LOG_SEV(logger(), trace) 
+  LOG_TRACE(logger()) 
     << "OnKeyEvent, type=" << event.type
     << " modifiers=" << event.modifiers
     << " windows_key_code=" << event.windows_key_code

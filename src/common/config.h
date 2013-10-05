@@ -27,16 +27,16 @@
 class Config : CefBase
 {
 public:
-  Config(const std::wstring& configXMLFile, CefRefPtr<PluginManager> pluginManager);
+  Config(const boost::filesystem::path& configXMLFile, CefRefPtr<PluginManager> pluginManager);
   virtual ~Config();
 
-  std::wstring appName() const { return _appName;}
-  std::wstring startDocument() const { return _startDocument; }
+  std::string appName() const { return _appName;}
+  std::string startDocument() const { return _startDocument; }
 
 private:
   
-  std::wstring _appName;
-  std::wstring _startDocument;  
+  std::string _appName;
+  std::string _startDocument;  
 
   IMPLEMENT_REFCOUNTING(Config);
   DECLARE_LOGGER(Config);

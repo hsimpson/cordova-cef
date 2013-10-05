@@ -61,7 +61,7 @@ void NativeToJsMessageQueue::addPluginResult( std::shared_ptr<const PluginResult
 {
   if(callbackId.empty())
   {
-    BOOST_LOG_SEV(logger(), error) << "Got plugin result with no callbackId";
+    LOG_ERROR(logger()) << "Got plugin result with no callbackId";
     return;
   }
   bool noResult = (pluginResult->getStatus() == PluginResult::NO_RESULT);
@@ -92,13 +92,13 @@ void NativeToJsMessageQueue::enqueueMessage( std::shared_ptr<JsMessage> message 
 void NativeToJsMessageQueue::setBridgeMode( size_t value )
 {
   if (value >= _registeredListeners.size()) {
-    BOOST_LOG_SEV(logger(), error) << "Invalid NativeToJsBridgeMode: " << value;
+    LOG_ERROR(logger()) << "Invalid NativeToJsBridgeMode: " << value;
   } 
   else 
   {
     if(value != _activeListenerIndex)
     {
-      BOOST_LOG_SEV(logger(), debug) <<  "Set native->JS mode to " << value;
+      LOG_DEBUG(logger()) <<  "Set native->JS mode to " << value;
       _activeListenerIndex = value;
       std::shared_ptr<BridgeMode> activeListener = _registeredListeners[value];
       if(!_paused && !_queue.empty() && activeListener.get() != nullptr)
@@ -120,7 +120,7 @@ void NativeToJsMessageQueue::setPaused( bool value )
   if (_paused && value) {
     // This should never happen. If a use-case for it comes up, we should
     // change pause to be a counter.
-    BOOST_LOG_SEV(logger(), error) << "nested call to setPaused detected.";
+    LOG_ERROR(logger()) << "nested call to setPaused detected.";
     return;
   }
   _paused = value;

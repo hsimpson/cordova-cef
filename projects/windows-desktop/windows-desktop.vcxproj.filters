@@ -66,6 +66,12 @@
     <ClCompile Include="..\..\src\windows-desktop\plugins\device_win.cpp">
       <Filter>plugins</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\common\helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\windows-desktop\helper_win.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\windows-desktop\application_win.h">
@@ -120,6 +126,9 @@
       <Filter>plugins</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\common\helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\windows-desktop\helper_win.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

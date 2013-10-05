@@ -26,6 +26,7 @@
 
 #include "application_win.h"
 #include "client_win.h"
+#include "helper_win.h"
 
 int CALLBACK WinMain(
   _In_  HINSTANCE hInstance,
@@ -35,6 +36,7 @@ int CALLBACK WinMain(
   )
 {
   {
+    std::shared_ptr<Helper::Paths> paths = std::make_shared<Helper::Paths_Win>();
 
     // first init the logging system
     init_logging();
@@ -43,7 +45,7 @@ int CALLBACK WinMain(
     CefMainArgs main_args(hInstance);
 
     // create app
-    CefRefPtr<CefApp> app = new Application_Win;
+    CefRefPtr<CefApp> app = new Application_Win(paths);
 
 
     // Execute the sub-process logic, if any. This will either return immediately for the browser

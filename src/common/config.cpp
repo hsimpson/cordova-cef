@@ -19,20 +19,22 @@
  *
 */
 
+#include <boost/filesystem.hpp>
+#include "helper.h"
 #include "config.h"
 
-Config::Config( const std::wstring& configXMLFile, CefRefPtr<PluginManager> pluginManager )
+Config::Config( const boost::filesystem::path& configXMLFile, CefRefPtr<PluginManager> pluginManager )
   : INIT_LOGGER(Config)
 {
   pugi::xml_document doc;
-  pugi::xml_parse_result result = doc.load_file(configXMLFile.c_str());
+  pugi::xml_parse_result result = doc.load_file(configXMLFile.wstring().c_str());
   if(result.status == pugi::status_ok)
   {
     // get name node
     pugi::xpath_node name_node =  doc.select_single_node(L"/widget/name");
-    _appName = name_node.node().text().get();
+    _appName = Helper::wideToUtf8(name_node.node().text().get());
     pugi::xpath_node content_node =  doc.select_single_node(L"/widget/content");
-    _startDocument = content_node.node().attribute(L"src").value();
+    _startDocument = Helper::wideToUtf8(content_node.node().attribute(L"src").value());
 
     // parse the plugins
     // get all feature nodes
@@ -40,25 +42,25 @@ Config::Config( const std::wstring& configXMLFile, CefRefPtr<PluginManager> plug
     
     for(pugi::xpath_node_set::const_iterator iter = features.begin() ; iter != features.end(); ++iter)
     {
-      std::wstring servicename = iter->node().attribute(L"name").value();
+      std::string servicename = Helper::wideToUtf8(iter->node().attribute(L"name").value());
       pugi::xpath_node param = iter->node().select_single_node(L"param");
       
       // check if name="cef-package"
-      std::wstring param_name = param.node().attribute(L"name").value();
-      if( param_name.compare(L"cef-package") == 0)
+      std::string param_name = Helper::wideToUtf8(param.node().attribute(L"name").value());
+      if( param_name.compare("cef-package") == 0)
       {
-        std::wstring classname = param.node().attribute(L"value").value();
-        std::wstring onload_str = param.node().attribute(L"onload").value();
+        std::string classname = Helper::wideToUtf8(param.node().attribute(L"value").value());
+        std::string onload_str = Helper::wideToUtf8(param.node().attribute(L"onload").value());
         bool onload = false;
-        if(onload_str.compare(L"true") == 0)
+        if(onload_str.compare("true") == 0)
           onload = true;
-        pluginManager->addPlugin(CefString(servicename).ToString(), CefString(classname).ToString(), onload);
+        pluginManager->addPlugin(servicename, classname, onload);
       }
     }
   }
   else
   {
-    BOOST_LOG_SEV(logger(), error) << "failed to parse config xml '" << configXMLFile << "' result=" << result.status;
+    LOG_ERROR(logger()) << "failed to parse config xml '" << configXMLFile << "' result=" << result.status;
     //TODO: error handling
   }
 }

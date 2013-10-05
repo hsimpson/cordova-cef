@@ -29,6 +29,7 @@
 #include "pluginmanager.h"
 #include "pluginresult.h"
 #include "nativetojsmessagequeue.h"
+#include "helper.h"
 
 
 class Application : public CefApp,
@@ -37,7 +38,7 @@ class Application : public CefApp,
                     public CefV8Handler
 {
 public:
-  Application(CefRefPtr<CefClient> client);
+  Application(CefRefPtr<CefClient> client, std::shared_ptr<Helper::Paths>);
   virtual ~Application();
 
   // CefApp method(s)
@@ -59,18 +60,17 @@ public:
   void runJavaScript(const std::string& js);
 
 protected:
-  virtual std::wstring getAppDirectory() = 0;
 
   CefRefPtr<CefClient> _client;
   CefRefPtr<Config> _config;
   CefRefPtr<PluginManager> _pluginManager;
 
-  bool _appDirFetched;
-  std::wstring _startupUrl;
+  std::string _startupUrl;
 
   CefRefPtr<CefV8Value> _exposedJSObject;
 
   NativeToJsMessageQueue _jsMessageQueue;
+  std::shared_ptr<Helper::Paths> _paths;
   
   IMPLEMENT_REFCOUNTING(Application);
 

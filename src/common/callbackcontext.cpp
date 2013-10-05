@@ -42,7 +42,7 @@ void CallbackContext::sendPluginresult( std::shared_ptr<const PluginResult> resu
     boost::lock_guard<boost::recursive_mutex> lock(_mutex);
     if(_finished)
     {
-      BOOST_LOG_SEV(logger(), warning) << "Attempted to send a second callback for ID: " << _callbackId << "\nResult was: " << result->getMessage();
+      LOG_WARN(logger()) << "Attempted to send a second callback for ID: " << _callbackId << "\nResult was: " << result->getMessage();
       return;
     }
     else

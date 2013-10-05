@@ -22,10 +22,10 @@
 #include "application.h"
 #include "client.h"
 
-Application::Application(CefRefPtr<CefClient> client)
+Application::Application(CefRefPtr<CefClient> client, std::shared_ptr<Helper::Paths> paths)
   : INIT_LOGGER(Application),
     _client(client),
-    _appDirFetched(false),
+    _paths(paths),    
     _jsMessageQueue(this)
 {
 }
@@ -43,12 +43,17 @@ void Application::OnContextInitialized()
   _pluginManager = new PluginManager(this);
 
   // load and parse config and fill configured plugins
-  _config = new Config(getAppDirectory() + L"/config.xml", _pluginManager);
+  boost::filesystem::path config_path = _paths->getApplicationDir();
+  config_path /= "config.xml";
+  _config = new Config(config_path, _pluginManager);
   
   // init plugin manager (also create the plugins with onload=true)
   _pluginManager->init();
 
-  _startupUrl = L"file:///" + getAppDirectory() + L"/www/" + _config->startDocument(); 
+  boost::filesystem::path startup_document = _paths->getApplicationDir();
+  startup_document /= "www";
+  startup_document /= _config->startDocument();
+  _startupUrl = "file:///" + startup_document.generic_string(); 
 
   CefWindowInfo info;
   info.SetAsPopup(NULL, _config->appName());
@@ -60,7 +65,7 @@ void Application::OnContextInitialized()
   browserSettings.web_security = STATE_DISABLED;
 
   // Create the browser asynchronously and load the startup url
-  BOOST_LOG_SEV(logger(), debug) << "create browser with startup url: '" << _startupUrl << "'";
+  LOG_DEBUG(logger()) << "create browser with startup url: '" << _startupUrl << "'";
   CefBrowserHost::CreateBrowser(info, _client, _startupUrl, browserSettings);
 }
 

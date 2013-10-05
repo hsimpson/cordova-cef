@@ -92,13 +92,17 @@ void PluginManager::addPlugin(const std::string& servicename, const std::string&
   if(creator)
   {
     if(_pluginEntries.find(servicename) == _pluginEntries.end()) // not found
+    {
       _pluginEntries[servicename] = std::make_shared<PluginEntry>(creator, onload);
+    }
     else
-      BOOST_LOG_SEV(logger(), error) << "Plugin '" << servicename << "' already added";
+    {
+      LOG_ERROR(logger()) << "Plugin '" << servicename << "' already added";
+    }
   }
   else
   {
-    BOOST_LOG_SEV(logger(), error) << "Plugin '" << servicename << "' not registered with classname '" << classname << "'";
+    LOG_ERROR(logger()) << "Plugin '" << servicename << "' not registered with classname '" << classname << "'";
   }
 }
 
@@ -138,7 +142,7 @@ void PluginManager::exec( const std::string& service, const std::string& action,
   std::shared_ptr<CordovaPlugin> plugin = getPlugin(service);
   if(!plugin.get())
   {
-    BOOST_LOG_SEV(logger(), error) << "exec() call to unknown plugin: " << service;    
+    LOG_ERROR(logger()) << "exec() call to unknown plugin: " << service;    
     _app->sendPluginResult(std::make_shared<PluginResult>(PluginResult::CLASS_NOT_FOUND_EXCEPTION), callbackId);
     return;
   }

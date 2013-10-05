@@ -19,19 +19,22 @@
  *
 */
 
-#include "application_win.h"
-#include "client_win.h"
+#include "helper_win.h"
+#include <Windows.h>
 
-#include <Shlwapi.h>
-#include <algorithm>
-
-Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
-  : INIT_LOGGER(Application_Win),
-    Application(new Client_Win, paths)
+Helper::Paths_Win::Paths_Win()
 {
+
 }
 
-Application_Win::~Application_Win()
+Helper::Paths_Win::~Paths_Win()
 {
+
 }
 
+boost::filesystem::path Helper::Paths_Win::getExecutablePath() const
+{
+  wchar_t path[MAX_PATH];
+  GetModuleFileNameW( NULL, path, MAX_PATH );
+  return boost::filesystem::path(path);
+}

@@ -98,7 +98,7 @@ void Client::OnBeforeClose( CefRefPtr<CefBrowser> browser )
 
 void Client::showDevTools( CefRefPtr<CefBrowser> browser )
 {
-  BOOST_LOG_SEV(logger(), debug) << "showDevTools, id=" << browser->GetIdentifier();
+  LOG_DEBUG(logger()) << "showDevTools, id=" << browser->GetIdentifier();
 
   std::string devtools_url = browser->GetHost()->GetDevToolsURL(true);
   if(!devtools_url.empty())

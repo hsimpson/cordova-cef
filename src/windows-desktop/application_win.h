@@ -28,15 +28,9 @@
 class Application_Win : public Application 
 {
 public:
-  Application_Win();
+  Application_Win(std::shared_ptr<Helper::Paths> paths);
   virtual ~Application_Win();
-
-protected:
-  virtual std::wstring getAppDirectory();
-
-private:
-  std::wstring _applicationDir;
-
+  
   IMPLEMENT_REFCOUNTING(Application_Win);
   
   DECLARE_LOGGER(Application_Win);

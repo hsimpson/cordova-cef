@@ -25,6 +25,7 @@
 #include <string>
 #include <locale>
 #include <codecvt>
+#include <boost/filesystem.hpp>
 
 namespace Helper
 {
@@ -33,5 +34,20 @@ namespace Helper
     std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
     return conv.to_bytes(wstr);
   }
+
+  class Paths
+  {
+  public:
+    Paths();
+    virtual ~Paths();
+    boost::filesystem::path getApplicationDir() const;
+
+  protected:
+    virtual boost::filesystem::path getExecutablePath() const = 0;
+
+  private:
+    mutable boost::filesystem::path _executablePath;
+
+  };
 }
 #endif // helper_h__

@@ -19,19 +19,21 @@
  *
 */
 
-#include "application_win.h"
-#include "client_win.h"
+#include "helper.h"
 
-#include <Shlwapi.h>
-#include <algorithm>
-
-Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
-  : INIT_LOGGER(Application_Win),
-    Application(new Client_Win, paths)
+Helper::Paths::Paths()
 {
+
 }
 
-Application_Win::~Application_Win()
+Helper::Paths::~Paths()
 {
+
 }
 
+boost::filesystem::path Helper::Paths::getApplicationDir() const
+{
+  if(_executablePath.empty())
+    _executablePath = getExecutablePath();
+  return _executablePath.parent_path();
+}

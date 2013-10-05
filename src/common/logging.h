@@ -37,7 +37,8 @@
 #include <boost/log/sinks.hpp>
 #include <boost/log/sources/logger.hpp>
 #include <boost/log/sources/global_logger_storage.hpp>
-#include <boost/log/support/date_time.hpp> 
+#include <boost/log/support/date_time.hpp>
+#include <boost/filesystem.hpp>
 
 namespace logging = boost::log;
 namespace attrs = boost::log::attributes;
@@ -51,10 +52,11 @@ namespace keywords = boost::log::keywords;
 inline void init_logging()
 {
   boost::shared_ptr< logging::core > core = logging::core::get();
-
+  
   boost::shared_ptr< sinks::text_file_backend > backend =
     boost::make_shared< sinks::text_file_backend >(
-    keywords::file_name = "file_%5N.log", // TODO: use better path then relative (maybe $HOME/..)                                         
+    keywords::file_name = (boost::filesystem::temp_directory_path() /= "cordova_cef%5N.log"), // TODO: use better path then relative (maybe $HOME/..)                                         
+    keywords::open_mode = (std::ios::out |std::ios::app),
     keywords::rotation_size = 5 * 1024 * 1024,                                     
     keywords::time_based_rotation = sinks::file::rotation_at_time_point(12, 0, 0),
     keywords::auto_flush = true,
@@ -68,37 +70,25 @@ inline void init_logging()
 
   sink->set_formatter(
     expr::stream
-    << "[" << expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%d.%m.%Y %H:%M:%S.%f") << "] "
-    << "[PID=" << expr::attr< attrs::current_process_id::value_type >("ProcessID") << "] "
-    << "[TID=" << expr::attr< attrs::current_thread_id::value_type >("ThreadID") << "] "
-    /*<< "[" << expr::attr< std::string >("Channel") << "] "*/
-    << "[" <<  logging::trivial::severity  << "] "
-    << "[" << expr::attr<std::string>("Channel") << "]: "
+    << "[" << expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S.%f") << "]"
+    << "[PID=" << expr::attr< attrs::current_process_id::value_type >("ProcessID") << "]"
+    << "[TID=" << expr::attr< attrs::current_thread_id::value_type >("ThreadID") << "]"
+    << "[" <<  logging::trivial::severity  << "]"
+    << "[" << expr::attr<std::string>("Channel") << "] "
+    << expr::format_named_scope("Scope", keywords::format = "%f(%l) %n")
+    << " - "
     << expr::smessage
   );
 
   core->add_sink(sink);
-
+  
   // Register common attributes
   logging::add_common_attributes();
+  core->add_global_attribute("Scope", attrs::named_scope());
   
 }
 
 using namespace logging::trivial;
-// declare global logger(s)
-BOOST_LOG_INLINE_GLOBAL_LOGGER_CTOR_ARGS(
-  g_appLogger,
-  src::severity_channel_logger< severity_level >,
-  (keywords::severity = debug)
-  (keywords::channel = "app")
-)
-
-BOOST_LOG_INLINE_GLOBAL_LOGGER_CTOR_ARGS(
-  g_clientLogger,
-  src::severity_channel_logger< severity_level >,
-  (keywords::severity = debug)
-  (keywords::channel = "client")
-)
 
 #define DECLARE_LOGGER(clazzname)\
   private:\
@@ -111,4 +101,13 @@ BOOST_LOG_INLINE_GLOBAL_LOGGER_CTOR_ARGS(
 #define INIT_LOGGER(clazzname)\
   _logger(keywords::channel = STR(clazzname))
 
+
+
+// logger macros
+#define LOG_TRACE(logger) BOOST_LOG_FUNCTION() BOOST_LOG_SEV(logger, trace)
+#define LOG_DEBUG(logger) BOOST_LOG_FUNCTION() BOOST_LOG_SEV(logger, debug)
+#define LOG_INFO (logger) BOOST_LOG_FUNCTION() BOOST_LOG_SEV(logger, info)
+#define LOG_WARN(logger) BOOST_LOG_FUNCTION() BOOST_LOG_SEV(logger, warning)
+#define LOG_ERROR(logger) BOOST_LOG_FUNCTION() BOOST_LOG_SEV(logger, error)
+#define LOG_FATAL(logger) BOOST_LOG_FUNCTION() BOOST_LOG_SEV(logger, fatal)
 #endif // logging_h__

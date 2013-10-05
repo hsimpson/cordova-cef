@@ -18,20 +18,23 @@
  * under the License.
  *
 */
+#ifndef helper_win_h__
+#define helper_win_h__
 
-#include "application_win.h"
-#include "client_win.h"
+#include "common/helper.h"
 
-#include <Shlwapi.h>
-#include <algorithm>
-
-Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
-  : INIT_LOGGER(Application_Win),
-    Application(new Client_Win, paths)
+namespace Helper
 {
-}
+  class Paths_Win : public Helper::Paths
+  {
+  public:
+    Paths_Win();
+    virtual ~Paths_Win();
 
-Application_Win::~Application_Win()
-{
-}
+  protected:
+    virtual boost::filesystem::path getExecutablePath() const;
 
+
+  };
+}
+#endif // helper_win_h__
