@@ -78,11 +78,20 @@ LRESULT CALLBACK Application_Win::WndProc( HWND hWnd, UINT message, WPARAM wPara
   switch (message) 
   {
     case WM_PAINT:
+    {
       hdc = BeginPaint(hWnd, &ps);
       EndPaint(hWnd, &ps);
       return 0;
+    }
+
+    case WM_KILLFOCUS:
+    {
+      appwindow->handlePause();
+      break;
+    }
 
     case WM_SETFOCUS:
+      appwindow->handleResume();
       if (appwindow->_client.get() && appwindow->_client->GetBrowser()) 
       {
         // Pass focus to the browser window
@@ -139,7 +148,7 @@ LRESULT CALLBACK Application_Win::WndProc( HWND hWnd, UINT message, WPARAM wPara
     {
       // Quitting CEF is handled in ClientHandler::OnBeforeClose().
       return 0;
-    } 
+    }
   }
   return DefWindowProcW(hWnd, message, wParam, lParam);
 }

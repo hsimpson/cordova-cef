@@ -62,6 +62,8 @@ public:
 protected:
 
   virtual CefRefPtr<Client::RenderHandler> createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent) = 0;
+  virtual void handlePause();
+  virtual void handleResume();
 
   CefRefPtr<Client> _client;
   CefRefPtr<Config> _config;

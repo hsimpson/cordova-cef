@@ -21,15 +21,18 @@
 -->
 <html>
     <head>
-        <title>Title of the document</title>
+        <title>Cordova-CEF test</title>
         <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/min.js"></script>
-  </head>
-  <body onload="onBodyLoad()">
-	<h1>Hey, it's Cordova!</h1>
-	<ol>
-		<li>Check your console log for any white-list rejection errors.</li>
-		<li>Add your allowed <strong>hosts</strong> in config.xml as access tags and set the origin attribute. (wildcards OK, don't enter the URL scheme)</li>
-	</ol>
-  </body>
+        <script type="text/javascript" src="js/main.js"></script>
+    </head>
+    <body>
+        <h1>Hey, it's Cordova!</h1>
+        <ol>
+            <li>Check your console log for any white-list rejection errors.</li>
+            <li>Add your allowed <strong>hosts</strong> in config.xml as access tags and set the origin attribute. (wildcards OK, don't enter the URL scheme)</li>
+        </ol>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+    </body>
 </html>

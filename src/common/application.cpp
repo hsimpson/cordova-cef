@@ -121,3 +121,13 @@ void Application::runJavaScript( const std::string& js )
 {
   _client->runJavaScript(js);
 }
+
+void Application::handlePause()
+{
+  runJavaScript("cordova.fireDocumentEvent('pause');");
+}
+
+void Application::handleResume()
+{
+  runJavaScript("cordova.fireDocumentEvent('resume');");
+}
