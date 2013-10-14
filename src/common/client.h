@@ -41,7 +41,8 @@ class Client : public CefClient,
                public CefLifeSpanHandler,
                public CefKeyboardHandler,
                public CefRenderHandler,
-               public OSRBrowserProvider
+               public OSRBrowserProvider,
+               public CefContextMenuHandler
 {
 public:
 
@@ -59,6 +60,7 @@ public:
   virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {return this;}
   virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() OVERRIDE { return this; }
   virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE { return this; }
+  virtual CefRefPtr<CefContextMenuHandler> GetContextMenuHandler() OVERRIDE { return this; }
 
   // CefLifeSpanHandler method(s)
   virtual bool OnBeforePopup( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access ) OVERRIDE;
@@ -67,14 +69,19 @@ public:
   virtual void OnBeforeClose( CefRefPtr<CefBrowser> browser ) OVERRIDE;
 
   // CefRenderHandler method(s)
-  virtual bool GetRootScreenRect( CefRefPtr<CefBrowser> browser, CefRect& rect );
-  virtual bool GetViewRect( CefRefPtr<CefBrowser> browser, CefRect& rect );
-  virtual bool GetScreenPoint( CefRefPtr<CefBrowser> browser, int viewX, int viewY, int& screenX, int& screenY );
-  virtual bool GetScreenInfo( CefRefPtr<CefBrowser> browser, CefScreenInfo& screen_info );
-  virtual void OnPopupShow( CefRefPtr<CefBrowser> browser, bool show );
-  virtual void OnPopupSize( CefRefPtr<CefBrowser> browser, const CefRect& rect );
-  virtual void OnPaint( CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height );
-  virtual void OnCursorChange( CefRefPtr<CefBrowser> browser, CefCursorHandle cursor );
+  virtual bool GetRootScreenRect( CefRefPtr<CefBrowser> browser, CefRect& rect ) OVERRIDE;
+  virtual bool GetViewRect( CefRefPtr<CefBrowser> browser, CefRect& rect ) OVERRIDE;
+  virtual bool GetScreenPoint( CefRefPtr<CefBrowser> browser, int viewX, int viewY, int& screenX, int& screenY ) OVERRIDE;
+  virtual bool GetScreenInfo( CefRefPtr<CefBrowser> browser, CefScreenInfo& screen_info ) OVERRIDE;
+  virtual void OnPopupShow( CefRefPtr<CefBrowser> browser, bool show ) OVERRIDE;
+  virtual void OnPopupSize( CefRefPtr<CefBrowser> browser, const CefRect& rect ) OVERRIDE;
+  virtual void OnPaint( CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height ) OVERRIDE;
+  virtual void OnCursorChange( CefRefPtr<CefBrowser> browser, CefCursorHandle cursor ) OVERRIDE;
+
+  // CefContextMenuHandler method(s)
+  virtual void OnBeforeContextMenu( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefContextMenuParams> params, CefRefPtr<CefMenuModel> model ) OVERRIDE;
+  virtual bool OnContextMenuCommand( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefContextMenuParams> params, int command_id, EventFlags event_flags ) OVERRIDE;
+  virtual void OnContextMenuDismissed( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame ) OVERRIDE;
 
   void runJavaScript( const std::string& js );
   void setOSRHandler(CefRefPtr<RenderHandler> handler) { _OSRHandler = handler;}
@@ -114,7 +121,6 @@ protected:
   IMPLEMENT_LOCKING(Client);
   // define logger
   DECLARE_LOGGER(Client);
-
 };
 
 #endif // client_h__

@@ -240,3 +240,19 @@ void Client::OnCursorChange( CefRefPtr<CefBrowser> browser, CefCursorHandle curs
     return;
   return _OSRHandler->OnCursorChange(browser, cursor);
 }
+
+void Client::OnBeforeContextMenu( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefContextMenuParams> params, CefRefPtr<CefMenuModel> model )
+{
+#ifndef _DEBUG
+  model->Clear();
+#endif
+}
+
+bool Client::OnContextMenuCommand( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefContextMenuParams> params, int command_id, EventFlags event_flags )
+{
+  return false;
+}
+
+void Client::OnContextMenuDismissed( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame )
+{
+}
