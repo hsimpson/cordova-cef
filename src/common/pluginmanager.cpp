@@ -27,13 +27,16 @@
 class PluginEntry
 {
 public:
-  PluginEntry()
+  /*
+  PluginEntry(Application* app)
     : creator(nullptr),
       onload(false)
   {
   }
-  PluginEntry(PluginCreator* creator, bool onLoad)
-    : creator(creator),    
+  */
+  PluginEntry(Application* app, PluginCreator* creator, bool onLoad)
+    : _app(app),
+      creator(creator),    
       onload(onLoad)
   {
   }
@@ -50,14 +53,16 @@ public:
       // create
       plugin = creator->create();
       // and call initialize
-      plugin->initialize();
+      plugin->initialize(_app);
     }
     return plugin;
   }
-
   PluginCreator* creator;
   std::shared_ptr<CordovaPlugin> plugin;
   bool onload;
+
+private:
+  Application* _app;
 };
 
 PluginManager::PluginManager(Application* app)
@@ -93,7 +98,7 @@ void PluginManager::addPlugin(const std::string& servicename, const std::string&
   {
     if(_pluginEntries.find(servicename) == _pluginEntries.end()) // not found
     {
-      _pluginEntries[servicename] = std::make_shared<PluginEntry>(creator, onload);
+      _pluginEntries[servicename] = std::make_shared<PluginEntry>(_app, creator, onload);
     }
     else
     {

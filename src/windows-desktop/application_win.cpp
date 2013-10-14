@@ -21,6 +21,8 @@
 
 #include "application_win.h"
 #include "client_win.h"
+#include "osrwindow_win.h"
+#include "resource.h"
 
 #include <Shlwapi.h>
 #include <algorithm>
@@ -29,9 +31,116 @@ Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
   : INIT_LOGGER(Application_Win),
     Application(new Client_Win, paths)
 {
+  WNDCLASSEX wcex;
+
+  wcex.cbSize = sizeof(WNDCLASSEX);
+
+  wcex.style         = CS_HREDRAW | CS_VREDRAW;
+  wcex.lpfnWndProc   = &Application_Win::WndProc;
+  wcex.cbClsExtra    = 0;
+  wcex.cbWndExtra    = 0;
+  wcex.hInstance     = GetModuleHandle(NULL);
+  wcex.hIcon         = NULL;
+  wcex.hCursor       = LoadCursor(NULL, IDC_ARROW);
+  HBITMAP hbmp = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDB_BITMAP_CHECKERBOARD));
+  wcex.hbrBackground = CreatePatternBrush(hbmp);
+  wcex.lpszMenuName  = NULL;
+  wcex.lpszClassName = L"CORDOVA-CEF-MAINWINDOW";
+  wcex.hIconSm       = NULL;
+
+  RegisterClassExW(&wcex);
+
+  _mainWindow = CreateWindowW(L"CORDOVA-CEF-MAINWINDOW", Helper::utf8ToWide(_config->appName()).c_str(),
+                              WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, 
+                              0, 0, 800, 600, 
+                              NULL, NULL, GetModuleHandle(NULL), NULL);
+
+  SetWindowLongPtrW(_mainWindow, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+ 
+  ShowWindow(_mainWindow, SW_SHOW );
+  UpdateWindow(_mainWindow);
 }
 
 Application_Win::~Application_Win()
 {
+}
+
+CefRefPtr<Client::RenderHandler> Application_Win::createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent)
+{
+  return new OSRWindow_Win(parent, browser_provider, transparent);
+}
+
+LRESULT CALLBACK Application_Win::WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
+{
+  Application_Win* appwindow = reinterpret_cast<Application_Win*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+  PAINTSTRUCT ps;
+  HDC hdc;
+  switch (message) 
+  {
+    case WM_PAINT:
+      hdc = BeginPaint(hWnd, &ps);
+      EndPaint(hWnd, &ps);
+      return 0;
+
+    case WM_SETFOCUS:
+      if (appwindow->_client.get() && appwindow->_client->GetBrowser()) 
+      {
+        // Pass focus to the browser window
+        CefWindowHandle hwnd = appwindow->_client->GetBrowser()->GetHost()->GetWindowHandle();
+        if (hwnd)
+          PostMessage(hwnd, WM_SETFOCUS, wParam, NULL);
+      }
+      return 0;
+
+    case WM_SIZE:
+    // Minimizing resizes the window to 0x0 which causes our layout to go all
+    // screwy, so we just ignore it.
+    if (wParam != SIZE_MINIMIZED && appwindow->_client.get() && appwindow->_client->GetBrowser()) 
+    {
+        CefWindowHandle hwnd = appwindow->_client->GetBrowser()->GetHost()->GetWindowHandle();
+        if (hwnd) 
+        {
+          // Resize the browser window and address bar to match the new frame
+          // window size
+          RECT rect;
+          GetClientRect(hWnd, &rect);
+          
+          HDWP hdwp = BeginDeferWindowPos(1);
+          hdwp = DeferWindowPos(hdwp, hwnd, NULL,
+            rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
+          EndDeferWindowPos(hdwp);
+        }
+    }
+    break;
+
+
+
+    case WM_CLOSE:
+    {
+      if (appwindow->_client.get() && !appwindow->_client->IsClosing()) {
+        CefRefPtr<CefBrowser> browser = appwindow->_client->GetBrowser();
+        if (browser.get()) 
+        {
+          // Notify the browser window that we would like to close it. This
+          // will result in a call to ClientHandler::DoClose() if the
+          // JavaScript 'onbeforeunload' event handler allows it.
+          browser->GetHost()->CloseBrowser(false);
+
+          // Cancel the close.
+          return 0;
+        }
+      }
+
+      // Allow the close.
+      break;
+    }   
+
+    case WM_DESTROY:
+    {
+      // Quitting CEF is handled in ClientHandler::OnBeforeClose().
+      return 0;
+    } 
+  }
+  return DefWindowProcW(hWnd, message, wParam, lParam);
 }
 

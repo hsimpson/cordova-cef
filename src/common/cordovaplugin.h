@@ -34,10 +34,15 @@ namespace Json
 class CordovaPlugin
 {
 public:
+  CordovaPlugin();
   virtual ~CordovaPlugin();
 
   virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext) = 0;
-  virtual void initialize();  
+  virtual void initialize(Application* app);
+  Application* getApp() const {return _app;}
+
+private:
+  Application* _app;
 };
 
 class PluginCreator : public std::enable_shared_from_this<PluginCreator>

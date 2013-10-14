@@ -46,9 +46,9 @@ bool DeviceBase::execute(const std::string& action, const Json::Value& args, Cal
   return false;
 }
 
-void DeviceBase::initialize()
+void DeviceBase::initialize(Application* app)
 {
-  CordovaPlugin::initialize();
+  CordovaPlugin::initialize(app);
   _uuid = getUuid();
   _version = getVersion();
   _platform = getPlatform();

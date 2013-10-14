@@ -213,3 +213,6 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+3rdparty/boost/
+3rdparty/cef3/
+3rdparty/pugixml/scripts/vs2010/

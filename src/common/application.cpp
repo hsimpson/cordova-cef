@@ -22,12 +22,18 @@
 #include "application.h"
 #include "client.h"
 
-Application::Application(CefRefPtr<CefClient> client, std::shared_ptr<Helper::Paths> paths)
+Application::Application(CefRefPtr<Client> client, std::shared_ptr<Helper::Paths> paths)
   : INIT_LOGGER(Application),
     _client(client),
     _paths(paths),    
-    _jsMessageQueue(this)
+    _jsMessageQueue(this),
+    _mainWindow(NULL),
+    _pluginManager(new PluginManager(this))
 {
+  // load and parse config and fill configured plugins
+  boost::filesystem::path config_path = _paths->getApplicationDir();
+  config_path /= "config.xml";
+  _config = new Config(config_path, _pluginManager);
 }
 
 Application::~Application()
@@ -38,25 +44,26 @@ Application::~Application()
 
 
 void Application::OnContextInitialized()
-{  
-  // create plugin manager
-  _pluginManager = new PluginManager(this);
-
-  // load and parse config and fill configured plugins
-  boost::filesystem::path config_path = _paths->getApplicationDir();
-  config_path /= "config.xml";
-  _config = new Config(config_path, _pluginManager);
-  
-  // init plugin manager (also create the plugins with onload=true)
-  _pluginManager->init();
-
+{ 
   boost::filesystem::path startup_document = _paths->getApplicationDir();
   startup_document /= "www";
   startup_document /= _config->startDocument();
   _startupUrl = "file:///" + startup_document.generic_string(); 
 
   CefWindowInfo info;
-  info.SetAsPopup(NULL, _config->appName());
+  bool transparent = true;
+  
+  CefRefPtr<Client::RenderHandler> osr_window = createOSRWindow(_mainWindow, _client.get(), transparent);
+  _client->setOSRHandler(osr_window);
+  
+  info.SetTransparentPainting(transparent ? TRUE : FALSE);
+  info.SetAsOffScreen(osr_window->handle());
+  /*
+  RECT r;
+  r.left = 0; r.top = 0; r.right = 700; r.bottom = 500;
+  info.SetAsChild(_mainWindow, r);
+  */
+  
 
   CefBrowserSettings browserSettings;
   //browserSettings.developer_tools = STATE_ENABLED;
@@ -64,9 +71,12 @@ void Application::OnContextInitialized()
   browserSettings.universal_access_from_file_urls = STATE_ENABLED;
   browserSettings.web_security = STATE_DISABLED;
 
+  // init plugin manager (also create the plugins with onload=true)
+  _pluginManager->init();
+
   // Create the browser asynchronously and load the startup url
   LOG_DEBUG(logger()) << "create browser with startup url: '" << _startupUrl << "'";
-  CefBrowserHost::CreateBrowser(info, _client, _startupUrl, browserSettings);
+  CefBrowserHost::CreateBrowser(info, _client.get(), _startupUrl, browserSettings);
 }
 
 void Application::OnContextCreated( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context )
@@ -109,7 +119,5 @@ void Application::sendPluginResult( std::shared_ptr<const PluginResult> pluginRe
 
 void Application::runJavaScript( const std::string& js )
 {
-  Client* c = dynamic_cast<Client*>(_client.get());
-  if(c)
-    c->runJavaScript(js);
+  _client->runJavaScript(js);
 }

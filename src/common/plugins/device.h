@@ -30,7 +30,7 @@ public:
   
   virtual ~DeviceBase();
   virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext);
-  virtual void initialize();
+  virtual void initialize(Application* app);
 
 protected:
   std::string getUuid();

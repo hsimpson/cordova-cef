@@ -33,8 +33,7 @@ namespace Helper
 
   protected:
     virtual boost::filesystem::path getExecutablePath() const;
-
-
+    virtual boost::filesystem::path getHomeDir() const;
   };
 }
 #endif // helper_win_h__

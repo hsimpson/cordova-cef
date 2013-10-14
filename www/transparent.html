@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Transparent test</title>
+    <style>
+    .body_background
+    {
+        background-color: rgba(255, 0, 0, 0.5);
+        /*background-color: transparent;*/
+    }
+    div.background
+    {
+        width: 800px;
+        height: 600px;
+        background: url('images/HTML5_Logo_64.png') repeat;
+        border: 2px solid black;
+    }
+    div.transbox
+    {
+          width: 400px;
+          height: 180px;
+          margin: 30px 50px;
+          background-color: #ffffff;
+          border: 1px solid black;
+          opacity:0.6;
+          filter:alpha(opacity=60); /* For IE8 and earlier */
+    }
+    div.transbox p
+    {
+      margin: 30px 40px;
+      font-weight: bold;
+      color: #000000;
+    }
+</style>
+</head>
+<body class="body_background">
+    <div class="transbox">
+        <p>This is some text that is placed in the transparent box.
+        This is some text that is placed in the transparent box.
+        This is some text that is placed in the transparent box.
+        This is some text that is placed in the transparent box.
+        This is some text that is placed in the transparent box.
+        </p>
+    </div>
+    <a href="http://www.google.de">google</a>
+</body>
+</html>

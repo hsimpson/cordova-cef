@@ -28,13 +28,14 @@
 #include "client_win.h"
 #include "helper_win.h"
 
-int CALLBACK WinMain(
-  _In_  HINSTANCE hInstance,
-  _In_  HINSTANCE hPrevInstance,
-  _In_  LPSTR lpCmdLine,
-  _In_  int nCmdShow
-  )
+int APIENTRY wWinMain(HINSTANCE hInstance,
+                      HINSTANCE hPrevInstance,
+                      LPTSTR    lpCmdLine,
+                      int       nCmdShow) 
 {
+  UNREFERENCED_PARAMETER(hPrevInstance);
+  UNREFERENCED_PARAMETER(lpCmdLine);
+
   {
     std::shared_ptr<Helper::Paths> paths = std::make_shared<Helper::Paths_Win>();
 
@@ -59,9 +60,10 @@ int CALLBACK WinMain(
     // Populate this structure to customize CEF behavior.
     CefSettings appsettings;
     appsettings.remote_debugging_port = 9999;
-  //#ifdef _DEBUG
+ //#ifdef _DEBUG
+    // use single process for now.
     appsettings.single_process = true;
-  //#endif
+ //#endif
 
     // Initialize CEF in the main process.
     CefInitialize(main_args, appsettings, app);

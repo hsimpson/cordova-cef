@@ -34,5 +34,11 @@ public:
   IMPLEMENT_REFCOUNTING(Application_Win);
   
   DECLARE_LOGGER(Application_Win);
+
+  virtual CefRefPtr<Client::RenderHandler> createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent);
+
+private:
+  static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
 };
 #endif // application_win_h__

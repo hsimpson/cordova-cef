@@ -35,18 +35,27 @@ namespace Helper
     return conv.to_bytes(wstr);
   }
 
+  inline std::wstring utf8ToWide(const std::string& str)
+  {
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+    return conv.from_bytes(str.data());
+  }
+
   class Paths
   {
   public:
     Paths();
     virtual ~Paths();
     boost::filesystem::path getApplicationDir() const;
+    boost::filesystem::path getAppDataDir() const;
 
   protected:
     virtual boost::filesystem::path getExecutablePath() const = 0;
+    virtual boost::filesystem::path getHomeDir() const = 0;
 
   private:
     mutable boost::filesystem::path _executablePath;
+    mutable boost::filesystem::path _homedir;
 
   };
 }

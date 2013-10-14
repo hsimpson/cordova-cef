@@ -37,3 +37,16 @@ boost::filesystem::path Helper::Paths::getApplicationDir() const
     _executablePath = getExecutablePath();
   return _executablePath.parent_path();
 }
+
+boost::filesystem::path Helper::Paths::getAppDataDir() const
+{
+  boost::filesystem::path ret;
+  if(_executablePath.empty())
+    _executablePath = getExecutablePath();
+  if(_homedir.empty())
+    _homedir = getHomeDir();
+
+  ret = _homedir;
+  ret += _executablePath.stem();
+  return ret;
+}

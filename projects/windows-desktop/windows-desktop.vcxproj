@@ -42,10 +42,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)\dist\$(ProjectName)\$(Configuration)\</OutDir>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)dist\$(ProjectName)\$(Configuration)\</OutDir>
+    <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -55,7 +57,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;JSON_IS_AMALGAMATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\src;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\json-cpp-amalgamation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\src\windows-desktop;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\json-cpp-amalgamation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessToFile>false</PreprocessToFile>
       <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
@@ -64,11 +66,16 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\3rdparty\cef3\windows\Debug;..\..\3rdparty\cef3\windows\out\Debug\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;..\..\3rdparty\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcef.lib;libcef_dll_wrapper.lib;pugixmlsd.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcef.lib;libcef_dll_wrapper.lib;pugixmlsd.lib;Shlwapi.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>"$(ProjectDir)postbuild.bat" "$(ProjectDir)" "$(OutDir)" $(Configuration)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>"$(ProjectDir)postbuild.bat" "$(ProjectDir)" "$(OutDir)" $(Configuration)</Command>
+      <Outputs>nonexisting.file</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -89,11 +96,15 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\3rdparty\cef3\windows\Release;..\..\3rdparty\cef3\windows\out\Release\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;..\..\3rdparty\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libcef.lib;libcef_dll_wrapper.lib;pugixmls.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcef.lib;libcef_dll_wrapper.lib;pugixmls.lib;Shlwapi.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(ProjectDir)postbuild.bat" "$(ProjectDir)" "$(OutDir)" $(Configuration)</Command>
     </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>"$(ProjectDir)postbuild.bat" "$(ProjectDir)" "$(OutDir)" $(Configuration)</Command>
+      <Outputs>nonexisting.file</Outputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\3rdparty\json-cpp-amalgamation\jsoncpp.cpp" />
@@ -105,6 +116,7 @@
     <ClCompile Include="..\..\src\common\helper.cpp" />
     <ClCompile Include="..\..\src\common\jsmessage.cpp" />
     <ClCompile Include="..\..\src\common\nativetojsmessagequeue.cpp" />
+    <ClCompile Include="..\..\src\common\osrenderer.cpp" />
     <ClCompile Include="..\..\src\common\pluginmanager.cpp" />
     <ClCompile Include="..\..\src\common\pluginresult.cpp" />
     <ClCompile Include="..\..\src\common\plugins\device.cpp" />
@@ -112,6 +124,7 @@
     <ClCompile Include="..\..\src\windows-desktop\client_win.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\helper_win.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\main_win-desktop.cpp" />
+    <ClCompile Include="..\..\src\windows-desktop\osrwindow_win.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\plugins\device_win.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -126,19 +139,33 @@
     <ClInclude Include="..\..\src\common\jsmessage.h" />
     <ClInclude Include="..\..\src\common\logging.h" />
     <ClInclude Include="..\..\src\common\nativetojsmessagequeue.h" />
+    <ClInclude Include="..\..\src\common\osrenderer.h" />
     <ClInclude Include="..\..\src\common\pluginmanager.h" />
     <ClInclude Include="..\..\src\common\pluginresult.h" />
     <ClInclude Include="..\..\src\common\plugins\device.h" />
+    <ClInclude Include="..\..\src\common\settings.h" />
     <ClInclude Include="..\..\src\common\util.h" />
     <ClInclude Include="..\..\src\windows-desktop\application_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\client_win.h" />
+    <ClInclude Include="..\..\src\windows-desktop\GL\wglext.h" />
     <ClInclude Include="..\..\src\windows-desktop\helper_win.h" />
+    <ClInclude Include="..\..\src\windows-desktop\osrwindow_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\plugins\device_win.h" />
+    <ClInclude Include="..\..\src\windows-desktop\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="postbuild.bat">
       <FileType>Script</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\resources\windows-desktop.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\resources\checkerboard.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\config.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

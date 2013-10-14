@@ -23,7 +23,7 @@
 #define application_h__
 
 #include "include/cef_app.h"
-#include "include/cef_client.h"
+#include "client.h"
 #include "config.h"
 #include "logging.h"
 #include "pluginmanager.h"
@@ -38,7 +38,7 @@ class Application : public CefApp,
                     public CefV8Handler
 {
 public:
-  Application(CefRefPtr<CefClient> client, std::shared_ptr<Helper::Paths>);
+  Application(CefRefPtr<Client> client, std::shared_ptr<Helper::Paths>);
   virtual ~Application();
 
   // CefApp method(s)
@@ -61,7 +61,9 @@ public:
 
 protected:
 
-  CefRefPtr<CefClient> _client;
+  virtual CefRefPtr<Client::RenderHandler> createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent) = 0;
+
+  CefRefPtr<Client> _client;
   CefRefPtr<Config> _config;
   CefRefPtr<PluginManager> _pluginManager;
 
@@ -71,6 +73,8 @@ protected:
 
   NativeToJsMessageQueue _jsMessageQueue;
   std::shared_ptr<Helper::Paths> _paths;
+
+  CefWindowHandle _mainWindow;
   
   IMPLEMENT_REFCOUNTING(Application);
 

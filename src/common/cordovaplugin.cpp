@@ -22,12 +22,18 @@
 #include "cordovaplugin.h"
 #include "json/json.h"
 
+CordovaPlugin::CordovaPlugin()
+  : _app(nullptr)
+{
+}
+
 CordovaPlugin::~CordovaPlugin()
 {
 }
 
-void CordovaPlugin::initialize()
+void CordovaPlugin::initialize(Application* app)
 {
+  _app = app;
 }
 
 PluginCreator::PluginCreator(const std::string& pluginname)

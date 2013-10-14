@@ -19,32 +19,12 @@
  *
 */
 
-#include "helper_win.h"
-#include <Windows.h>
-#include <Shlobj.h>
+#ifndef settings_h__
+#define settings_h__
 
-Helper::Paths_Win::Paths_Win()
+class Settings
 {
+public: 
 
-}
-
-Helper::Paths_Win::~Paths_Win()
-{
-
-}
-
-boost::filesystem::path Helper::Paths_Win::getExecutablePath() const
-{
-  wchar_t path[MAX_PATH];
-  if(GetModuleFileNameW( NULL, path, MAX_PATH ))
-    return boost::filesystem::path(path);
-  return boost::filesystem::path();
-}
-
-boost::filesystem::path Helper::Paths_Win::getHomeDir() const
-{
-  wchar_t path[MAX_PATH];
-  if(SUCCEEDED(SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, 0, path)))
-    return boost::filesystem::path(path);
-  return boost::filesystem::path();
-}
+};
+#endif // settings_h__

@@ -23,25 +23,7 @@
     <head>
         <title>Title of the document</title>
         <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript">
-
-
-	
-            function onBodyLoad()
-            {		
-                document.addEventListener("deviceready", onDeviceReady, false);
-            }
-        
-        
-           function onDeviceReady()
-            {
-                // Used by unit tests to tell when the page is loaded.
-                window.pageIsLoaded = true;
-                // do your thing!
-                console.log("Cordova is working")
-            }
-        
-        </script>
+        <script type="text/javascript" src="js/min.js"></script>
   </head>
   <body onload="onBodyLoad()">
 	<h1>Hey, it's Cordova!</h1>
