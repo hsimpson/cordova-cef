@@ -24,7 +24,6 @@
 
 #include "jsmessage.h"
 #include "logging.h"
-#include <boost/thread.hpp>
 #include <deque>
 
 class Application;

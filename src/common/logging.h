@@ -23,23 +23,6 @@
 #define logging_h__
 
 
-
-
-#include <boost/shared_ptr.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/log/trivial.hpp>
-#include <boost/log/common.hpp>
-#include <boost/log/expressions.hpp>
-
-#include <boost/log/utility/setup/common_attributes.hpp>
-#include <boost/log/attributes.hpp>
-#include <boost/log/sinks.hpp>
-#include <boost/log/sources/logger.hpp>
-#include <boost/log/sources/global_logger_storage.hpp>
-#include <boost/log/support/date_time.hpp>
-#include <boost/filesystem.hpp>
-
 namespace logging = boost::log;
 namespace attrs = boost::log::attributes;
 namespace src = boost::log::sources;

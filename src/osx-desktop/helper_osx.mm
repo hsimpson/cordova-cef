@@ -19,30 +19,30 @@
  *
 */
 
-#ifndef cdvplugindevice_h__
-#define cdvplugindevice_h__
+#include "helper_osx.h"
 
-#include "cordovaplugin.h"
-
-class DeviceBase : public CordovaPlugin
+Helper::Paths_OSX::Paths_OSX()
 {
-public:
-  
-  virtual ~DeviceBase();
-  virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext);
-  virtual void initialize(Application* app);
 
-protected:
-  std::string getUuid();
-  virtual std::string getVersion() = 0;
-  virtual std::string getPlatform() = 0;
-  virtual std::string getModel() = 0;
+}
 
-private:
-  std::string _uuid;
-  std::string _version;
-  std::string _platform;
-  std::string _cordova;
-  std::string _model;
-};
-#endif // cdvplugindevice_h__
+Helper::Paths_OSX::~Paths_OSX()
+{
+
+}
+
+boost::filesystem::path Helper::Paths_OSX::getExecutablePath() const
+{
+  NSString* path = [[NSBundle mainBundle] executablePath];
+  if(path)
+    return boost::filesystem::path([path UTF8String]);
+  return boost::filesystem::path();
+}
+
+boost::filesystem::path Helper::Paths_OSX::getHomeDir() const
+{
+  NSString* path = NSHomeDirectory();
+  if(path)
+    return boost::filesystem::path([path UTF8String]);
+  return boost::filesystem::path();
+}

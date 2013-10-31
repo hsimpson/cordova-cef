@@ -26,7 +26,6 @@
 #include <vector>
 #include "logging.h"
 #include "pluginresult.h"
-#include <boost/thread.hpp>
 
 class Application;
 namespace Json

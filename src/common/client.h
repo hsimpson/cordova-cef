@@ -27,7 +27,7 @@
 #include <list>
 #include <set>
 #include <string>
-#include "common/logging.h"
+#include "logging.h"
 
 class OSRBrowserProvider {
 public:

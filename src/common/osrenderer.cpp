@@ -2,7 +2,8 @@
 // reserved. Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file.
 
-#include "cefclient/osrenderer.h"
+#include <limits.h>
+#include "osrenderer.h"
 
 #if defined(OS_WIN)
 #include <gl/gl.h>

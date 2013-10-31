@@ -56,7 +56,7 @@ void Application::OnContextInitialized()
   CefRefPtr<Client::RenderHandler> osr_window = createOSRWindow(_mainWindow, _client.get(), transparent);
   _client->setOSRHandler(osr_window);
   
-  info.SetTransparentPainting(transparent ? TRUE : FALSE);
+  info.SetTransparentPainting(transparent ? true : false);
   info.SetAsOffScreen(osr_window->handle());
   /*
   RECT r;

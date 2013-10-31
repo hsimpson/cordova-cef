@@ -142,10 +142,11 @@ void Client::showDevTools( CefRefPtr<CefBrowser> browser )
       // Open DevTools in a popup window.
       _openDevToolsURLs.insert(devtools_url);
 
-      /*
+      
       browser->GetMainFrame()->ExecuteJavaScript(
         "window.open('" +  devtools_url + "');", "about:blank", 0);
-      */
+      
+      /*
 
       CefWindowInfo info;
       info.SetAsPopup(NULL, devtools_url);
@@ -157,6 +158,7 @@ void Client::showDevTools( CefRefPtr<CefBrowser> browser )
       browserSettings.web_security = STATE_DISABLED;
 
       CefBrowserHost::CreateBrowser(info, this, devtools_url, browserSettings);
+      */
     }
   }
 }

@@ -18,44 +18,22 @@
  * under the License.
  *
 */
+#ifndef helper_win_h__
+#define helper_win_h__
 
-#ifndef helper_h__
-#define helper_h__
-
-#include <string>
-#include <locale>
-#include <codecvt>
+#include "common/helper.h"
 
 namespace Helper
 {
-  inline std::string wideToUtf8(const std::wstring& wstr)
-  {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-    return conv.to_bytes(wstr);
-  }
-
-  inline std::wstring utf8ToWide(const std::string& str)
-  {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-    return conv.from_bytes(str.data());
-  }
-
-  class Paths
+  class Paths_OSX : public Helper::Paths
   {
   public:
-    Paths();
-    virtual ~Paths();
-    boost::filesystem::path getApplicationDir() const;
-    boost::filesystem::path getAppDataDir() const;
+    Paths_OSX();
+    virtual ~Paths_OSX();
 
   protected:
-    virtual boost::filesystem::path getExecutablePath() const = 0;
-    virtual boost::filesystem::path getHomeDir() const = 0;
-
-  private:
-    mutable boost::filesystem::path _executablePath;
-    mutable boost::filesystem::path _homedir;
-
+    virtual boost::filesystem::path getExecutablePath() const;
+    virtual boost::filesystem::path getHomeDir() const;
   };
 }
-#endif // helper_h__
+#endif // helper_win_h__

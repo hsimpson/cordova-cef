@@ -19,30 +19,23 @@
  *
 */
 
-#ifndef cdvplugindevice_h__
-#define cdvplugindevice_h__
+#ifndef client_win_h__
+#define client_win_h__
 
-#include "cordovaplugin.h"
+#include "common/client.h"
+#include "common/logging.h"
 
-class DeviceBase : public CordovaPlugin
+class Client_OSX : public Client
 {
 public:
-  
-  virtual ~DeviceBase();
-  virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext);
-  virtual void initialize(Application* app);
+  Client_OSX();
+  virtual ~Client_OSX();
 
-protected:
-  std::string getUuid();
-  virtual std::string getVersion() = 0;
-  virtual std::string getPlatform() = 0;
-  virtual std::string getModel() = 0;
+  virtual bool OnKeyEvent( CefRefPtr<CefBrowser> browser, const CefKeyEvent& event, CefEventHandle os_event ) OVERRIDE;
 
-private:
-  std::string _uuid;
-  std::string _version;
-  std::string _platform;
-  std::string _cordova;
-  std::string _model;
+  IMPLEMENT_REFCOUNTING(Client_OSX);
+
+  DECLARE_LOGGER(Client_OSX);
 };
-#endif // cdvplugindevice_h__
+
+#endif // client_win_h__

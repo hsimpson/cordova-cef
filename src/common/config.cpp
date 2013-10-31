@@ -19,7 +19,6 @@
  *
 */
 
-#include <boost/filesystem.hpp>
 #include "helper.h"
 #include "config.h"
 

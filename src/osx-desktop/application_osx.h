@@ -7,9 +7,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,32 +17,26 @@
  * specific language governing permissions and limitations
  * under the License.
  *
-*/
+ */
 
-#ifndef cdvplugindevice_h__
-#define cdvplugindevice_h__
+#ifndef osx_desktop_application_osx_h
+#define osx_desktop_application_osx_h
 
-#include "cordovaplugin.h"
+#include "common/application.h"
+#include "common/logging.h"
 
-class DeviceBase : public CordovaPlugin
+class Application_OSX : public Application
 {
 public:
+  Application_OSX(std::shared_ptr<Helper::Paths> paths);
+  virtual ~Application_OSX();
   
-  virtual ~DeviceBase();
-  virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext);
-  virtual void initialize(Application* app);
-
-protected:
-  std::string getUuid();
-  virtual std::string getVersion() = 0;
-  virtual std::string getPlatform() = 0;
-  virtual std::string getModel() = 0;
-
-private:
-  std::string _uuid;
-  std::string _version;
-  std::string _platform;
-  std::string _cordova;
-  std::string _model;
+  IMPLEMENT_REFCOUNTING(Application_OSX);
+  
+  DECLARE_LOGGER(Application_OSX);
+  
+  virtual CefRefPtr<Client::RenderHandler> createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent);
 };
-#endif // cdvplugindevice_h__
+
+
+#endif
