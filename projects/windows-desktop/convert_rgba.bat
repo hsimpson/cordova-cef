@@ -1,0 +1,1 @@
+convert -size "800x600" -depth 8 raw.rgba raw.png

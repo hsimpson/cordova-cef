@@ -51,21 +51,21 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;JSON_IS_AMALGAMATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\src;..\..\src\windows-desktop;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\json-cpp-amalgamation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\src\common;..\..\src\windows-desktop;..\..\3rdparty\cef3;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\json-cpp-amalgamation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessToFile>false</PreprocessToFile>
-      <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-D_SCL_SECURE_NO_WARNINGS -Zm200 %(AdditionalOptions)</AdditionalOptions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\3rdparty\cef3\windows\Debug;..\..\3rdparty\cef3\windows\out\Debug\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;..\..\3rdparty\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\3rdparty\cef3\Debug;..\..\3rdparty\cef3\out\Debug\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;..\..\3rdparty\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libcef.lib;libcef_dll_wrapper.lib;pugixmlsd.lib;Shlwapi.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -87,15 +87,16 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;JSON_IS_AMALGAMATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\src;..\..\3rdparty\cef3\windows;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\json-cpp-amalgamation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\src\common;..\..\src\windows-desktop;..\..\3rdparty\cef3;..\..\3rdparty\boost;..\..\3rdparty\pugixml\src;..\..\3rdparty\json-cpp-amalgamation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\3rdparty\cef3\windows\Release;..\..\3rdparty\cef3\windows\out\Release\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;..\..\3rdparty\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\3rdparty\cef3\Release;..\..\3rdparty\cef3\out\Release\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;..\..\3rdparty\boost\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libcef.lib;libcef_dll_wrapper.lib;pugixmls.lib;Shlwapi.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -107,7 +108,9 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\3rdparty\json-cpp-amalgamation\jsoncpp.cpp" />
+    <ClCompile Include="..\..\3rdparty\json-cpp-amalgamation\jsoncpp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\src\common\application.cpp" />
     <ClCompile Include="..\..\src\common\callbackcontext.cpp" />
     <ClCompile Include="..\..\src\common\client.cpp" />
@@ -126,6 +129,9 @@
     <ClCompile Include="..\..\src\windows-desktop\main_win-desktop.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\osrwindow_win.cpp" />
     <ClCompile Include="..\..\src\windows-desktop\plugins\device_win.cpp" />
+    <ClCompile Include="..\..\src\windows-desktop\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\3rdparty\json-cpp-amalgamation\json\json-forwards.h" />
@@ -147,11 +153,11 @@
     <ClInclude Include="..\..\src\common\util.h" />
     <ClInclude Include="..\..\src\windows-desktop\application_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\client_win.h" />
-    <ClInclude Include="..\..\src\windows-desktop\GL\wglext.h" />
     <ClInclude Include="..\..\src\windows-desktop\helper_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\osrwindow_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\plugins\device_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\resource.h" />
+    <ClInclude Include="..\..\src\windows-desktop\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="postbuild.bat">
@@ -159,7 +165,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\resources\windows-desktop.rc" />
+    <ResourceCompile Include="..\..\resources\windows-desktop\windows-desktop.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\resources\checkerboard.bmp" />

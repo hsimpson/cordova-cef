@@ -78,6 +78,9 @@
     <ClCompile Include="..\..\src\windows-desktop\osrwindow_win.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\windows-desktop\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\windows-desktop\application_win.h">
@@ -146,10 +149,10 @@
     <ClInclude Include="..\..\src\windows-desktop\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windows-desktop\GL\wglext.h">
+    <ClInclude Include="..\..\src\common\osrenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\common\osrenderer.h">
+    <ClInclude Include="..\..\src\windows-desktop\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -157,11 +160,6 @@
     <None Include="postbuild.bat">
       <Filter>scripts</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\..\resources\windows-desktop.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\resources\checkerboard.bmp">
@@ -172,5 +170,10 @@
     <Xml Include="..\..\config.xml">
       <Filter>plugins</Filter>
     </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\resources\windows-desktop\windows-desktop.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
