@@ -20,7 +20,7 @@
 */
 
 #include "client.h"
-#include "util.h"
+#include "cefclient/util.h"
 
 #include "include/cef_app.h"
 #include "include/cef_runnable.h"
@@ -133,34 +133,14 @@ void Client::OnBeforeClose( CefRefPtr<CefBrowser> browser )
 void Client::showDevTools( CefRefPtr<CefBrowser> browser )
 {
   LOG_DEBUG(logger()) << "showDevTools, id=" << browser->GetIdentifier();
+  CefWindowInfo windowInfo;
+  CefBrowserSettings settings;
 
-  std::string devtools_url = browser->GetHost()->GetDevToolsURL(true);
-  if(!devtools_url.empty())
-  {
-    if(_openDevToolsURLs.find(devtools_url) == _openDevToolsURLs.end())
-    {
-      // Open DevTools in a popup window.
-      _openDevToolsURLs.insert(devtools_url);
+#if defined(OS_WIN)
+  windowInfo.SetAsPopup(browser->GetHost()->GetWindowHandle(), "DevTools");
+#endif
 
-      
-      browser->GetMainFrame()->ExecuteJavaScript(
-        "window.open('" +  devtools_url + "');", "about:blank", 0);
-      
-      /*
-
-      CefWindowInfo info;
-      info.SetAsPopup(NULL, devtools_url);
-
-      CefBrowserSettings browserSettings;
-      //browserSettings.developer_tools = STATE_DISABLED;
-      browserSettings.file_access_from_file_urls = STATE_ENABLED;
-      browserSettings.universal_access_from_file_urls = STATE_ENABLED;
-      browserSettings.web_security = STATE_DISABLED;
-
-      CefBrowserHost::CreateBrowser(info, this, devtools_url, browserSettings);
-      */
-    }
-  }
+  browser->GetHost()->ShowDevTools(windowInfo, this, settings);
 }
 
 void Client::runJavaScript( const std::string& js )

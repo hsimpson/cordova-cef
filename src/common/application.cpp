@@ -76,7 +76,7 @@ void Application::OnContextInitialized()
 
   // Create the browser asynchronously and load the startup url
   LOG_DEBUG(logger()) << "create browser with startup url: '" << _startupUrl << "'";
-  CefBrowserHost::CreateBrowser(info, _client.get(), _startupUrl, browserSettings);
+  CefBrowserHost::CreateBrowser(info, _client.get(), _startupUrl, browserSettings, NULL);
 }
 
 void Application::OnContextCreated( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context )

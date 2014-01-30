@@ -42,6 +42,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     // first init the logging system
     init_logging();
 
+
+    void* sandbox_info = NULL;
+
+
     // passing command-line
     CefMainArgs main_args(hInstance);
 
@@ -51,7 +55,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
     // Execute the sub-process logic, if any. This will either return immediately for the browser
     // process or block until the sub-process should exit.
-    int exit_code = CefExecuteProcess(main_args, app);
+    int exit_code = CefExecuteProcess(main_args, app, sandbox_info);
     if (exit_code >= 0) {
       // The sub-process terminated, exit now.
       return exit_code;
@@ -66,7 +70,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
  //#endif
 
     // Initialize CEF in the main process.
-    CefInitialize(main_args, appsettings, app);
+    CefInitialize(main_args, appsettings, app, sandbox_info);
   
     // Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
     CefRunMessageLoop();

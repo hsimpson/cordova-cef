@@ -150,7 +150,7 @@
     <ClInclude Include="..\..\src\common\pluginresult.h" />
     <ClInclude Include="..\..\src\common\plugins\device.h" />
     <ClInclude Include="..\..\src\common\settings.h" />
-    <ClInclude Include="..\..\src\common\util.h" />
+    <ClInclude Include="..\..\3rdparty\cef3\cefclient\util.h" />
     <ClInclude Include="..\..\src\windows-desktop\application_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\client_win.h" />
     <ClInclude Include="..\..\src\windows-desktop\helper_win.h" />

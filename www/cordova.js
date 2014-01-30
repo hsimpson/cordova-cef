@@ -1,5 +1,5 @@
 // Platform: cef
-// 3.0.0-dev-43-g7d5f6f6
+// 3.4.0-dev-4ca9251
 /*
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
@@ -19,8 +19,11 @@
  under the License.
 */
 ;(function() {
-var CORDOVA_JS_BUILD_LABEL = '3.0.0-dev-43-g7d5f6f6';
-// file: lib/scripts/require.js
+var CORDOVA_JS_BUILD_LABEL = '3.4.0-dev-4ca9251';
+// file: src/scripts/require.js
+
+/*jshint -W079 */
+/*jshint -W020 */
 
 var require,
     define;
@@ -31,7 +34,7 @@ var require,
         requireStack = [],
     // Map of module ID -> index into requireStack of modules currently being built.
         inProgressModules = {},
-        SEPERATOR = ".";
+        SEPARATOR = ".";
 
 
 
@@ -41,7 +44,7 @@ var require,
                 var resultantId = id;
                 //Its a relative path, so lop off the last portion and add the id (minus "./")
                 if (id.charAt(0) === ".") {
-                    resultantId = module.id.slice(0, module.id.lastIndexOf(SEPERATOR)) + SEPERATOR + id.slice(2);
+                    resultantId = module.id.slice(0, module.id.lastIndexOf(SEPARATOR)) + SEPARATOR + id.slice(2);
                 }
                 return require(resultantId);
             };
@@ -95,11 +98,12 @@ if (typeof module === "object" && typeof require === "function") {
     module.exports.define = define;
 }
 
-// file: lib/cordova.js
+// file: src/cordova.js
 define("cordova", function(require, exports, module) {
 
 
 var channel = require('cordova/channel');
+var platform = require('cordova/platform');
 
 /**
  * Intercept calls to addEventListener + removeEventListener and handle deviceready,
@@ -171,6 +175,8 @@ function createEvent(type, data) {
 var cordova = {
     define:define,
     require:require,
+    version:CORDOVA_JS_BUILD_LABEL,
+    platformId:platform.id,
     /**
      * Methods to add/remove your own addEventListener hijacking on document + window.
      */
@@ -310,7 +316,7 @@ module.exports = cordova;
 
 });
 
-// file: lib/common/argscheck.js
+// file: src/common/argscheck.js
 define("cordova/argscheck", function(require, exports, module) {
 
 var exec = require('cordova/exec');
@@ -376,7 +382,7 @@ moduleExports.enableChecks = true;
 
 });
 
-// file: lib/common/base64.js
+// file: src/common/base64.js
 define("cordova/base64", function(require, exports, module) {
 
 var base64 = exports;
@@ -432,7 +438,7 @@ function uint8ToBase64(rawData) {
 
 });
 
-// file: lib/common/builder.js
+// file: src/common/builder.js
 define("cordova/builder", function(require, exports, module) {
 
 var utils = require('cordova/utils');
@@ -501,7 +507,7 @@ function include(parent, objects, clobber, merge) {
                 include(result, obj.children, clobber, merge);
             }
         } catch(e) {
-            utils.alert('Exception building cordova JS globals: ' + e + ' for key "' + key + '"');
+            utils.alert('Exception building Cordova JS globals: ' + e + ' for key "' + key + '"');
         }
     });
 }
@@ -545,7 +551,7 @@ exports.replaceHookForTesting = function() {};
 
 });
 
-// file: lib/common/channel.js
+// file: src/common/channel.js
 define("cordova/channel", function(require, exports, module) {
 
 var utils = require('cordova/utils'),
@@ -786,7 +792,7 @@ module.exports = channel;
 
 });
 
-// file: lib/cef/exec.js
+// file: src/cef/exec.js
 define("cordova/exec", function(require, exports, module) {
 
 /**
@@ -828,7 +834,37 @@ function cefExec(success, fail, service, action, args) {
 module.exports = cefExec;
 });
 
-// file: lib/common/init.js
+// file: src/common/exec/proxy.js
+define("cordova/exec/proxy", function(require, exports, module) {
+
+
+// internal map of proxy function
+var CommandProxyMap = {};
+
+module.exports = {
+
+    // example: cordova.commandProxy.add("Accelerometer",{getCurrentAcceleration: function(successCallback, errorCallback, options) {...},...);
+    add:function(id,proxyObj) {
+        console.log("adding proxy for " + id);
+        CommandProxyMap[id] = proxyObj;
+        return proxyObj;
+    },
+
+    // cordova.commandProxy.remove("Accelerometer");
+    remove:function(id) {
+        var proxy = CommandProxyMap[id];
+        delete CommandProxyMap[id];
+        CommandProxyMap[id] = null;
+        return proxy;
+    },
+
+    get:function(service,action) {
+        return ( CommandProxyMap[service] ? CommandProxyMap[service][action] : null );
+    }
+};
+});
+
+// file: src/common/init.js
 define("cordova/init", function(require, exports, module) {
 
 var channel = require('cordova/channel');
@@ -942,7 +978,7 @@ channel.join(function() {
 
 });
 
-// file: lib/common/modulemapper.js
+// file: src/common/modulemapper.js
 define("cordova/modulemapper", function(require, exports, module) {
 
 var builder = require('cordova/builder'),
@@ -1043,7 +1079,7 @@ exports.reset();
 
 });
 
-// file: lib/cef/platform.js
+// file: src/cef/platform.js
 define("cordova/platform", function(require, exports, module) {
 
 module.exports = {
@@ -1054,10 +1090,11 @@ module.exports = {
 };
 });
 
-// file: lib/common/pluginloader.js
+// file: src/common/pluginloader.js
 define("cordova/pluginloader", function(require, exports, module) {
 
 var modulemapper = require('cordova/modulemapper');
+var urlutil = require('cordova/urlutil');
 
 // Helper function to inject a <script> tag.
 function injectScript(url, onload, onerror) {
@@ -1126,11 +1163,14 @@ function handlePluginsObject(path, moduleList, finishPluginLoading) {
 }
 
 function injectPluginScript(pathPrefix, finishPluginLoading) {
-    injectScript(pathPrefix + 'cordova_plugins.js', function(){
+    var pluginPath = pathPrefix + 'cordova_plugins.js';
+
+    injectScript(pluginPath, function() {
         try {
             var moduleList = require("cordova/plugin_list");
             handlePluginsObject(pathPrefix, moduleList, finishPluginLoading);
-        } catch (e) {
+        }
+        catch (e) {
             // Error loading cordova_plugins.js, file not found or something
             // this is an acceptable error, pre-3.0.0, so we just move on.
             finishPluginLoading();
@@ -1167,24 +1207,24 @@ exports.load = function(callback) {
 
 });
 
-// file: lib/common/urlutil.js
+// file: src/common/urlutil.js
 define("cordova/urlutil", function(require, exports, module) {
 
-var urlutil = exports;
-var anchorEl = document.createElement('a');
 
 /**
  * For already absolute URLs, returns what is passed in.
  * For relative URLs, converts them to absolute ones.
  */
-urlutil.makeAbsolute = function(url) {
-  anchorEl.href = url;
-  return anchorEl.href;
+exports.makeAbsolute = function makeAbsolute(url) {
+    var anchorEl = document.createElement('a');
+    anchorEl.href = url;
+    return anchorEl.href;
 };
+
 
 });
 
-// file: lib/common/utils.js
+// file: src/common/utils.js
 define("cordova/utils", function(require, exports, module) {
 
 var utils = exports;
@@ -1355,7 +1395,7 @@ function UUIDcreatePart(length) {
 });
 
 window.cordova = require('cordova');
-// file: lib/scripts/bootstrap.js
+// file: src/scripts/bootstrap.js
 
 require('cordova/init');
 

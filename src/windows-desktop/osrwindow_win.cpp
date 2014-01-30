@@ -22,9 +22,8 @@
 #include "osrwindow_win.h"
 #include <windowsx.h>
 #include "include/cef_runnable.h"
-#include "common/util.h"
+#include "cefclient/util.h"
 #include <gl/gl.h>
-#include "GL/wglext.h"		//WGL extensions
 
 
 OSRWindow_Win::OSRWindow_Win(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent)
