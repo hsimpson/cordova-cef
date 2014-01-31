@@ -168,7 +168,8 @@
     <ResourceCompile Include="..\..\resources\windows-desktop\windows-desktop.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\resources\checkerboard.bmp" />
+    <Image Include="..\..\resources\common\checkerboard.bmp" />
+    <Image Include="..\..\resources\common\colorgrid.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\config.xml" />

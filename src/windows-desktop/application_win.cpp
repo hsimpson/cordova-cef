@@ -44,6 +44,7 @@ Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
   wcex.hCursor       = LoadCursor(NULL, IDC_ARROW);
   HBITMAP hbmp = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDB_BITMAP_CHECKERBOARD));
   wcex.hbrBackground = CreatePatternBrush(hbmp);
+  
   wcex.lpszMenuName  = NULL;
   wcex.lpszClassName = L"CORDOVA-CEF-MAINWINDOW";
   wcex.hIconSm       = NULL;

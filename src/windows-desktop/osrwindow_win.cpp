@@ -24,6 +24,7 @@
 #include "include/cef_runnable.h"
 #include "cefclient/util.h"
 #include <gl/gl.h>
+#include "resource.h"
 
 
 OSRWindow_Win::OSRWindow_Win(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent)
@@ -157,6 +158,7 @@ bool OSRWindow_Win::CreateWidget( HWND hWndParent, const RECT& rect, HINSTANCE h
     rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
    hWndParent, 0, hInst, 0);
 
+  ASSERT(_hWnd != 0);
   if (!_hWnd)
     return false;
 
@@ -282,6 +284,31 @@ void OSRWindow_Win::EnableGL()
   const char* glversion = (const char*)glGetString(GL_VERSION);
 
   _renderer.Initialize();
+
+  // create background texture
+  
+  //HBITMAP hBmp = (HBITMAP) ::LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDB_BITMAP_COLORGRID));
+  HBITMAP hBmp = (HBITMAP) ::LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP_COLORGRID), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
+  BITMAP bm;
+  ::GetObject(hBmp, sizeof(bm), &bm);
+
+  TexLayer background_tex;
+  background_tex.bRepeatableS = true;
+  background_tex.bRepeatableT = true;
+  background_tex.width = bm.bmWidth;
+  background_tex.height = bm.bmHeight;
+  background_tex.bFlippedh = true;
+
+  glGenTextures(1, &background_tex.id);
+  glBindTexture(GL_TEXTURE_2D, background_tex.id);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bm.bmWidth, bm.bmHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, bm.bmBits);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+  _renderer.addTextureWithPrio(0, background_tex);
 }
 
 void OSRWindow_Win::DisableGL()
@@ -569,8 +596,8 @@ LRESULT CALLBACK OSRWindow_Win::WndProc(HWND hWnd, UINT message,
       // Apply rotation effect.
       curMousePos.x = x;
       curMousePos.y = y;
-      window->_renderer.IncrementSpin((curMousePos.x - lastMousePos.x),
-        (curMousePos.y - lastMousePos.y));
+      window->_renderer.IncrementSpin((float)(curMousePos.x - lastMousePos.x),
+        (float)(curMousePos.y - lastMousePos.y));
       lastMousePos.x = curMousePos.x;
       lastMousePos.y = curMousePos.y;
       window->Invalidate();

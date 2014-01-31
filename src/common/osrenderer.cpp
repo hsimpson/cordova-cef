@@ -34,8 +34,7 @@
 
 ClientOSRenderer::ClientOSRenderer(bool transparent)
     : transparent_(transparent),
-      initialized_(false),
-      texture_id_(0),
+      initialized_(false),     
       view_width_(0),
       view_height_(0),
       spin_x_(0),
@@ -58,20 +57,27 @@ void ClientOSRenderer::Initialize() {
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
   // Create the texture.
-  glGenTextures(1, &texture_id_);
-  ASSERT(texture_id_ != 0);
+  TexLayer tex;
+  glGenTextures(1, &tex.id);
+  ASSERT(tex.id != 0);
 
-  glBindTexture(GL_TEXTURE_2D, texture_id_);
+  glBindTexture(GL_TEXTURE_2D, tex.id);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
   initialized_ = true;
+
+  // insert int texture map
+  
+  
+  texture_ids_[WEB_CONTENT_TEXTURE_PRIORITY] = tex;
 }
 
 void ClientOSRenderer::Cleanup() {
-  if (texture_id_ != 0)
-    glDeleteTextures(1, &texture_id_);
+
+  if (texture_ids_.find(WEB_CONTENT_TEXTURE_PRIORITY) != texture_ids_.end() && texture_ids_[WEB_CONTENT_TEXTURE_PRIORITY].id != 0)
+    glDeleteTextures(1, &texture_ids_[WEB_CONTENT_TEXTURE_PRIORITY].id);
 }
 
 void ClientOSRenderer::Render() {
@@ -80,15 +86,7 @@ void ClientOSRenderer::Render() {
 
   ASSERT(initialized_);
 
-  struct {
-    float tu, tv;
-    float x, y, z;
-  } static vertices[] = {
-    {0.0f, 1.0f, -1.0f, -1.0f, 0.0f},
-    {1.0f, 1.0f,  1.0f, -1.0f, 0.0f},
-    {1.0f, 0.0f,  1.0f,  1.0f, 0.0f},
-    {0.0f, 0.0f, -1.0f,  1.0f, 0.0f}
-  };
+  
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -101,40 +99,103 @@ void ClientOSRenderer::Render() {
   glLoadIdentity();
   glOrtho(0, 0, view_width_, view_height_, 0.1, 100.0);
 
-  // Draw the background gradient.
-  glPushAttrib(GL_ALL_ATTRIB_BITS);
-  glBegin(GL_QUADS);
-  glColor4f(1.0, 0.0, 0.0, 1.0);  // red
-  glVertex2f(-1.0, -1.0);
-  glVertex2f(1.0, -1.0);
-  glColor4f(0.0, 0.0, 1.0, 1.0);  // blue
-  glVertex2f(1.0, 1.0);
-  glVertex2f(-1.0, 1.0);
-  glEnd();
-  glPopAttrib();
+  std::map<int, TexLayer>::iterator iter;
+  for(iter = texture_ids_.begin(); iter != texture_ids_.end(); ++iter) 
+  {
 
-  // Rotate the view based on the mouse spin.
-  if (spin_x_ != 0)
-    glRotatef(-spin_x_, 1.0f, 0.0f, 0.0f);
-  if (spin_y_ != 0)
-    glRotatef(-spin_y_, 0.0f, 1.0f, 0.0f);
+    const TexLayer& tex = (*iter).second;
 
-  if (transparent_) {
-    // Alpha blending style. Texture values have premultiplied alpha.
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    float tex_coordinate_S = 1.0f;
+    float tex_coordinate_T = 1.0f;
 
-    // Enable alpha blending.
-    glEnable(GL_BLEND);
+    if(tex.bRepeatableS)
+      tex_coordinate_S = (float)view_width_ / (float)tex.width;
+
+    if(tex.bRepeatableT)
+      tex_coordinate_T = (float)view_height_ / (float)tex.height;
+    
+
+    /*
+    struct {
+      float tu, tv;
+      float x, y, z;
+    } static vertices[] = {
+      {0.0f,             tex_coordinate_T, -1.0f, -1.0f, 0.0f},
+      {tex_coordinate_S, tex_coordinate_T,  1.0f, -1.0f, 0.0f},
+      {tex_coordinate_S, 0.0f,          1.0f,  1.0f, 0.0f},
+      {0.0f,             0.0f,         -1.0f,  1.0f, 0.0f}
+    };
+    */
+
+    // Draw the background gradient.
+
+    if (transparent_) {
+      // Alpha blending style. Texture values have premultiplied alpha.
+      glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+      // Enable alpha blending.
+      glEnable(GL_BLEND);
+    }
+
+    // Enable 2D textures.
+    glEnable(GL_TEXTURE_2D);
+
+    // Draw the facets with the texture.
+
+
+    ASSERT(tex.id != 0);
+    glBindTexture(GL_TEXTURE_2D, tex.id);
+
+
+    
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    glBegin(GL_QUADS);
+
+    // flipped h
+    if(tex.bFlippedh) 
+    {
+      glTexCoord2f(0.0f, 0.0f);
+      glVertex2f(-1.0, -1.0); // bottom left
+      glTexCoord2f(tex_coordinate_S, 0.0f);
+      glVertex2f(1.0, -1.0); // bottom right
+
+    
+      glTexCoord2f(tex_coordinate_S, tex_coordinate_T);
+      glVertex2f(1.0, 1.0); // top right
+      glTexCoord2f(0.0f, tex_coordinate_T);
+      glVertex2f(-1.0, 1.0); // top left
+    }
+    else
+    {
+      glTexCoord2f(0.0f, tex_coordinate_T);
+      glVertex2f(-1.0, -1.0); // bottom left    
+      glTexCoord2f(tex_coordinate_S, tex_coordinate_T);
+      glVertex2f(1.0, -1.0); // bottom right
+
+      glTexCoord2f(tex_coordinate_S, 0.0f);
+      glVertex2f(1.0, 1.0); // top right
+      glTexCoord2f(0.0f, 0.0f);
+      glVertex2f(-1.0, 1.0); // top left
+    }
+    
+    glEnd();
+    glPopAttrib();
+    
+
+    // Rotate the view based on the mouse spin.
+    if (spin_x_ != 0)
+      glRotatef(-spin_x_, 1.0f, 0.0f, 0.0f);
+    if (spin_y_ != 0)
+      glRotatef(-spin_y_, 0.0f, 1.0f, 0.0f);
+
+    
+    /*
+    glInterleavedArrays(GL_T2F_V3F, 0, vertices);
+    glDrawArrays(GL_QUADS, 0, 4);
+    */
   }
 
-  // Enable 2D textures.
-  glEnable(GL_TEXTURE_2D);
-
-  // Draw the facets with the texture.
-  ASSERT(texture_id_ != 0);
-  glBindTexture(GL_TEXTURE_2D, texture_id_);
-  glInterleavedArrays(GL_T2F_V3F, 0, vertices);
-  glDrawArrays(GL_QUADS, 0, 4);
+  
 
   // Disable 2D textures.
   glDisable(GL_TEXTURE_2D);
@@ -212,8 +273,13 @@ void ClientOSRenderer::OnPaint(CefRefPtr<CefBrowser> browser,
   // Enable 2D textures.
   glEnable(GL_TEXTURE_2D);
 
-  ASSERT(texture_id_ != 0);
-  glBindTexture(GL_TEXTURE_2D, texture_id_);
+  unsigned int texture_id = texture_ids_[WEB_CONTENT_TEXTURE_PRIORITY].id;
+
+  texture_ids_[WEB_CONTENT_TEXTURE_PRIORITY].width = width;
+  texture_ids_[WEB_CONTENT_TEXTURE_PRIORITY].height = height;
+
+  ASSERT(texture_id != 0);
+  glBindTexture(GL_TEXTURE_2D, texture_id);
 
   if (type == PET_VIEW) {
     int old_width = view_width_;
@@ -288,4 +354,14 @@ void ClientOSRenderer::SetSpin(float spinX, float spinY) {
 void ClientOSRenderer::IncrementSpin(float spinDX, float spinDY) {
   spin_x_ -= spinDX;
   spin_y_ -= spinDY;
+}
+
+void ClientOSRenderer::addTextureWithPrio(int priority, TexLayer tex)
+{
+  texture_ids_[priority] = tex;
+}
+
+void ClientOSRenderer::removeTextureWithPrio(int priority)
+{
+  texture_ids_.erase(priority);
 }

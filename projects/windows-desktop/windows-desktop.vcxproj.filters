@@ -162,7 +162,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\resources\checkerboard.bmp">
+    <Image Include="..\..\resources\common\colorgrid.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\..\resources\common\checkerboard.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

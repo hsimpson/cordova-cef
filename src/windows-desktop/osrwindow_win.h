@@ -23,7 +23,7 @@
 #define osrwindow_win_h__
 
 #include "common/client.h"
-#include "cefclient/osrenderer.h"
+#include "common/osrenderer.h"
 
 class OSRWindow_Win : public Client::RenderHandler
 {
