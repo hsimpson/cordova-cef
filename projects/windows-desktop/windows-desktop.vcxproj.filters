@@ -170,13 +170,13 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="..\..\config.xml">
-      <Filter>plugins</Filter>
-    </Xml>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="..\..\resources\windows-desktop\windows-desktop.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\config.xml">
+      <Filter>Resource Files</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

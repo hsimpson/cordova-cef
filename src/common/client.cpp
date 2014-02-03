@@ -31,7 +31,8 @@ Client::Client()
   : INIT_LOGGER(Client),
     _bIsClosing(false),
     _browserId(0),
-    _browserCount(0)
+    _browserCount(0),
+    _bIsFullScreen(false)
 {
 }
 

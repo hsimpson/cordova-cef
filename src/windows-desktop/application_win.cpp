@@ -51,9 +51,39 @@ Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
 
   RegisterClassExW(&wcex);
 
+  DWORD window_style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN;
+
+  RECT neededRect;
+  neededRect.left = 0;
+  neededRect.top = 0;
+  neededRect.right = 800;
+  neededRect.bottom = 600;
+
+  AdjustWindowRect(&neededRect, window_style, false);
+
+  int offset_x = 0 - neededRect.left;
+  int offset_y = 0 - neededRect.top;
+
+  int nWidth = neededRect.right - neededRect.left;
+  int nHeight = neededRect.bottom - neededRect.top;
+
+  int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+  int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+  offset_x += ((nScreenWidth / 2) - (nWidth / 2));
+  offset_y += ((nScreenHeight / 2) - (nHeight / 2));
+
+  neededRect.left   += offset_x;
+  neededRect.top    += offset_y;
+  neededRect.right  += offset_x;
+  neededRect.bottom += offset_y;
+
   _mainWindow = CreateWindowW(L"CORDOVA-CEF-MAINWINDOW", Helper::utf8ToWide(_config->appName()).c_str(),
-                              WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, 
-                              0, 0, 800, 600, 
+                              window_style, 
+                              neededRect.left, 
+                              neededRect.top, 
+                              neededRect.right - neededRect.left,
+                              neededRect.bottom - neededRect.top, 
                               NULL, NULL, GetModuleHandle(NULL), NULL);
 
   SetWindowLongPtrW(_mainWindow, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));

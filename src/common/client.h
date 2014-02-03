@@ -89,6 +89,8 @@ public:
 
   virtual CefRefPtr<CefBrowser> GetBrowser() const {return _browser;}
 
+  virtual void toggleFullScreen(CefWindowHandle window) = 0;
+
 protected:
 
   virtual void showDevTools(CefRefPtr<CefBrowser> browser);
@@ -113,6 +115,8 @@ protected:
   // Number of currently existing browser windows. The application will exit
   // when the number of windows reaches 0.
   int _browserCount;
+
+  bool _bIsFullScreen;
 
 
   // Include the default reference counting implementation.

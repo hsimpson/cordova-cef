@@ -58,6 +58,11 @@ bool Client_Win::OnKeyEvent( CefRefPtr<CefBrowser> browser, const CefKeyEvent& e
           browser->Reload();
           return true;
         }
+        case  VK_F11:
+        {
+          toggleFullScreen(browser->GetHost()->GetWindowHandle());
+          return true;
+        }
         default:
           break;
       }
@@ -106,5 +111,56 @@ bool Client_Win::OnKeyEvent( CefRefPtr<CefBrowser> browser, const CefKeyEvent& e
   
 
   return false;
+}
+
+void Client_Win::toggleFullScreen(CefWindowHandle window)
+{
+  window = GetParent(window);
+  // Save current window state if not already fullscreen.  
+  if(!_bIsFullScreen) 
+  {
+    _savedWindowInfo.maximized = ::IsZoomed(window);
+    if(_savedWindowInfo.maximized)
+      ::SendMessage(window, WM_SYSCOMMAND, SC_RESTORE, 0);
+    _savedWindowInfo.style = GetWindowLong(window, GWL_STYLE);
+    _savedWindowInfo.ex_style = GetWindowLong(window, GWL_EXSTYLE);
+    GetWindowRect(window, &_savedWindowInfo.rect);
+  }
+
+  _bIsFullScreen =! _bIsFullScreen; // toggle
+  if(_bIsFullScreen)
+  {
+    SetWindowLong(window, GWL_STYLE, 
+                  _savedWindowInfo.style & ~(WS_CAPTION | WS_THICKFRAME));
+    SetWindowLong(window, GWL_EXSTYLE, 
+                  _savedWindowInfo.ex_style & ~(WS_EX_DLGMODALFRAME | 
+                  WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE));
+
+    MONITORINFO monitor_info;
+    monitor_info.cbSize = sizeof(monitor_info);
+    GetMonitorInfo(MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST),
+                                     &monitor_info);
+    SetWindowPos(window, NULL, 
+                 monitor_info.rcMonitor.left, 
+                 monitor_info.rcMonitor.top,
+                 monitor_info.rcMonitor.right - monitor_info.rcMonitor.left,
+                 monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top,
+                 SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+  }
+  else
+  {
+    SetWindowLong(window, GWL_STYLE, _savedWindowInfo.style);
+    SetWindowLong(window, GWL_EXSTYLE, _savedWindowInfo.ex_style);
+
+    SetWindowPos(window, NULL, 
+      _savedWindowInfo.rect.left, 
+      _savedWindowInfo.rect.top,
+      _savedWindowInfo.rect.right - _savedWindowInfo.rect.left,
+      _savedWindowInfo.rect.bottom - _savedWindowInfo.rect.top,
+      SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+
+    if (_savedWindowInfo.maximized)
+      ::SendMessage(window, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+  }
 }
 

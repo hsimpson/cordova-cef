@@ -33,9 +33,24 @@ public:
 
   virtual bool OnKeyEvent( CefRefPtr<CefBrowser> browser, const CefKeyEvent& event, CefEventHandle os_event ) OVERRIDE;
 
+  virtual void toggleFullScreen(CefWindowHandle window) OVERRIDE;
+
+private:
+
+  struct WindowInfo
+  {
+    BOOL maximized;
+    DWORD style;
+    DWORD ex_style;
+    RECT rect;
+  } _savedWindowInfo;
+
   IMPLEMENT_REFCOUNTING(Client_Win);
 
   DECLARE_LOGGER(Client_Win);
+
+  
+
 };
 
 #endif // client_win_h__

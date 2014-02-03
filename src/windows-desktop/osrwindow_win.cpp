@@ -154,7 +154,7 @@ bool OSRWindow_Win::CreateWidget( HWND hWndParent, const RECT& rect, HINSTANCE h
 
   RegisterOSRClass(hInst, className);
   _hWnd = ::CreateWindowW(className, 0,
-    WS_BORDER | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_VISIBLE,
+    WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | WS_VISIBLE,
     rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
    hWndParent, 0, hInst, 0);
 
