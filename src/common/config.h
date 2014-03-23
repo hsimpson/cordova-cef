@@ -33,10 +33,17 @@ public:
   std::string appName() const { return _appName;}
   std::string startDocument() const { return _startDocument; }
 
+  bool getStringPreference(const std::string& prefName, std::string& value) const;
+  bool getBoolPreference(const std::string& prefName, bool& value) const;
+  bool getIntPreference(const std::string& prefName, int& value) const;
+  bool getDoublePreference(const std::string& prefName, double& value) const;
+
+
 private:
   
   std::string _appName;
   std::string _startDocument;  
+  std::map<std::string, std::string> _preferences;
 
   IMPLEMENT_REFCOUNTING(Config);
   DECLARE_LOGGER(Config);

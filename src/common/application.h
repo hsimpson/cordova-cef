@@ -59,6 +59,8 @@ public:
   void sendPluginResult(std::shared_ptr<const PluginResult> pluginResult, const std::string& callbackId);
   void runJavaScript(const std::string& js);
 
+  const CefRefPtr<Config> config() const {return _config;}
+
 protected:
 
   virtual CefRefPtr<Client::RenderHandler> createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent) = 0;

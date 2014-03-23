@@ -35,6 +35,15 @@ Config::Config( const boost::filesystem::path& configXMLFile, CefRefPtr<PluginMa
     pugi::xpath_node content_node =  doc.select_single_node(L"/widget/content");
     _startDocument = Helper::wideToUtf8(content_node.node().attribute(L"src").value());
 
+    // parse the preferences
+    pugi::xpath_node_set preferences = doc.select_nodes(L"/widget/preference");
+    for(pugi::xpath_node_set::const_iterator iter = preferences.begin() ; iter != preferences.end(); ++iter)
+    {
+      std::string preferenceName = Helper::wideToUtf8(iter->node().attribute(L"name").value());
+      std::string preferenceValue = Helper::wideToUtf8(iter->node().attribute(L"value").value());
+      _preferences[preferenceName] = preferenceValue;
+    }
+
     // parse the plugins
     // get all feature nodes
     pugi::xpath_node_set features = doc.select_nodes(L"/widget/feature");
@@ -67,6 +76,66 @@ Config::Config( const boost::filesystem::path& configXMLFile, CefRefPtr<PluginMa
 Config::~Config()
 {
 
+}
+
+bool Config::getStringPreference( const std::string& prefName, std::string& value ) const
+{
+  bool ret = false;
+  std::map<std::string, std::string>::const_iterator search = _preferences.find(prefName);
+  if(search != _preferences.end())
+  {
+    value = search->second;
+    return true;
+  }
+  return ret;
+}
+
+bool Config::getBoolPreference( const std::string& prefName, bool& value ) const
+{
+  bool ret = false;
+  std::map<std::string, std::string>::const_iterator search = _preferences.find(prefName);
+  if(search != _preferences.end())
+  {
+    std::string val = search->second;
+    if(boost::iequals(val, "true"))
+      value = true;
+    else
+      value = false;
+    return true;
+  }
+  return ret;
+}
+
+bool Config::getIntPreference( const std::string& prefName, int& value ) const
+{
+  bool ret = false;
+  std::map<std::string, std::string>::const_iterator search = _preferences.find(prefName);
+  if(search != _preferences.end())
+  {
+    try {
+      value = boost::lexical_cast<int>(search->second);
+      return true;
+    } catch(boost::bad_lexical_cast const&) {
+      return false;
+    }
+  }
+  return ret;
+}
+
+bool Config::getDoublePreference( const std::string& prefName, double& value ) const
+{
+  bool ret = false;
+  std::map<std::string, std::string>::const_iterator search = _preferences.find(prefName);
+  if(search != _preferences.end())
+  {
+    try {
+      value = boost::lexical_cast<double>(search->second);
+      return true;
+    } catch(boost::bad_lexical_cast const&) {
+      return false;
+    }
+  }
+  return ret;
 }
 
 

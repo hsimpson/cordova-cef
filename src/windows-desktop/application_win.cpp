@@ -54,6 +54,7 @@ Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
   DWORD window_style = WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN;
 
   RECT neededRect;
+  // TODO: move to config.xml
   neededRect.left = 0;
   neededRect.top = 0;
   neededRect.right = 800;

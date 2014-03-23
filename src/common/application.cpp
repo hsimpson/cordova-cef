@@ -52,19 +52,36 @@ void Application::OnContextInitialized()
 
   CefWindowInfo info;
   bool transparent = true;
+
+  bool offscreenrendering = false;
+  config()->getBoolPreference("OffScreenRendering", offscreenrendering);
   
-  CefRefPtr<Client::RenderHandler> osr_window = createOSRWindow(_mainWindow, _client.get(), transparent);
-  _client->setOSRHandler(osr_window);
+
+  if(offscreenrendering) 
+  {
+    CefRefPtr<Client::RenderHandler> osr_window = createOSRWindow(_mainWindow, _client.get(), transparent);
+    _client->setOSRHandler(osr_window);
+    /* old
+    info.SetTransparentPainting(transparent ? true : false);
+    info.SetAsOffScreen(osr_window->handle());
+    */
+    info.SetAsWindowless(osr_window->handle(), transparent);
+  }
+  else
+  {
+    RECT rect;
+    GetClientRect(_mainWindow, &rect);
+    info.SetAsChild(_mainWindow, rect);
+  }
+
   
-  info.SetTransparentPainting(transparent ? true : false);
-  info.SetAsOffScreen(osr_window->handle());
   /*
   RECT r;
   r.left = 0; r.top = 0; r.right = 700; r.bottom = 500;
   info.SetAsChild(_mainWindow, r);
   */
   
-
+  //TODO: move the settings into config.xml
   CefBrowserSettings browserSettings;
   //browserSettings.developer_tools = STATE_ENABLED;
   browserSettings.file_access_from_file_urls = STATE_ENABLED;

@@ -50,17 +50,18 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     CefMainArgs main_args(hInstance);
 
     // create app
-    CefRefPtr<CefApp> app = new Application_Win(paths);
+    CefRefPtr<Application> app = new Application_Win(paths);
 
 
     // Execute the sub-process logic, if any. This will either return immediately for the browser
     // process or block until the sub-process should exit.
-    int exit_code = CefExecuteProcess(main_args, app, sandbox_info);
+    int exit_code = CefExecuteProcess(main_args, app.get(), sandbox_info);
     if (exit_code >= 0) {
       // The sub-process terminated, exit now.
       return exit_code;
     }
 
+    //TODO: move the settings into config.xml
     // Populate this structure to customize CEF behavior.
     CefSettings appsettings;
     appsettings.remote_debugging_port = 9999;
@@ -69,8 +70,12 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     appsettings.single_process = true;
  //#endif
 
+    bool offscreenrendering = false;
+    app->config()->getBoolPreference("OffScreenRendering", offscreenrendering);
+    appsettings.windowless_rendering_enabled = offscreenrendering;
+
     // Initialize CEF in the main process.
-    CefInitialize(main_args, appsettings, app, sandbox_info);
+    CefInitialize(main_args, appsettings, app.get(), sandbox_info);
   
     // Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
     CefRunMessageLoop();
