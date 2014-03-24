@@ -45,10 +45,26 @@ Application::~Application()
 
 void Application::OnContextInitialized()
 { 
-  boost::filesystem::path startup_document = _paths->getApplicationDir();
-  startup_document /= "www";
-  startup_document /= _config->startDocument();
-  _startupUrl = "file:///" + startup_document.generic_string(); 
+  
+  std::string startup_document = _config->startDocument();
+
+  // test if absolute url with http or https
+  if(boost::starts_with(startup_document, "http://") || boost::starts_with(startup_document, "https://"))
+  {
+    _startupUrl = startup_document;
+  }
+  else
+  {
+    std::string www_dir = _paths->getApplicationDir().generic_string();
+    www_dir += "/www";
+    if(!boost::starts_with(www_dir, "/"))
+      www_dir = "/" + www_dir;
+    _startupUrl = "file://" + www_dir + "/" + startup_document; 
+  }
+
+
+
+  
 
   CefWindowInfo info;
   bool transparent = true;

@@ -32,7 +32,7 @@
 
     
 
-    <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
+    <!--content src="http://www.google.de" /-->
     <content src="index.html" />
     <access origin="*"/>
 
