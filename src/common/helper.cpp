@@ -47,6 +47,40 @@ boost::filesystem::path Helper::Paths::getAppDataDir() const
     _homedir = getHomeDir();
 
   ret = _homedir;
+  // Make the app dir configurable
   ret += _executablePath.stem();
+  return ret;
+}
+boost::filesystem::path Helper::Paths::getPersistentFsDir() const
+{
+  boost::filesystem::path ret = getAppDataDir();
+
+  ret /= "fs";
+  ret /= "persistent";
+  return ret;
+}
+
+
+boost::filesystem::path Helper::Paths::getTemporaryFsDir() const
+{
+  boost::filesystem::path ret = getAppDataDir();
+
+  ret /= "fs";
+  ret /= "Temp";
+  return ret;
+}
+boost::filesystem::path Helper::Paths::getDbDir() const
+{
+  boost::filesystem::path ret = getAppDataDir();
+
+  ret /= "db";
+  return ret;
+}
+
+boost::filesystem::path Helper::Paths::getCacheDir() const
+{
+  boost::filesystem::path ret = getAppDataDir();
+
+  ret /= "cache";
   return ret;
 }

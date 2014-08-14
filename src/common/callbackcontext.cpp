@@ -94,4 +94,7 @@ void CallbackContext::error(int message)
   sendPluginresult(std::make_shared<PluginResult>(PluginResult::ERROR_, message));
 }
 
-
+std::string CallbackContext::getCallbackId() 
+{
+	return _callbackId;
+}

@@ -32,13 +32,15 @@ namespace keywords = boost::log::keywords;
 
 // We define our own severity levels
 
-inline void init_logging()
+//WORLDAPP change: make log file path configurable
+inline void init_logging(boost::filesystem::path path)
 {
   boost::shared_ptr< logging::core > core = logging::core::get();
   
   boost::shared_ptr< sinks::text_file_backend > backend =
     boost::make_shared< sinks::text_file_backend >(
-    keywords::file_name = (boost::filesystem::temp_directory_path() /= "cordova_cef%5N.log"), // TODO: use better path then relative (maybe $HOME/..)                                         
+	//WorldAPP logging path
+    keywords::file_name = (path /= "cordova_cef%5N.log"), // TODO: use better path then relative (maybe $HOME/..)                                         
     keywords::open_mode = (std::ios::out |std::ios::app),
     keywords::rotation_size = 5 * 1024 * 1024,                                     
     keywords::time_based_rotation = sinks::file::rotation_at_time_point(12, 0, 0),
@@ -54,11 +56,11 @@ inline void init_logging()
   sink->set_formatter(
     expr::stream
     << "[" << expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S.%f") << "]"
-    << "[PID=" << expr::attr< attrs::current_process_id::value_type >("ProcessID") << "]"
-    << "[TID=" << expr::attr< attrs::current_thread_id::value_type >("ThreadID") << "]"
+    //<< "[PID=" << expr::attr< attrs::current_process_id::value_type >("ProcessID") << "]"
+    //<< "[TID=" << expr::attr< attrs::current_thread_id::value_type >("ThreadID") << "]"
     << "[" <<  logging::trivial::severity  << "]"
     << "[" << expr::attr<std::string>("Channel") << "] "
-    << expr::format_named_scope("Scope", keywords::format = "%f(%l) %n")
+    << expr::format_named_scope("Scope", keywords::format = "%f(%l)")
     << " - "
     << expr::smessage
   );
@@ -93,4 +95,6 @@ using namespace logging::trivial;
 #define LOG_WARN(logger) BOOST_LOG_FUNCTION() BOOST_LOG_SEV(logger, warning)
 #define LOG_ERROR(logger) BOOST_LOG_FUNCTION() BOOST_LOG_SEV(logger, error)
 #define LOG_FATAL(logger) BOOST_LOG_FUNCTION() BOOST_LOG_SEV(logger, fatal)
+
+
 #endif // logging_h__
