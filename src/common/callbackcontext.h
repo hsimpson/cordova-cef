@@ -52,7 +52,7 @@ public:
 
 
 
-
+  std::string getCallbackId();
 
   void sendPluginresult( std::shared_ptr<const PluginResult> result);
 

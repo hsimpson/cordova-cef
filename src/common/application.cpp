@@ -42,9 +42,56 @@ Application::~Application()
 }
 
 
+void Application::InitializeAppData()
+{
+
+//Creating the file systems to be used with the file plugins in AppData. 
+
+	try {
+
+		boost::filesystem::path persistent_root_path = _paths->getPersistentFsDir();
+		boost::filesystem::path temporary_root_path = _paths->getTemporaryFsDir();
+		boost::filesystem::path db_path = _paths->getDbDir();
+
+		if (!boost::filesystem::exists(persistent_root_path))
+			boost::filesystem::create_directories(persistent_root_path);
+
+		if (!boost::filesystem::exists(temporary_root_path))
+			boost::filesystem::create_directories(temporary_root_path);
+
+		if (!boost::filesystem::exists(db_path))
+			boost::filesystem::create_directories(db_path);
+
+	}
+	catch (const boost::filesystem::filesystem_error e) {
+		LOG_TRACE(logger()) << "Failed to create AppData directories: " << e.code().message();
+	}
+
+}
+
+void Application::MoveWebAppToTempFs() {
+  boost::filesystem::path src_path = _paths->getApplicationDir();
+  boost::filesystem::path dest_path(_paths->getTemporaryFsDir());
+
+		//Copy the the contents of www
+
+		src_path /= "www";
+
+		dest_path /= "www";
+
+		if (boost::filesystem::exists(dest_path))
+			boost::filesystem::remove_all(dest_path);
+
+		Helper::copyDir(src_path, dest_path);
+
+}
+
 
 void Application::OnContextInitialized()
 { 
+
+  InitializeAppData();
+
   
   std::string startup_document = _config->startDocument();
 
@@ -53,9 +100,16 @@ void Application::OnContextInitialized()
   {
     _startupUrl = startup_document;
   }
-  else
-  {
-    std::string www_dir = _paths->getApplicationDir().generic_string();
+  else {
+    std::string www_dir;
+	bool copyWebApp;
+	if (_config->getBoolPreference("copyWebApp", copyWebApp)) {
+		MoveWebAppToTempFs();
+		www_dir = _paths->getTemporaryFsDir().generic_string();
+	}
+	else {
+	    www_dir = _paths->getApplicationDir().generic_string();
+	}
     www_dir += "/www";
     if(!boost::starts_with(www_dir, "/"))
       www_dir = "/" + www_dir;
@@ -163,4 +217,14 @@ void Application::handlePause()
 void Application::handleResume()
 {
   runJavaScript("cordova.fireDocumentEvent('resume');");
+}
+
+std::shared_ptr<Helper::Paths> Application::getPaths()
+{
+	return _paths;
+}
+
+CefWindowHandle Application::getHandle()
+{
+	return _mainWindow;
 }

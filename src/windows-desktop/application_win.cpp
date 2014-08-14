@@ -40,14 +40,14 @@ Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
   wcex.cbClsExtra    = 0;
   wcex.cbWndExtra    = 0;
   wcex.hInstance     = GetModuleHandle(NULL);
-  wcex.hIcon         = NULL;
+  wcex.hIcon         = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDI_ICON));
   wcex.hCursor       = LoadCursor(NULL, IDC_ARROW);
-  HBITMAP hbmp = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDB_BITMAP_CHECKERBOARD));
+  HBITMAP hbmp = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDB_BITMAP_WHITE));
   wcex.hbrBackground = CreatePatternBrush(hbmp);
   
   wcex.lpszMenuName  = NULL;
   wcex.lpszClassName = L"CORDOVA-CEF-MAINWINDOW";
-  wcex.hIconSm       = NULL;
+  wcex.hIconSm       = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDI_ICON));
 
   RegisterClassExW(&wcex);
 

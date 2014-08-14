@@ -59,6 +59,13 @@ public:
   void sendPluginResult(std::shared_ptr<const PluginResult> pluginResult, const std::string& callbackId);
   void runJavaScript(const std::string& js);
 
+  void Application::InitializeAppData();
+  void Application::MoveWebAppToTempFs();
+
+  std::shared_ptr<Helper::Paths> getPaths();
+
+  CefWindowHandle getHandle();
+
   const CefRefPtr<Config> config() const {return _config;}
 
 protected:
