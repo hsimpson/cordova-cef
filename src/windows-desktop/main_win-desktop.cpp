@@ -65,6 +65,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     //TODO: move the settings into config.xml
     // Populate this structure to customize CEF behavior.
     CefSettings appsettings;
+		appsettings.remote_debugging_port = 9999;
 
 	//Set the path where the cache should be stored to save cross-session data
 //	appsettings.cache_path = *cefPath;
