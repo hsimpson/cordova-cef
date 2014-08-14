@@ -32,14 +32,14 @@ namespace keywords = boost::log::keywords;
 
 // We define our own severity levels
 
-//WORLDAPP change: make log file path configurable
+//Make log file path configurable
 inline void init_logging(boost::filesystem::path path)
 {
   boost::shared_ptr< logging::core > core = logging::core::get();
   
   boost::shared_ptr< sinks::text_file_backend > backend =
     boost::make_shared< sinks::text_file_backend >(
-	//WorldAPP logging path
+	//Logging path
     keywords::file_name = (path /= "cordova_cef%5N.log"), // TODO: use better path then relative (maybe $HOME/..)                                         
     keywords::open_mode = (std::ios::out |std::ios::app),
     keywords::rotation_size = 5 * 1024 * 1024,                                     

@@ -38,7 +38,7 @@ OSRWindow_Win::OSRWindow_Win(CefWindowHandle parent, OSRBrowserProvider* browser
 {
   RECT r;
 
-	//WorldAPP fix a bug with icorrect size on strtup
+	//Fix a bug with icorrect size on strtup
   GetClientRect(parent, &r);
 
   CreateWidget(parent, r, GetModuleHandle(NULL), L"CORDOVA-CEF-OSR-WIDGET");

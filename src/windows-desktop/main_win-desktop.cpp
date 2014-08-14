@@ -40,7 +40,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     std::shared_ptr<Helper::Paths> paths = std::make_shared<Helper::Paths_Win>();
 
     // first init the logging system
-	// WorldAPP log file path
+	// Log file path
     init_logging(paths->getAppDataDir());
 
 
@@ -72,7 +72,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     cef_string_utf8_to_utf16( paths->getCacheDir().generic_string().c_str(), paths->getCacheDir().generic_string().length(), cef_str );
 	appsettings.cache_path = *cef_str;
 
-	//WorldAPP put the cef log file into the standard directory
+	//Put the cef log file into the standard directory
     cef_string_t* path_str = cef_string_userfree_utf16_alloc();
 	boost::filesystem::path log_path = paths->getAppDataDir() / "cef.log";
 	cef_string_utf8_to_utf16( log_path.generic_string().c_str(), log_path.generic_string().length(), path_str );

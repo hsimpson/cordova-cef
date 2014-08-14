@@ -90,7 +90,7 @@ void Application::MoveWebAppToTempFs() {
 void Application::OnContextInitialized()
 { 
 
-//  InitializeAppData();
+  InitializeAppData();
 
   
   std::string startup_document = _config->startDocument();
@@ -157,13 +157,6 @@ void Application::OnContextInitialized()
   browserSettings.file_access_from_file_urls = STATE_ENABLED;
   browserSettings.universal_access_from_file_urls = STATE_ENABLED;
   browserSettings.web_security = STATE_DISABLED;
-
-  //WORLDAPP modification: default browser background
-  // HACK: we have to set black background to avoid white flashes.
-  // 'aHRtbCxib2R5e2JhY2tncm91bmQtY29sb3I6d2hpdGU7fQ==' stands for 'html,body{background-color:white;}'.
-  // Ym9keXtiYWNrZ3JvdW5kLWNvbG9yOndoaXRlO30= stands for body{background-color:white;}
-  //LPCSTR strCss = "data:text/css;charset=utf-8;base64,Ym9keXtiYWNrZ3JvdW5kLWNvbG9yOndoaXRlO30=";
-  //CefString(&browserSettings.user_style_sheet_location).FromASCII(strCss);
 
   // init plugin manager (also create the plugins with onload=true)
   _pluginManager->init();
