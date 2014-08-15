@@ -19,11 +19,11 @@
  *
 */
 
+#include "application.h"
 #include "cordovaplugin.h"
 #include "json/json.h"
 
 CordovaPlugin::CordovaPlugin()
-  : _app(nullptr)
 {
 }
 
@@ -31,9 +31,14 @@ CordovaPlugin::~CordovaPlugin()
 {
 }
 
-void CordovaPlugin::initialize(Application* app)
+void CordovaPlugin::initialize(CefRefPtr<Application> app)
 {
   _app = app;
+}
+
+CefRefPtr<Application> CordovaPlugin::getApp() const
+{
+  return _app;
 }
 
 PluginCreator::PluginCreator(const std::string& pluginname)

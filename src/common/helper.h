@@ -40,22 +40,75 @@ namespace Helper
     return conv.from_bytes(str.data());
   }
 
-  class Paths
+#define NATIVE_SEPERATOR '/'
+#define WIN_SEPERATOR '\\'
+
+  class Path
   {
   public:
-    Paths();
-    virtual ~Paths();
-    boost::filesystem::path getApplicationDir() const;
-    boost::filesystem::path getAppDataDir() const;
+    // constructs an empty path
+    Path();
 
-  protected:
-    virtual boost::filesystem::path getExecutablePath() const = 0;
-    virtual boost::filesystem::path getHomeDir() const = 0;
+    // constructs a path from UTF-16 string
+    Path(const std::wstring& path);
+
+    // constructs a path from UTF-8 string
+    Path(const std::string& path);
+
+    // operators
+    Path& operator=  (const std::wstring& other);
+    Path& operator=  (const Path& other);
+    Path& operator+= (const std::string& other);
+    Path  operator+  (const std::string& other) const;
+
+
+    // get the dir of this path, if it is a already a dir then it returns a copy of itself
+    Path dir() const;
+    // returns true if this path is a dir
+    bool isDir() const;
+    // returns true if this Path is a file
+    bool isFile() const;
+    // returns the complete file path
+    std::string filePath() const;
+    // get the parent
+    Path parentPath() const;
+    // get the file name of the file with extension
+    std::string fileName() const;    
+    // get the base name of the file without extension
+    std::string baseName() const;
 
   private:
-    mutable boost::filesystem::path _executablePath;
-    mutable boost::filesystem::path _homedir;
+
+    // set the path to slash separators
+    void setToSlashSeparators();
+
+    // stores the complete path as UTF-8
+    std::string _path;
+  };
+
+
+  class StringUtils
+  {
+  public:
+    static bool iequals(const std::string& str1, const std::string& str2);
+    static bool starts_with(const std::string& str1, const std::string& str2);
+  };
+
+  class PathManager
+  {
+  public:
+    PathManager();
+    virtual ~PathManager();
+    Helper::Path getApplicationDir() const;
+    Helper::Path getAppDataDir() const;
+
+  protected:
+    virtual Helper::Path getExecutablePath() const = 0;
+    virtual Helper::Path getHomeDir() const = 0;
+    virtual Helper::Path getTempDir() const = 0;
+
+  private:
 
   };
-}
+} // namespace Helper
 #endif // helper_h__

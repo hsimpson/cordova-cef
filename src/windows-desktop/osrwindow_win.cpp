@@ -36,11 +36,12 @@ OSRWindow_Win::OSRWindow_Win(CefWindowHandle parent, OSRBrowserProvider* browser
     _painting_popup(false),
     _render_task_pending(false)
 {
+  // TODO: move to config.xml
   RECT r;
   r.left = 0;
   r.top = 0;
-  r.right = 800;
-  r.bottom = 600;
+  r.right = 1024;
+  r.bottom = 768;
   CreateWidget(parent, r, GetModuleHandle(NULL), L"CORDOVA-CEF-OSR-WIDGET");
 }
 

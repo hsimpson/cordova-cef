@@ -24,7 +24,11 @@
 
 
 #include "callbackcontext.h"
+#include "include/cef_base.h"
 #include <memory>
+#include <map>
+
+class Application;
 
 namespace Json
 {
@@ -38,11 +42,11 @@ public:
   virtual ~CordovaPlugin();
 
   virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext) = 0;
-  virtual void initialize(Application* app);
-  Application* getApp() const {return _app;}
+  virtual void initialize(CefRefPtr<Application> app);
+  CefRefPtr<Application> getApp() const;
 
 private:
-  Application* _app;
+  CefRefPtr<Application> _app;
 };
 
 class PluginCreator : public std::enable_shared_from_this<PluginCreator>

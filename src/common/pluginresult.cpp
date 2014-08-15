@@ -98,28 +98,9 @@ PluginResult::PluginResult(PluginResult::Status status, const std::vector<char>&
     _status(status),
     _messageType(binaryString ? MESSAGE_TYPE_BINARYSTRING : MESSAGE_TYPE_ARRAYBUFFER)
 {
-  using namespace boost::archive::iterators;
-
-  std::stringstream os;
-  typedef 
-    insert_linebreaks<         // insert line breaks every 72 characters
-      base64_from_binary<    // convert binary values ot base64 characters
-        transform_width<   // retrieve 6 bit integers from a sequence of 8 bit bytes
-          const char *,
-          6,
-          8
-        >
-      > 
-      ,72
-    > 
-    base64_text; // compose all the above operations in to a new iterator
-
-  std::copy(
-    base64_text(&data[0]),
-    base64_text(&data[0] + data.size()),
-    ostream_iterator<char>(os)
-  );
-  _encodedMessage = os.str();
+  // TODO: implement this
+  throw std::runtime_error("not yet implemented");
+  _encodedMessage = "";
 }
 
 PluginResult::~PluginResult()

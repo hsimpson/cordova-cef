@@ -24,6 +24,10 @@
 #include "application.h"
 #include "json/json.h"
 
+#include "humblelogging/api.h"
+
+HUMBLE_LOGGER(logger, "PluginManagement");
+
 class PluginEntry
 {
 public:
@@ -34,7 +38,7 @@ public:
   {
   }
   */
-  PluginEntry(Application* app, PluginCreator* creator, bool onLoad)
+  PluginEntry(CefRefPtr<Application> app, PluginCreator* creator, bool onLoad)
     : _app(app),
       creator(creator),    
       onload(onLoad)
@@ -62,12 +66,11 @@ public:
   bool onload;
 
 private:
-  Application* _app;
+  CefRefPtr<Application> _app;
 };
 
-PluginManager::PluginManager(Application* app)
-  : INIT_LOGGER(PluginManager),
-    _app(app),
+PluginManager::PluginManager(CefRefPtr<Application> app)
+  : _app(app),
     _firstRun(true)
 {
 }
@@ -102,12 +105,12 @@ void PluginManager::addPlugin(const std::string& servicename, const std::string&
     }
     else
     {
-      LOG_ERROR(logger()) << "Plugin '" << servicename << "' already added";
+      HL_ERROR(logger, "Plugin '" + servicename + "' already added");
     }
   }
   else
   {
-    LOG_ERROR(logger()) << "Plugin '" << servicename << "' not registered with classname '" << classname << "'";
+    HL_ERROR(logger, "Plugin '" + servicename + "' not registered with classname '" + classname + "'");
   }
 }
 
@@ -147,7 +150,7 @@ void PluginManager::exec( const std::string& service, const std::string& action,
   std::shared_ptr<CordovaPlugin> plugin = getPlugin(service);
   if(!plugin.get())
   {
-    LOG_ERROR(logger()) << "exec() call to unknown plugin: " << service;    
+    HL_ERROR(logger, "exec() call to unknown plugin: " + service);    
     _app->sendPluginResult(std::make_shared<PluginResult>(PluginResult::CLASS_NOT_FOUND_EXCEPTION), callbackId);
     return;
   }

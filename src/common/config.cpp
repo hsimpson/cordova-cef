@@ -21,12 +21,16 @@
 
 #include "helper.h"
 #include "config.h"
+#include "humblelogging/api.h"
+#include <sstream>
 
-Config::Config( const boost::filesystem::path& configXMLFile, CefRefPtr<PluginManager> pluginManager )
-  : INIT_LOGGER(Config)
+HUMBLE_LOGGER(logger, "Config");
+
+
+Config::Config( const Helper::Path& configXMLFile, std::shared_ptr<PluginManager> pluginManager )
 {
   pugi::xml_document doc;
-  pugi::xml_parse_result result = doc.load_file(configXMLFile.wstring().c_str());
+  pugi::xml_parse_result result = doc.load_file(configXMLFile.filePath().c_str());
   if(result.status == pugi::status_ok)
   {
     // get name node
@@ -68,7 +72,9 @@ Config::Config( const boost::filesystem::path& configXMLFile, CefRefPtr<PluginMa
   }
   else
   {
-    LOG_ERROR(logger()) << "failed to parse config xml '" << configXMLFile << "' result=" << result.status;
+    std::stringstream ss;
+    ss << "failed to parse config xml '" << configXMLFile.filePath() << "' result=" << result.status;
+    HL_ERROR(logger, ss.str());
     //TODO: error handling
   }
 }
@@ -97,7 +103,7 @@ bool Config::getBoolPreference( const std::string& prefName, bool& value ) const
   if(search != _preferences.end())
   {
     std::string val = search->second;
-    if(boost::iequals(val, "true"))
+    if(Helper::StringUtils::iequals(val, "true"))
       value = true;
     else
       value = false;
@@ -113,9 +119,9 @@ bool Config::getIntPreference( const std::string& prefName, int& value ) const
   if(search != _preferences.end())
   {
     try {
-      value = boost::lexical_cast<int>(search->second);
+      value = std::stoi(search->second);
       return true;
-    } catch(boost::bad_lexical_cast const&) {
+    } catch(std::exception&) {
       return false;
     }
   }
@@ -129,9 +135,9 @@ bool Config::getDoublePreference( const std::string& prefName, double& value ) c
   if(search != _preferences.end())
   {
     try {
-      value = boost::lexical_cast<double>(search->second);
+      value = std::stod(search->second);
       return true;
-    } catch(boost::bad_lexical_cast const&) {
+    } catch(std::exception&) {
       return false;
     }
   }

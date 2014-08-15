@@ -21,10 +21,13 @@
 
 #include "callbackcontext.h"
 #include "application.h"
+#include "humblelogging/api.h"
+#include <sstream>
 
-CallbackContext::CallbackContext( const std::string& callbackId, Application* app )
-  : INIT_LOGGER(CallbackContext),
-    _callbackId(callbackId),
+HUMBLE_LOGGER(logger, "CallbackContext");
+
+CallbackContext::CallbackContext( const std::string& callbackId, CefRefPtr<Application> app )
+  : _callbackId(callbackId),
     _app(app),
     _finished(false)
 {
@@ -39,10 +42,12 @@ CallbackContext::~CallbackContext()
 void CallbackContext::sendPluginresult( std::shared_ptr<const PluginResult> result )
 {
   {
-    boost::lock_guard<boost::recursive_mutex> lock(_mutex);
+    std::lock_guard<std::recursive_mutex> lock(_mutex);
     if(_finished)
     {
-      LOG_WARN(logger()) << "Attempted to send a second callback for ID: " << _callbackId << "\nResult was: " << result->getMessage();
+      std::stringstream ss;
+      ss << "Attempted to send a second callback for ID: %d" << _callbackId << "\nResult was: " << result->getMessage();
+      HL_WARN(logger, ss.str());
       return;
     }
     else

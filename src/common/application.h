@@ -7,9 +7,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,7 +25,6 @@
 #include "include/cef_app.h"
 #include "client.h"
 #include "config.h"
-#include "logging.h"
 #include "pluginmanager.h"
 #include "pluginresult.h"
 #include "nativetojsmessagequeue.h"
@@ -33,17 +32,22 @@
 
 
 class Application : public CefApp,
-                    public CefBrowserProcessHandler,
-                    public CefRenderProcessHandler,
-                    public CefV8Handler
+  public CefBrowserProcessHandler,
+  public CefRenderProcessHandler,
+  public CefV8Handler
 {
 public:
-  Application(CefRefPtr<Client> client, std::shared_ptr<Helper::Paths>);
+  Application(std::shared_ptr<Helper::PathManager> pathManager);
   virtual ~Application();
+
+
+  virtual void createMainWindow() = 0;
 
   // CefApp method(s)
   virtual CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE { return this; }
   virtual CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE { return this; }
+  virtual void OnBeforeCommandLineProcessing( const CefString& process_type, CefRefPtr<CefCommandLine> command_line );
+
 
   //CefBrowserProcessHandler method(s)
   virtual void OnContextInitialized() OVERRIDE;
@@ -51,6 +55,7 @@ public:
   //CefRenderProcessHandler method(s)
   virtual void OnContextCreated( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context ) OVERRIDE;
   virtual void OnContextReleased( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefV8Context> context ) OVERRIDE;
+  virtual void OnBrowserDestroyed(CefRefPtr<CefBrowser> browser) OVERRIDE;
 
   //CefV8Handler method(s)
   virtual bool Execute( const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception ) OVERRIDE;
@@ -59,29 +64,34 @@ public:
   void sendPluginResult(std::shared_ptr<const PluginResult> pluginResult, const std::string& callbackId);
   void runJavaScript(const std::string& js);
 
-  const CefRefPtr<Config> config() const {return _config;}
+  std::shared_ptr<Config> config() const
+  {
+    return _config;
+  }
+  std::shared_ptr<Helper::PathManager> pathManager() const
+  {
+    return _pathManager;
+  }
 
 protected:
-
-  virtual CefRefPtr<Client::RenderHandler> createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent) = 0;
+  //virtual CefRefPtr<Client::RenderHandler> createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent) = 0;
   virtual void handlePause();
   virtual void handleResume();
+  void createBrowser();
 
   CefRefPtr<Client> _client;
-  CefRefPtr<Config> _config;
-  CefRefPtr<PluginManager> _pluginManager;
-
-  std::string _startupUrl;
-
-  CefRefPtr<CefV8Value> _exposedJSObject;
-
-  NativeToJsMessageQueue _jsMessageQueue;
-  std::shared_ptr<Helper::Paths> _paths;
-
+  std::shared_ptr<Config> _config;
   CefWindowHandle _mainWindow;
-  
-  IMPLEMENT_REFCOUNTING(Application);
 
-  DECLARE_LOGGER(Application);
+private:
+
+  std::shared_ptr<PluginManager> _pluginManager;
+  std::string _startupUrl;
+  CefRefPtr<CefV8Value> _exposedJSObject;
+  std::shared_ptr<NativeToJsMessageQueue> _jsMessageQueue;
+  std::shared_ptr<Helper::PathManager> _pathManager;
+
+
+  IMPLEMENT_REFCOUNTING(Application);
 };
 #endif // application_h__

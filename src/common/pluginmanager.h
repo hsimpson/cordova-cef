@@ -26,7 +26,6 @@
 #include <string>
 #include <map>
 #include "cordovaplugin.h"
-#include "logging.h"
 
 class Application;
 class PluginEntry;
@@ -34,7 +33,7 @@ class PluginEntry;
 class PluginManager
 {
 public:
-  PluginManager(Application* app);
+  PluginManager(CefRefPtr<Application> app);
   virtual ~PluginManager();
   void init();
   void addPlugin(const std::string& servicename, const std::string& classname, bool onload=false);
@@ -50,12 +49,11 @@ private:
 
   
   bool _firstRun;
-  Application* _app;
+  CefRefPtr<Application> _app;
   typedef std::map<std::string, std::shared_ptr<PluginEntry> > PluginMap;
   PluginMap _pluginEntries;
 
   IMPLEMENT_REFCOUNTING(PluginManager);
-  DECLARE_LOGGER(PluginManager);
 };
 
 #endif // pluginmanager_h__

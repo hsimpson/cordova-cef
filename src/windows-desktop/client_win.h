@@ -23,7 +23,6 @@
 #define client_win_h__
 
 #include "common/client.h"
-#include "common/logging.h"
 
 class Client_Win : public Client
 {
@@ -44,12 +43,6 @@ private:
     DWORD ex_style;
     RECT rect;
   } _savedWindowInfo;
-
-  IMPLEMENT_REFCOUNTING(Client_Win);
-
-  DECLARE_LOGGER(Client_Win);
-
-  
 
 };
 

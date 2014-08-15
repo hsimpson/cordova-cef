@@ -34,6 +34,7 @@ public:
   virtual std::string getVersion();
   virtual std::string getPlatform();
   virtual std::string getModel();
+  virtual std::string getUuid();
 
 };
 #endif // device_win_h__

@@ -33,18 +33,29 @@ Helper::Paths_Win::~Paths_Win()
 
 }
 
-boost::filesystem::path Helper::Paths_Win::getExecutablePath() const
+Helper::Path Helper::Paths_Win::getExecutablePath() const
 {
   wchar_t path[MAX_PATH];
+  Helper::Path ret;
   if(GetModuleFileNameW( NULL, path, MAX_PATH ))
-    return boost::filesystem::path(path);
-  return boost::filesystem::path();
+    ret = path;
+  return ret;
 }
 
-boost::filesystem::path Helper::Paths_Win::getHomeDir() const
+Helper::Path Helper::Paths_Win::getHomeDir() const
 {
   wchar_t path[MAX_PATH];
-  if(SUCCEEDED(SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, 0, path)))
-    return boost::filesystem::path(path);
-  return boost::filesystem::path();
+  Helper::Path ret;
+  if(SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, path)))
+    ret = path;
+  return ret;
+}
+
+Helper::Path Helper::Paths_Win::getTempDir() const
+{
+  wchar_t path[MAX_PATH];
+  Helper::Path ret;
+  if(SUCCEEDED(GetTempPath(MAX_PATH,  path)))
+    ret = path;
+  return ret;
 }

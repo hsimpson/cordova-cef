@@ -1,5 +1,5 @@
 // Platform: cef
-// 3.4.0-dev-4ca9251
+// 3.5.0-dev-e2e8a26
 /*
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
@@ -19,7 +19,7 @@
  under the License.
 */
 ;(function() {
-var CORDOVA_JS_BUILD_LABEL = '3.4.0-dev-4ca9251';
+var CORDOVA_JS_BUILD_LABEL = '3.5.0-dev-e2e8a26';
 // file: src/scripts/require.js
 
 /*jshint -W079 */

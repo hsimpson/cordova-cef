@@ -20,16 +20,18 @@
 */
 
 #include "client.h"
-#include "cefclient/util.h"
+
+#include "include/wrapper/cef_helpers.h"
 
 #include "include/cef_app.h"
 #include "include/cef_runnable.h"
-#include "logging.h"
+#include "humblelogging/api.h"
+#include <sstream>
 
+HUMBLE_LOGGER(logger, "Client");
 
 Client::Client()
-  : INIT_LOGGER(Client),
-    _bIsClosing(false),
+  : _bIsClosing(false),
     _browserId(0),
     _browserCount(0),
     _bIsFullScreen(false)
@@ -40,6 +42,7 @@ Client:: ~Client()
 {
 }
 
+/*
 bool Client::OnBeforePopup( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access )
 {
   if (browser->GetHost()->IsWindowRenderingDisabled()) {
@@ -48,10 +51,11 @@ bool Client::OnBeforePopup( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> f
   }
   return false;
 }
+*/
 
 void Client::OnAfterCreated( CefRefPtr<CefBrowser> browser )
 {
-  REQUIRE_UI_THREAD();
+  CEF_REQUIRE_UI_THREAD();
   AutoLock lock_scope(this);
   if (!_browser.get())
   {
@@ -70,7 +74,7 @@ void Client::OnAfterCreated( CefRefPtr<CefBrowser> browser )
 
 bool Client::DoClose( CefRefPtr<CefBrowser> browser )
 {
-  REQUIRE_UI_THREAD();
+  CEF_REQUIRE_UI_THREAD();
 
   // Closing the main window requires special handling. See the DoClose()
   // documentation in the CEF header for a detailed destription of this
@@ -88,17 +92,18 @@ bool Client::DoClose( CefRefPtr<CefBrowser> browser )
 
 void Client::OnBeforeClose( CefRefPtr<CefBrowser> browser )
 {
-  REQUIRE_UI_THREAD();
+  CEF_REQUIRE_UI_THREAD();
   if (_browserId == browser->GetIdentifier())
   {
     // Free the browser pointer so that the browser can be destroyed
     _browser = NULL;
-
+    /*
     if (_OSRHandler.get())
     {
       _OSRHandler->OnBeforeClose(browser);
       _OSRHandler = NULL;
     }
+    */
   }
   else if (browser->IsPopup())
   {
@@ -130,7 +135,9 @@ void Client::OnBeforeClose( CefRefPtr<CefBrowser> browser )
 
 void Client::showDevTools( CefRefPtr<CefBrowser> browser )
 {
-  LOG_DEBUG(logger()) << "showDevTools, id=" << browser->GetIdentifier();
+  std::stringstream ss;
+  ss << "showDevTools, id=" << browser->GetIdentifier();
+  HL_DEBUG(logger, ss.str());
   CefWindowInfo windowInfo;
   CefBrowserSettings settings;
 
@@ -140,7 +147,7 @@ void Client::showDevTools( CefRefPtr<CefBrowser> browser )
 
   browser->GetHost()->ShowDevTools(windowInfo, this, settings);
 }
-
+/*
 void Client::runJavaScript( const std::string& js )
 {
   // ToDo: run on first or last or all browsers ??
@@ -163,8 +170,9 @@ void Client::runJavaScriptOnUI_Thread( CefRefPtr<CefBrowser> browser, const std:
   CefRefPtr<CefFrame> frame = browser->GetMainFrame();
   frame->ExecuteJavaScript(js, frame->GetURL(), 0);
 }
+*/
 
-
+/*
 bool Client::GetRootScreenRect( CefRefPtr<CefBrowser> browser, CefRect& rect )
 {
   if (!_OSRHandler.get())
@@ -220,6 +228,7 @@ void Client::OnCursorChange( CefRefPtr<CefBrowser> browser, CefCursorHandle curs
     return;
   return _OSRHandler->OnCursorChange(browser, cursor);
 }
+*/
 
 void Client::OnBeforeContextMenu( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefContextMenuParams> params, CefRefPtr<CefMenuModel> model )
 {
@@ -236,3 +245,10 @@ bool Client::OnContextMenuCommand( CefRefPtr<CefBrowser> browser, CefRefPtr<CefF
 void Client::OnContextMenuDismissed( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame )
 {
 }
+
+bool Client::OnQuotaRequest( CefRefPtr<CefBrowser> browser, const CefString& origin_url, int64 new_size, CefRefPtr<CefQuotaCallback> callback )
+{
+  callback->Continue(true);
+  return true;
+}
+

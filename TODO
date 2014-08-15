@@ -5,6 +5,5 @@ TODO's for Cordova-CEF:
 - Cookie handling
 
 * windows-desktop
-- Off-screen rendering for transparent window and background
 - multi process implementation has problems
 - fullscreen

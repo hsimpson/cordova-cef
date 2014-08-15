@@ -25,15 +25,17 @@
 
 namespace Helper
 {
-  class Paths_Win : public Helper::Paths
+  class Paths_Win : public Helper::PathManager
   {
   public:
     Paths_Win();
     virtual ~Paths_Win();
 
   protected:
-    virtual boost::filesystem::path getExecutablePath() const;
-    virtual boost::filesystem::path getHomeDir() const;
+    virtual Helper::Path getExecutablePath() const;
+    virtual Helper::Path getHomeDir() const;
+    virtual Helper::Path getTempDir() const;
+
   };
 }
 #endif // helper_win_h__

@@ -23,15 +23,16 @@
 #define nativetojsmessagequeue_h__
 
 #include "jsmessage.h"
-#include "logging.h"
+#include "include/cef_base.h"
 #include <deque>
+#include <mutex>
 
 class Application;
 
 class NativeToJsMessageQueue
 {
 public:
-  NativeToJsMessageQueue(Application* app);
+  NativeToJsMessageQueue(CefRefPtr<Application> app);
   virtual ~NativeToJsMessageQueue();
   
   void addJavaScript(const std::string& statement);
@@ -63,13 +64,12 @@ private:
   std::string popAndEncodeAsJs();
 
   std::deque<std::shared_ptr<JsMessage> > _queue;
-  boost::recursive_mutex _mutex;
+  std::recursive_mutex _mutex;
   bool _paused;
   std::vector<std::shared_ptr<BridgeMode> > _registeredListeners;
   size_t _activeListenerIndex;
-  Application* _app;
+  CefRefPtr<Application> _app;
 
-  DECLARE_LOGGER(NativeToJsMessageQueue);
 };
 
 #endif // nativetojsmessagequeue_h__

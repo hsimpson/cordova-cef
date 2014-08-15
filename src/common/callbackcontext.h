@@ -24,7 +24,9 @@
 
 #include <string>
 #include <vector>
-#include "logging.h"
+#include <mutex>
+#include <memory>
+#include "include/cef_base.h"
 #include "pluginresult.h"
 
 class Application;
@@ -37,7 +39,7 @@ namespace Json
 class CallbackContext
 {
 public:
-  CallbackContext(const std::string& callbackId, Application* app);
+  CallbackContext(const std::string& callbackId, CefRefPtr<Application> app);
   virtual ~CallbackContext();
 
   void success(const Json::Value& message);
@@ -58,11 +60,10 @@ public:
 
 private:
   std::string _callbackId;
-  Application* _app;
+  CefRefPtr<Application> _app;
   bool _finished;
-  boost::recursive_mutex _mutex;
+  std::recursive_mutex _mutex;
 
-  DECLARE_LOGGER(CallbackContext);
 };
 
 #endif // CallbackContext_h__

@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="include\util">
+      <UniqueIdentifier>{bad58649-2d80-4e8c-accd-27a2eb2da3c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\util">
+      <UniqueIdentifier>{033b5bc4-3491-4835-8b9a-0fc8ff3bfaec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\humblelogging\api.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\appender.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\defines.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\factory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\formatter.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\logevent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\logger.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\loglevel.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\util\mutex_windows.h">
+      <Filter>include\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\util\ternarytree.h">
+      <Filter>include\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\util\mutex.h">
+      <Filter>include\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\util\processinfo.h">
+      <Filter>include\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\util\spinlock_windows.h">
+      <Filter>include\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\util\patternconfigregistry.h">
+      <Filter>include\util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\humblelogging\util\spinlock.h">
+      <Filter>include\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\appender.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\factory.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\formatter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logevent.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\logger.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\loglevel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\mutex_windows.cpp">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\patternconfigregistry.cpp">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\spinlock_windows.cpp">
+      <Filter>src\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

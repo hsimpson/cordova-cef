@@ -7,9 +7,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -23,22 +23,23 @@
 #define application_win_h__
 
 #include "common/application.h"
-#include "common/logging.h"
 
-class Application_Win : public Application 
+class Application_Win : public Application
 {
 public:
-  Application_Win(std::shared_ptr<Helper::Paths> paths);
+  Application_Win(HINSTANCE hInstance, std::shared_ptr<Helper::PathManager> pathManager);
   virtual ~Application_Win();
-  
-  IMPLEMENT_REFCOUNTING(Application_Win);
-  
-  DECLARE_LOGGER(Application_Win);
+  virtual void createMainWindow();
 
-  virtual CefRefPtr<Client::RenderHandler> createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent);
+  //virtual CefRefPtr<Client::RenderHandler> createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent);
 
 private:
   static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+
+
+
+  HINSTANCE _hInstance;
 
 };
 #endif // application_win_h__

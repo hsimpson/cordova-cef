@@ -21,13 +21,17 @@
 
 #include "include/cef_base.h"
 #include "pugixml.hpp"
-#include "logging.h"
 #include "pluginmanager.h"
 
-class Config : CefBase
+namespace Helper
+{
+  class Path;
+}
+
+class Config
 {
 public:
-  Config(const boost::filesystem::path& configXMLFile, CefRefPtr<PluginManager> pluginManager);
+  Config(const Helper::Path& configXMLFile, std::shared_ptr<PluginManager> pluginManager);
   virtual ~Config();
 
   std::string appName() const { return _appName;}
@@ -45,6 +49,4 @@ private:
   std::string _startDocument;  
   std::map<std::string, std::string> _preferences;
 
-  IMPLEMENT_REFCOUNTING(Config);
-  DECLARE_LOGGER(Config);
 };

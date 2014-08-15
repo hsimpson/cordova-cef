@@ -22,6 +22,7 @@
 #include "device_win.h"
 #include "common/helper.h"
 #include <Windows.h>
+#include <sstream>
 
 REGISTER_PLUGIN(Device_Win, Device);
 
@@ -61,4 +62,17 @@ std::string Device_Win::getModel()
   }
   delete[] buffer;
   return ret;
+}
+
+std::string Device_Win::getUuid()
+{
+  GUID guid;
+  CoCreateGuid(&guid);
+  BYTE* str;
+  UuidToStringA((UUID*)&guid, &str);
+
+  std::string unique((char*)str);
+  RpcStringFreeA(&str);
+
+  return unique;
 }

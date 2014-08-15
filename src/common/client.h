@@ -22,12 +22,12 @@
 #ifndef client_h__
 #define client_h__
 
-
+#include "include/base/cef_lock.h"
 #include "include/cef_client.h"
+
 #include <list>
 #include <set>
 #include <string>
-#include "logging.h"
 
 class OSRBrowserProvider {
 public:
@@ -40,18 +40,21 @@ protected:
 class Client : public CefClient,
                public CefLifeSpanHandler,
                public CefKeyboardHandler,
-               public CefRenderHandler,
+               //public CefRenderHandler,
                public OSRBrowserProvider,
-               public CefContextMenuHandler
+               public CefContextMenuHandler,
+               public CefRequestHandler
 {
 public:
 
   // Interface implemented to handle off-screen rendering.
+  /*
   class RenderHandler : public CefRenderHandler {
   public:
     virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) = 0;
     virtual CefWindowHandle handle() const = 0;
   };
+  */
 
   Client();
   virtual ~Client();
@@ -59,16 +62,19 @@ public:
   // CefClient method(s)
   virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {return this;}
   virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() OVERRIDE { return this; }
-  virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE { return this; }
+  //virtual CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE { return this; }
   virtual CefRefPtr<CefContextMenuHandler> GetContextMenuHandler() OVERRIDE { return this; }
+  virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE { return this; }
+
 
   // CefLifeSpanHandler method(s)
-  virtual bool OnBeforePopup( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access ) OVERRIDE;
+  //virtual bool OnBeforePopup( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access ) OVERRIDE;
   virtual void OnAfterCreated( CefRefPtr<CefBrowser> browser ) OVERRIDE;
   virtual bool DoClose( CefRefPtr<CefBrowser> browser ) OVERRIDE;
   virtual void OnBeforeClose( CefRefPtr<CefBrowser> browser ) OVERRIDE;
 
   // CefRenderHandler method(s)
+  /*
   virtual bool GetRootScreenRect( CefRefPtr<CefBrowser> browser, CefRect& rect ) OVERRIDE;
   virtual bool GetViewRect( CefRefPtr<CefBrowser> browser, CefRect& rect ) OVERRIDE;
   virtual bool GetScreenPoint( CefRefPtr<CefBrowser> browser, int viewX, int viewY, int& screenX, int& screenY ) OVERRIDE;
@@ -77,14 +83,18 @@ public:
   virtual void OnPopupSize( CefRefPtr<CefBrowser> browser, const CefRect& rect ) OVERRIDE;
   virtual void OnPaint( CefRefPtr<CefBrowser> browser, PaintElementType type, const RectList& dirtyRects, const void* buffer, int width, int height ) OVERRIDE;
   virtual void OnCursorChange( CefRefPtr<CefBrowser> browser, CefCursorHandle cursor ) OVERRIDE;
+  */
 
   // CefContextMenuHandler method(s)
   virtual void OnBeforeContextMenu( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefContextMenuParams> params, CefRefPtr<CefMenuModel> model ) OVERRIDE;
   virtual bool OnContextMenuCommand( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefContextMenuParams> params, int command_id, EventFlags event_flags ) OVERRIDE;
   virtual void OnContextMenuDismissed( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame ) OVERRIDE;
 
-  void runJavaScript( const std::string& js );
-  void setOSRHandler(CefRefPtr<RenderHandler> handler) { _OSRHandler = handler;}
+  // CefRequestHandler method(s)
+  virtual bool OnQuotaRequest( CefRefPtr<CefBrowser> browser, const CefString& origin_url, int64 new_size, CefRefPtr<CefQuotaCallback> callback ) OVERRIDE;
+   
+  //void runJavaScript( const std::string& js );
+  //void setOSRHandler(CefRefPtr<RenderHandler> handler) { _OSRHandler = handler;}
   bool IsClosing() { return _bIsClosing; }
 
   virtual CefRefPtr<CefBrowser> GetBrowser() const {return _browser;}
@@ -94,7 +104,7 @@ public:
 protected:
 
   virtual void showDevTools(CefRefPtr<CefBrowser> browser);
-  void runJavaScriptOnUI_Thread(CefRefPtr<CefBrowser> browser, const std::string js);
+  //void runJavaScriptOnUI_Thread(CefRefPtr<CefBrowser> browser, const std::string js);
 
   // List of open DevTools URLs if not using an external browser window.
   std::set<std::string> _openDevToolsURLs;
@@ -103,7 +113,7 @@ protected:
   typedef std::list<CefRefPtr<CefBrowser> > BrowserList;
   BrowserList _popupBrowsers;
 
-  CefRefPtr<RenderHandler> _OSRHandler;
+  //CefRefPtr<RenderHandler> _OSRHandler;
 
   bool _bIsClosing;
 
@@ -123,8 +133,7 @@ protected:
   IMPLEMENT_REFCOUNTING(Client);
   // Include the default locking implementation.
   IMPLEMENT_LOCKING(Client);
-  // define logger
-  DECLARE_LOGGER(Client);
+
 };
 
 #endif // client_h__

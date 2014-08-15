@@ -7,9 +7,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -21,15 +21,25 @@
 
 #include "application_win.h"
 #include "client_win.h"
-#include "osrwindow_win.h"
+//#include "osrwindow_win.h"
 #include "resource.h"
+
+
 
 #include <Shlwapi.h>
 #include <algorithm>
 
-Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
-  : INIT_LOGGER(Application_Win),
-    Application(new Client_Win, paths)
+Application_Win::Application_Win(HINSTANCE hInstance, std::shared_ptr<Helper::PathManager> pathManager)
+  : Application(pathManager),
+    _hInstance(hInstance)
+{
+}
+
+Application_Win::~Application_Win()
+{
+}
+
+void Application_Win::createMainWindow()
 {
   WNDCLASSEX wcex;
 
@@ -39,15 +49,16 @@ Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
   wcex.lpfnWndProc   = &Application_Win::WndProc;
   wcex.cbClsExtra    = 0;
   wcex.cbWndExtra    = 0;
-  wcex.hInstance     = GetModuleHandle(NULL);
-  wcex.hIcon         = NULL;
+  wcex.hInstance     = _hInstance;
+  wcex.hIcon         = NULL; // ToDo use APP-Icon
   wcex.hCursor       = LoadCursor(NULL, IDC_ARROW);
-  HBITMAP hbmp = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDB_BITMAP_CHECKERBOARD));
+  //wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+  HBITMAP hbmp       = LoadBitmap(_hInstance, MAKEINTRESOURCEW(IDB_BITMAP_CHECKERBOARD));
   wcex.hbrBackground = CreatePatternBrush(hbmp);
-  
+
   wcex.lpszMenuName  = NULL;
   wcex.lpszClassName = L"CORDOVA-CEF-MAINWINDOW";
-  wcex.hIconSm       = NULL;
+  wcex.hIconSm       = NULL; // ToDo use APP-Icon
 
   RegisterClassExW(&wcex);
 
@@ -57,8 +68,8 @@ Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
   // TODO: move to config.xml
   neededRect.left = 0;
   neededRect.top = 0;
-  neededRect.right = 800;
-  neededRect.bottom = 600;
+  neededRect.right = 1024;
+  neededRect.bottom = 768;
 
   AdjustWindowRect(&neededRect, window_style, false);
 
@@ -80,35 +91,43 @@ Application_Win::Application_Win(std::shared_ptr<Helper::Paths> paths)
   neededRect.bottom += offset_y;
 
   _mainWindow = CreateWindowW(L"CORDOVA-CEF-MAINWINDOW", Helper::utf8ToWide(_config->appName()).c_str(),
-                              window_style, 
-                              neededRect.left, 
-                              neededRect.top, 
+                              window_style,
+                              neededRect.left,
+                              neededRect.top,
                               neededRect.right - neededRect.left,
-                              neededRect.bottom - neededRect.top, 
-                              NULL, NULL, GetModuleHandle(NULL), NULL);
+                              neededRect.bottom - neededRect.top,
+                              NULL, NULL, _hInstance, this);
 
-  SetWindowLongPtrW(_mainWindow, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
- 
+
+
   ShowWindow(_mainWindow, SW_SHOW );
   UpdateWindow(_mainWindow);
 }
 
-Application_Win::~Application_Win()
-{
-}
-
+/*
 CefRefPtr<Client::RenderHandler> Application_Win::createOSRWindow(CefWindowHandle parent, OSRBrowserProvider* browser_provider, bool transparent)
 {
   return new OSRWindow_Win(parent, browser_provider, transparent);
 }
+*/
 
 LRESULT CALLBACK Application_Win::WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
   Application_Win* appwindow = reinterpret_cast<Application_Win*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
   PAINTSTRUCT ps;
   HDC hdc;
-  switch (message) 
+  switch (message)
   {
+    case WM_CREATE:
+    {
+      LPCREATESTRUCT create_struct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+      appwindow = reinterpret_cast<Application_Win*>(create_struct->lpCreateParams);
+      SetWindowLongPtrW(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(appwindow));
+      appwindow->_mainWindow = hWnd;
+      appwindow->_client = new Client_Win();
+      appwindow->createBrowser();
+      return 0;
+    }
     case WM_PAINT:
     {
       hdc = BeginPaint(hWnd, &ps);
@@ -118,13 +137,14 @@ LRESULT CALLBACK Application_Win::WndProc( HWND hWnd, UINT message, WPARAM wPara
 
     case WM_KILLFOCUS:
     {
-      appwindow->handlePause();
+      //appwindow->handlePause();
       break;
     }
 
     case WM_SETFOCUS:
-      appwindow->handleResume();
-      if (appwindow->_client.get() && appwindow->_client->GetBrowser()) 
+    {
+
+      if (appwindow->_client.get() && appwindow->_client->GetBrowser())
       {
         // Pass focus to the browser window
         CefWindowHandle hwnd = appwindow->_client->GetBrowser()->GetHost()->GetWindowHandle();
@@ -132,35 +152,52 @@ LRESULT CALLBACK Application_Win::WndProc( HWND hWnd, UINT message, WPARAM wPara
           PostMessage(hwnd, WM_SETFOCUS, wParam, NULL);
       }
       return 0;
-
-    case WM_SIZE:
-    // Minimizing resizes the window to 0x0 which causes our layout to go all
-    // screwy, so we just ignore it.
-    if (wParam != SIZE_MINIMIZED && appwindow->_client.get() && appwindow->_client->GetBrowser()) 
+    }
+    case WM_ACTIVATEAPP:
     {
+
+      if(LOWORD(wParam) == TRUE)
+      {
+        appwindow->handleResume();
+      }
+      else
+      {
+        appwindow->handlePause();
+      }
+      break;
+    }
+    case WM_SIZE:
+    {
+
+      // Minimizing resizes the window to 0x0 which causes our layout to go all
+      // screwy, so we just ignore it.
+      if (wParam != SIZE_MINIMIZED && appwindow->_client.get() && appwindow->_client->GetBrowser())
+      {
         CefWindowHandle hwnd = appwindow->_client->GetBrowser()->GetHost()->GetWindowHandle();
-        if (hwnd) 
+        if (hwnd)
         {
           // Resize the browser window and address bar to match the new frame
           // window size
           RECT rect;
           GetClientRect(hWnd, &rect);
-          
+
           HDWP hdwp = BeginDeferWindowPos(1);
           hdwp = DeferWindowPos(hdwp, hwnd, NULL,
-            rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
+                                rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_NOZORDER);
           EndDeferWindowPos(hdwp);
         }
+      }
+      break;
     }
-    break;
 
 
 
     case WM_CLOSE:
     {
-      if (appwindow->_client.get() && !appwindow->_client->IsClosing()) {
+      if (appwindow->_client.get() && !appwindow->_client->IsClosing())
+      {
         CefRefPtr<CefBrowser> browser = appwindow->_client->GetBrowser();
-        if (browser.get()) 
+        if (browser.get())
         {
           // Notify the browser window that we would like to close it. This
           // will result in a call to ClientHandler::DoClose() if the
@@ -174,7 +211,7 @@ LRESULT CALLBACK Application_Win::WndProc( HWND hWnd, UINT message, WPARAM wPara
 
       // Allow the close.
       break;
-    }   
+    }
 
     case WM_DESTROY:
     {

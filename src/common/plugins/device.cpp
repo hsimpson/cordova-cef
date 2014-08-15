@@ -21,6 +21,7 @@
 
 #include "device.h"
 #include "json/json.h"
+#include "application.h"
 
 
 DeviceBase::~DeviceBase()
@@ -44,7 +45,7 @@ bool DeviceBase::execute(const std::string& action, const Json::Value& args, Cal
   return false;
 }
 
-void DeviceBase::initialize(Application* app)
+void DeviceBase::initialize(CefRefPtr<Application> app)
 {
   CordovaPlugin::initialize(app);
   _uuid = getUuid();
@@ -54,11 +55,5 @@ void DeviceBase::initialize(Application* app)
   _model = getModel();
 }
 
-std::string DeviceBase::getUuid()
-{
-  // ToDo: serialize into app settings
-  boost::uuids::uuid uuid = boost::uuids::random_generator()();
-  return boost::uuids::to_string(uuid);
-}
 
 //REGISTER_PLUGIN(Device);

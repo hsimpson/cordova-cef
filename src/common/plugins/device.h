@@ -22,6 +22,7 @@
 #ifndef cdvplugindevice_h__
 #define cdvplugindevice_h__
 
+#include "include/cef_base.h"
 #include "cordovaplugin.h"
 
 class DeviceBase : public CordovaPlugin
@@ -30,10 +31,11 @@ public:
   
   virtual ~DeviceBase();
   virtual bool execute(const std::string& action, const Json::Value& args, CallbackContext& callbackContext);
-  virtual void initialize(Application* app);
+  virtual void initialize(CefRefPtr<Application> app);
 
 protected:
-  std::string getUuid();
+  // serialize to user/appdata
+  virtual std::string getUuid() = 0;
   virtual std::string getVersion() = 0;
   virtual std::string getPlatform() = 0;
   virtual std::string getModel() = 0;
