@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
@@ -17,35 +17,28 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<widget xmlns     = "http://www.w3.org/ns/widgets"
-        id        = "com.example.hello"
-        version   = "2.0.0">
-    <name>Hello World</name>
-
-    <description>
-        A sample Apache Cordova application on the cordova-cef platform.
-    </description>
-
-    <author href="http://cordova.io" email="dev@cordova.apache.org">
-        Apache Cordova Team
-    </author>
-
-    
-
-    <!--content src="http://www.google.de" /-->
-    <content src="index.html" />
-    <access origin="*"/>
-
-    <!-- not yet implemented
-    <preference name="Fullscreen" value="true" />
-    -->
-    <preference name="OffScreenRendering" value="false" />
-
-    <feature name="Device">
-        <param name="cef-package" value="Device" onload="true"/>
-    </feature>
-    <feature name="MyPlugin">
-        <param name="cef-package" value="Plugin"/>
-    </feature>
-    
+<widget id="com.example.hello"
+        version="2.0.0"
+        xmlns="http://www.w3.org/ns/widgets">
+  <name>Hello World</name>
+  <description>A sample Apache Cordova application on the cordova-cef platform.</description>
+  <author email="dev@cordova.apache.org"
+          href="http://cordova.io">Apache Cordova Team</author>
+  <!--content src="http://www.google.de" /-->
+  <content src="index.html" />
+  <access origin="*" />
+  <!-- not yet implemented
+  <preference name="Fullscreen" value="true" />
+  -->
+  <preference name="OffScreenRendering"
+              value="false" />
+  <feature name="Device">
+    <param name="cef-package"
+           onload="true"
+           value="Device" />
+  </feature>
+  <feature name="MyPlugin">
+    <param name="cef-package"
+           value="Plugin" />
+  </feature>
 </widget>

@@ -3,7 +3,7 @@ This project is a [Cordova/Phongap](http://cordova.apache.org "Cordova") framewo
 
 [cordova-cef](https://github.com/hsimpson/cordova-cef "cordova-cef") **is not yet production ready** and is not fully integrated into the [Cordova](http://cordova.apache.org "Cordova") eco system, which means it is not usable with the cordova-cli.
 
-The future plan is to complete the the following implementations:
+The future plan is to complete the following implementations:
 
 - Windows Desktop for Windows 7 or later (not Windows 8/8.1 Store-App)
 - Mac OSX
@@ -12,10 +12,8 @@ The future plan is to complete the the following implementations:
 
 
 ## Windows-Desktop for Windows 7 or later (not Windows 8/8.1 Store-App) ##
-- Download [CEF3 binaries for Windows 32bit](http://cefbuilds.com "CEF3 binaries for Windows") (mostly the trunk is used because this project is under high development tested with CEF 3.1846.1637)
+- Download [CEF3 binaries for Windows 32bit](http://cefbuilds.com "CEF3 binaries for Windows") (mostly the trunk is used because this project is under high development tested with CEF 3.2078.1808)
 - Copy contents of CEF3 binaries package into `<ROOT>/3rdparty/cef3`
-- Download the [Boost Libraries](http://www.boost.org/users/download/ "Boost Libraries")
-- Copy the contents of the `boost_x_y_z` folder into `<ROOT>/3rdparty/boost`
 - Open `<ROOT>/projects/windows-desktop/windows-desktop.sln` with Visual Studio 2012
 - Update the Platform Toolset of the `libcef_dll_wrapper` project in Visual Studio to `Visual Studio 2012 (v110)` 
 - Build Debug or Release

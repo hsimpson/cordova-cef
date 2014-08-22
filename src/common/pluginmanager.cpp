@@ -151,7 +151,7 @@ void PluginManager::exec( const std::string& service, const std::string& action,
   if(!plugin.get())
   {
     HL_ERROR(logger, "exec() call to unknown plugin: " + service);    
-    _app->sendPluginResult(std::make_shared<PluginResult>(PluginResult::CLASS_NOT_FOUND_EXCEPTION), callbackId);
+    _app->sendPluginResult(std::make_shared<PluginResult>(PluginResult::CLASS_NOT_FOUND_EXCEPTION, "exec() call to unknown plugin: " + service), callbackId);
     return;
   }
 
