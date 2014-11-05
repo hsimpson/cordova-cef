@@ -55,9 +55,6 @@
     <ClCompile Include="..\..\src\windows-desktop\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\common\plugins\CDVRenderEngine.cpp">
-      <Filter>plugins</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\application.h">
@@ -122,9 +119,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\common\nativetojsmessagequeue.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\common\plugins\CDVRenderEngine.h">
-      <Filter>plugins</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

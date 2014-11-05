@@ -5,6 +5,8 @@ set(VERSION_MINOR 0)
 
 option(BuildShared "BuildShared" ON)
 option(BuildExamples "BuildExamples" ON)
+option(BuildLockFree "BuildLockFree" OFF)
+option(IncludeFunctionSignature "IncludeFunctionSignature" OFF)
 
 if(BuildShared)
   set(StaticOrShared "SHARED")
@@ -21,6 +23,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
+# Sources
 set(headers
   include/humblelogging/util/mutex.h
   include/humblelogging/util/spinlock.h
@@ -40,6 +43,7 @@ set(headers
 
 set(sources
   src/util/patternconfigregistry.cpp
+  src/util/processinfo.cpp
   src/appender.cpp
   src/configuration.cpp
   src/factory.cpp
@@ -53,16 +57,31 @@ if(WIN32)
   add_definitions(/Zc:wchar_t-)
   add_definitions(/INCREMENTAL:NO)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-  list(APPEND headers include/humblelogging/util/mutex_windows.h)
-  list(APPEND headers include/humblelogging/util/spinlock_windows.h)
-  list(APPEND sources src/util/mutex_windows.cpp)
-  list(APPEND sources src/util/spinlock_windows.cpp)
+  if(NOT BuildLockFree)
+    list(APPEND headers include/humblelogging/util/mutex_windows.h)
+    list(APPEND headers include/humblelogging/util/spinlock_windows.h)
+    list(APPEND sources src/util/mutex_windows.cpp)
+    list(APPEND sources src/util/spinlock_windows.cpp)
+  endif()
 else(WIN32)
-  list(APPEND headers include/humblelogging/util/mutex_linux.h)
-  list(APPEND headers include/humblelogging/util/spinlock_linux.h)
-  list(APPEND sources src/util/mutex_linux.cpp)
-  list(APPEND sources src/util/spinlock_linux.cpp)
+  if(NOT BuildLockFree)
+    list(APPEND headers include/humblelogging/util/mutex_linux.h)
+    list(APPEND headers include/humblelogging/util/spinlock_linux.h)
+    list(APPEND sources src/util/mutex_linux.cpp)
+    list(APPEND sources src/util/spinlock_linux.cpp)
+  endif()
 endif(WIN32)
+
+if(BuildLockFree)
+  list(APPEND headers include/humblelogging/util/mutex_nolock.h)
+  list(APPEND headers include/humblelogging/util/spinlock_nolock.h)
+  list(APPEND sources src/util/mutex_nolock.cpp)
+  list(APPEND sources src/util/spinlock_nolock.cpp)
+endif(BuildLockFree)
+
+if(IncludeFunctionSignature)
+  add_definitions(-DHUMBLE_INCLUDE_PRETTY_FUNCTION)
+endif(IncludeFunctionSignature)
 
 include_directories(include)
 

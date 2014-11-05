@@ -62,6 +62,9 @@
     <ClInclude Include="include\humblelogging\util\spinlock.h">
       <Filter>include\util</Filter>
     </ClInclude>
+    <ClInclude Include="include\humblelogging\configuration.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\appender.cpp">
@@ -89,6 +92,12 @@
       <Filter>src\util</Filter>
     </ClCompile>
     <ClCompile Include="src\util\spinlock_windows.cpp">
+      <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\configuration.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\processinfo.cpp">
       <Filter>src\util</Filter>
     </ClCompile>
   </ItemGroup>

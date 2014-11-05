@@ -145,7 +145,7 @@ void Client::showDevTools( CefRefPtr<CefBrowser> browser )
   windowInfo.SetAsPopup(browser->GetHost()->GetWindowHandle(), "DevTools");
 #endif
 
-  browser->GetHost()->ShowDevTools(windowInfo, this, settings);
+  browser->GetHost()->ShowDevTools(windowInfo, this, settings, CefPoint());
 }
 /*
 void Client::runJavaScript( const std::string& js )

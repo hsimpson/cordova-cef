@@ -206,4 +206,6 @@ void Application::handleResume()
 void Application::OnBeforeCommandLineProcessing( const CefString& process_type, CefRefPtr<CefCommandLine> command_line )
 {
   command_line->AppendSwitch("allow-file-access-from-files");
+  //command_line->AppendSwitchWithValue("use-gl", "desktop"); // 
+  //command_line->AppendSwitch("enable-media-stream"); // WebRTC
 }
