@@ -12,10 +12,12 @@ The future plan is to complete the following implementations:
 
 
 ## Windows-Desktop for Windows 7 or later (not Windows 8/8.1 Store-App) ##
-- Download [CEF3 binaries for Windows 32bit](http://cefbuilds.com "CEF3 binaries for Windows") (mostly the trunk is used because this project is under high development tested with CEF 3.2217.1905)
+- Download and install [CMake](http://www.cmake.org/) (minimum and tested version: 2.8.12.2)
+- Download [CEF3 binaries for Windows 32bit](http://cefbuilds.com "CEF3 binaries for Windows") (mostly the trunk is used because this project is under high development tested with CEF 3.2339.1251)
 - Copy contents of CEF3 binaries package into `<ROOT>/3rdparty/cef3`
-- Open `<ROOT>/projects/windows-desktop/windows-desktop.sln` with Visual Studio 2012
-- Update the Platform Toolset of the `libcef_dll_wrapper` project in Visual Studio to `Visual Studio 2012 (v110)` in all configurations
+- Run the cmake command in the `<ROOT>/3rdparty/cef3` directory:
+    cmake -G "Visual Studio 12"
+- Open `<ROOT>/projects/windows-desktop/windows-desktop.sln` with Visual Studio 2013
 - Build Debug or Release
 - After building the output can be found in `<ROOT>/dist/windows-desktop/Debug` or `Release`
 

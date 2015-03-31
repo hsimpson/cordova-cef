@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,13 +19,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -69,8 +69,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\3rdparty\humble-logging-library\lib\Debug;..\..\3rdparty\cef3\Debug;..\..\3rdparty\cef3\out\Debug\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>humble-logging-library.lib;libcef.lib;libcef_dll_wrapper.lib;pugixmlsd.lib;Shlwapi.lib;opengl32.lib;%(AdditionalDependencies);rpcrt4.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Debug;..\..\3rdparty\cef3\Debug;..\..\3rdparty\cef3\libcef_dll\Debug;..\..\3rdparty\pugixml\scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>humblelogging.lib;libcef.lib;libcef_dll_wrapper.lib;pugixmlsd.lib;Shlwapi.lib;opengl32.lib;%(AdditionalDependencies);rpcrt4.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -102,8 +102,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\3rdparty\humble-logging-library\lib\Release;..\..\3rdparty\cef3\Release;..\..\3rdparty\cef3\out\Release\lib;..\..\3rdparty\pugixml\scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>humble-logging-library.lib;libcef.lib;libcef_dll_wrapper.lib;pugixmls.lib;Shlwapi.lib;opengl32.lib;%(AdditionalDependencies);rpcrt4.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Release;..\..\3rdparty\cef3\Release;..\..\3rdparty\cef3\libcef_dll\Release;..\..\3rdparty\pugixml\scripts\vs2010\x32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>humblelogging.lib;libcef.lib;libcef_dll_wrapper.lib;pugixmls.lib;Shlwapi.lib;opengl32.lib;%(AdditionalDependencies);rpcrt4.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
