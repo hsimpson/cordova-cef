@@ -1,0 +1,3 @@
+[submodule "3rdparty/humble-logging-library"]
+	path = 3rdparty/humble-logging-library
+	url = https://github.com/hsimpson/humble-logging-library
