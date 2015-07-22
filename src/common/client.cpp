@@ -246,7 +246,7 @@ void Client::OnContextMenuDismissed( CefRefPtr<CefBrowser> browser, CefRefPtr<Ce
 {
 }
 
-bool Client::OnQuotaRequest( CefRefPtr<CefBrowser> browser, const CefString& origin_url, int64 new_size, CefRefPtr<CefQuotaCallback> callback )
+bool Client::OnQuotaRequest( CefRefPtr<CefBrowser> browser, const CefString& origin_url, int64 new_size, CefRefPtr<CefRequestCallback> callback)
 {
   callback->Continue(true);
   return true;

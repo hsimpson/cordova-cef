@@ -7,14 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "windows-desktop", "projects
 	ProjectSection(ProjectDependencies) = postProject
 		{89A1E353-E2DC-495C-B403-742BE206ACED} = {89A1E353-E2DC-495C-B403-742BE206ACED}
 		{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9} = {A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}
-		{48C54DF8-0C12-40A9-BC5C-3D8B4037BA27} = {48C54DF8-0C12-40A9-BC5C-3D8B4037BA27}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pugixml_vs2010_static", "3rdparty\pugixml\scripts\pugixml_vs2010_static.vcxproj", "{89A1E353-E2DC-495C-B403-742BE206ACED}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcef_dll_wrapper", "3rdparty\cef3\libcef_dll\libcef_dll_wrapper.vcxproj", "{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "humble-logging-library", "3rdparty\humble-logging-library\vs2013\humblelogging.vcxproj", "{48C54DF8-0C12-40A9-BC5C-3D8B4037BA27}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "humblelogging", "3rdparty\humblelogging\vs2013\humblelogging.vcxproj", "{D20A015B-A5DC-4578-BC2E-E4959248A71B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,12 +43,14 @@ Global
 		{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}.Release|Win32.ActiveCfg = Release|Win32
 		{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}.Release|Win32.Build.0 = Release|Win32
 		{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}.Release|x64.ActiveCfg = Release|Win32
-		{48C54DF8-0C12-40A9-BC5C-3D8B4037BA27}.Debug|Win32.ActiveCfg = Debug|Win32
-		{48C54DF8-0C12-40A9-BC5C-3D8B4037BA27}.Debug|Win32.Build.0 = Debug|Win32
-		{48C54DF8-0C12-40A9-BC5C-3D8B4037BA27}.Debug|x64.ActiveCfg = Debug|Win32
-		{48C54DF8-0C12-40A9-BC5C-3D8B4037BA27}.Release|Win32.ActiveCfg = Release|Win32
-		{48C54DF8-0C12-40A9-BC5C-3D8B4037BA27}.Release|Win32.Build.0 = Release|Win32
-		{48C54DF8-0C12-40A9-BC5C-3D8B4037BA27}.Release|x64.ActiveCfg = Release|Win32
+		{D20A015B-A5DC-4578-BC2E-E4959248A71B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D20A015B-A5DC-4578-BC2E-E4959248A71B}.Debug|Win32.Build.0 = Debug|Win32
+		{D20A015B-A5DC-4578-BC2E-E4959248A71B}.Debug|x64.ActiveCfg = Debug|x64
+		{D20A015B-A5DC-4578-BC2E-E4959248A71B}.Debug|x64.Build.0 = Debug|x64
+		{D20A015B-A5DC-4578-BC2E-E4959248A71B}.Release|Win32.ActiveCfg = Release|Win32
+		{D20A015B-A5DC-4578-BC2E-E4959248A71B}.Release|Win32.Build.0 = Release|Win32
+		{D20A015B-A5DC-4578-BC2E-E4959248A71B}.Release|x64.ActiveCfg = Release|x64
+		{D20A015B-A5DC-4578-BC2E-E4959248A71B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

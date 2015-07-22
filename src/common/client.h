@@ -91,7 +91,7 @@ public:
   virtual void OnContextMenuDismissed( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame ) OVERRIDE;
 
   // CefRequestHandler method(s)
-  virtual bool OnQuotaRequest( CefRefPtr<CefBrowser> browser, const CefString& origin_url, int64 new_size, CefRefPtr<CefQuotaCallback> callback ) OVERRIDE;
+  virtual bool OnQuotaRequest( CefRefPtr<CefBrowser> browser, const CefString& origin_url, int64 new_size, CefRefPtr<CefRequestCallback> callback) OVERRIDE;
    
   //void runJavaScript( const std::string& js );
   //void setOSRHandler(CefRefPtr<RenderHandler> handler) { _OSRHandler = handler;}

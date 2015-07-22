@@ -216,3 +216,5 @@ pip-log.txt
 3rdparty/boost/
 3rdparty/cef3/
 3rdparty/pugixml/scripts/vs2010/
+Debug_Win32/
+Release_Win32/

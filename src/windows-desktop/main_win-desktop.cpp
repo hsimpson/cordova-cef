@@ -66,7 +66,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
   humble::logging::Factory& fac = humble::logging::Factory::getInstance();
 
   // Change the default LogLevel, which every NEW Logger will have.
-  fac.setDefaultLogLevel(DEFAULT_LOG_LEVEL);
+  fac.setConfiguration(new humble::logging::SimpleConfiguration(DEFAULT_LOG_LEVEL));
   // Change the default Formatter (optional).
   fac.setDefaultFormatter(new humble::logging::PatternFormatter("[%date] [pid=%pid] [tid=%tid] [%lls] [line=%line] [file=%filename] %m\n"));
   // Add Appender which logs to file (rolling).
