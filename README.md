@@ -17,6 +17,11 @@ The future plan is to complete the following implementations:
 - Copy contents of CEF3 binaries package into `<ROOT>/3rdparty/cef3`
 - Run the cmake command in the `<ROOT>/3rdparty/cef3` directory: `cmake -G "Visual Studio 12"`
 - Open `<ROOT>/projects/windows-desktop/windows-desktop.sln` with Visual Studio 2013
+- Change the properties of the 'libcef_dll_wrapper':
+    - Debug
+        - C/C++ -> Code Genration -> Runtime Library: **Multi-threaded Debug DLL (/MDd)**
+    - Release
+        - C/C++ -> Code Genration -> Runtime Library: **Multi-threaded DLL (/MD)**
 - Build Debug or Release
 - After building the output can be found in `<ROOT>/dist/windows-desktop/Debug` or `Release`
 
