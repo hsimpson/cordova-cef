@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pugixml_vs2010_static", "3r
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcef_dll_wrapper", "3rdparty\cef3\libcef_dll\libcef_dll_wrapper.vcxproj", "{A9D6DC71-C0DC-4549-AEA0-3B15B44E86A9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "humblelogging", "3rdparty\humblelogging\vs2013\humblelogging.vcxproj", "{D20A015B-A5DC-4578-BC2E-E4959248A71B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "humblelogging", "3rdparty\humblelogging\vs2015\humblelogging.vcxproj", "{D20A015B-A5DC-4578-BC2E-E4959248A71B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

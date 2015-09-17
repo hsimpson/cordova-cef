@@ -30,7 +30,7 @@
 class Application;
 class PluginEntry;
 
-class PluginManager
+class PluginManager : public CefBase
 {
 public:
   PluginManager(CefRefPtr<Application> app);
